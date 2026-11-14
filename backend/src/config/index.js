@@ -14,7 +14,10 @@ module.exports = {
     accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '1d',
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   },
-  corsOrigin: (process.env.CORS_ORIGIN || 'http://localhost:5173,http://localhost:5174')
+  corsOrigin: (
+    process.env.CORS_ORIGIN ||
+    'https://delegation-checklist-system.vercel.app,http://localhost:5185,http://localhost:5173'
+  )
     .split(',')
     .map((o) => o.trim()),
   cookieSecret: process.env.COOKIE_SECRET || 'dev_cookie_secret',

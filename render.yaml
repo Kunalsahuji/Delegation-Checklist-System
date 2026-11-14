@@ -27,7 +27,7 @@ services:
       - key: COOKIE_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: "*"
+        value: https://delegation-checklist-system.vercel.app,http://localhost:5185
       - key: LOG_LEVEL
         value: info
       - key: CRON_ENABLED

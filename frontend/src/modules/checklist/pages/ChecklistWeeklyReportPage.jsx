@@ -10,11 +10,16 @@ import {
   Check, 
   HelpCircle,
   Clock,
-  RotateCcw
+  RotateCcw,
+  ShieldCheck,
+  FileCheck
 } from 'lucide-react';
 import { checklistApi } from '../api/checklistApi';
 import { axiosClient } from '../../../api/axiosClient';
 import { ChecklistTaskDrawer } from '../components/ChecklistTaskDrawer';
+import ChecklistItemsReport from '../components/ChecklistItemsReport';
+import ChecklistPersonPerformanceReport from '../components/ChecklistPersonPerformanceReport';
+import ChecklistWeeklyItemBreakdownModal from '../components/ChecklistWeeklyItemBreakdownModal';
 
 const formatCivilDate = (dateStr) => {
   if (!dateStr) return '-';
@@ -43,6 +48,17 @@ export default function ChecklistWeeklyReportPage() {
   const [nextNotDoneOnTime, setNextNotDoneOnTime] = useState('');
   const [savingPlan, setSavingPlan] = useState(false);
   const [planSavedNotice, setPlanSavedNotice] = useState(false);
+
+  // Report selector
+  const [reportKey, setReportKey] = useState('checklistWeekly');
+
+  // Breakdown Modal
+  const [breakdownModal, setBreakdownModal] = useState({
+    isOpen: false,
+    filterType: 'all',
+    title: '',
+    personName: '',
+  });
 
   // Modal
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -198,36 +214,40 @@ export default function ChecklistWeeklyReportPage() {
       <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1 w-full sm:max-w-md min-w-0 flex-1">
-            <label className="text-xs font-medium text-slate-500 block">
+            <label className="text-xs font-semibold text-slate-700 block">
               What do you want to report on?
             </label>
             <select
-              value="notDone"
-              onChange={() => {}}
-              className="w-full max-w-full truncate text-xs sm:text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              value={reportKey}
+              onChange={(e) => setReportKey(e.target.value)}
+              className="w-full max-w-full truncate text-xs sm:text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
-              <option value="notDone">Weekly performance — % work not done</option>
+              <option value="checklistWeekly">Weekly performance — % work not done</option>
+              <option value="checklistItems">Checklist items — dated occurrences</option>
+              <option value="checklistPerformance">Person-wise performance — who did what</option>
             </select>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => setShowFilters(!showFilters)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
-                showFilters || selectedDept || selectedDoer
-                  ? 'bg-blue-50 border-blue-200 text-blue-700'
-                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-              }`}
-            >
-              <Filter className="w-3.5 h-3.5" />
-              <span>Filters {selectedDept || selectedDoer ? '(active)' : ''}</span>
-            </button>
-          </div>
+          {reportKey === 'checklistWeekly' && (
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                  showFilters || selectedDept || selectedDoer
+                    ? 'bg-blue-50 border-blue-200 text-blue-700'
+                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Filter className="w-3.5 h-3.5" />
+                <span>Filters {selectedDept || selectedDoer ? '(active)' : ''}</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Collapsible Filter Bar */}
-        {showFilters && (
+        {/* Collapsible Filter Bar (Weekly View) */}
+        {reportKey === 'checklistWeekly' && showFilters && (
           <div className="pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <div>
               <label className="text-[11px] font-medium text-slate-500 block mb-1">
@@ -275,13 +295,18 @@ export default function ChecklistWeeklyReportPage() {
         )}
 
         <div className="text-[11px] text-slate-400 font-medium">
-          Period: Weekly
+          Period: {reportKey === 'checklistWeekly' ? 'Weekly' : 'Comprehensive Register'}
         </div>
       </div>
 
-      {/* Main Report Card (Matching Screenshot 1) */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        {/* Card Header */}
+      {/* RENDER CONDITIONAL REPORT VIEW */}
+      {reportKey === 'checklistItems' ? (
+        <ChecklistItemsReport departments={departments} users={users} />
+      ) : reportKey === 'checklistPerformance' ? (
+        <ChecklistPersonPerformanceReport departments={departments} users={users} />
+      ) : (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          {/* Card Header */}
         <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-base font-bold text-slate-900">
@@ -374,6 +399,60 @@ export default function ChecklistWeeklyReportPage() {
           </div>
         </div>
 
+        {/* Business Logic & Industry SLA Standards Guide */}
+        <div className="p-4 bg-slate-50/70 border-b border-slate-100">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5">
+            <ShieldCheck className="w-4 h-4 text-blue-600" />
+            <span>Checklist Operational Rigor & SLA Standards (% Work Not Done)</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div className="bg-emerald-50 border border-emerald-200/80 rounded-lg p-3 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-emerald-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                  Tier 1: High Compliance
+                </span>
+                <span className="text-[10px] font-bold bg-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded">
+                  Target: &lt; 5% Not Done
+                </span>
+              </div>
+              <p className="text-emerald-800 text-[11px] leading-relaxed">
+                Over 95% of recurring operational checklist items completed on time. Meets enterprise operational rigor standards.
+              </p>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200/80 rounded-lg p-3 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-amber-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                  Tier 2: Attention Required
+                </span>
+                <span className="text-[10px] font-bold bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded">
+                  Tolerance: 5% – 15%
+                </span>
+              </div>
+              <p className="text-amber-800 text-[11px] leading-relaxed">
+                Occasional checklist skips or delays due to work shifts. Routine supervisor follow-up recommended during weekly reviews.
+              </p>
+            </div>
+
+            <div className="bg-rose-50 border border-rose-200/80 rounded-lg p-3 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-rose-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                  Tier 3: Critical Slippage
+                </span>
+                <span className="text-[10px] font-bold bg-rose-200 text-rose-800 px-1.5 py-0.5 rounded">
+                  Action: &gt; 15% Not Done
+                </span>
+              </div>
+              <p className="text-rose-800 text-[11px] leading-relaxed">
+                Severe operational breakdown with recurring tasks neglected or overdue. Requires immediate managerial intervention and root-cause audit.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* High-Visibility Scorecard Matrix */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[500px] text-left text-xs border-collapse">
@@ -413,27 +492,47 @@ export default function ChecklistWeeklyReportPage() {
               {/* Row 2: Actual Score */}
               <tr className="bg-slate-50/50">
                 <td className="py-3.5 px-4 font-bold text-slate-900">
-                  Actual Score
+                  Actual Score (Click to Audit)
                 </td>
                 <td className="py-3.5 px-4 text-center bg-rose-50/50 border-x border-rose-100">
-                  <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={() => setBreakdownModal({
+                      isOpen: true,
+                      filterType: 'notDone',
+                      title: 'Incomplete / Slipped Checklist Items',
+                      personName: '',
+                    })}
+                    className="flex flex-col items-center mx-auto hover:bg-rose-100/70 p-1.5 rounded-lg transition-colors group cursor-pointer"
+                    title="Click to view incomplete/slipped items"
+                  >
                     <span className="text-base font-bold text-rose-700">
                       {summary.pctNotDone !== null ? `${summary.pctNotDone}%` : '—'}
                     </span>
-                    <span className="text-[10px] text-slate-400 mt-0.5">
-                      {summary.notDone} items
+                    <span className="text-[10px] text-rose-600 font-medium mt-0.5 group-hover:underline">
+                      {summary.notDone} items (Audit)
                     </span>
-                  </div>
+                  </button>
                 </td>
                 <td className="py-3.5 px-4 text-center bg-amber-50/50">
-                  <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={() => setBreakdownModal({
+                      isOpen: true,
+                      filterType: 'notDone',
+                      title: 'Items Not Completed On Time',
+                      personName: '',
+                    })}
+                    className="flex flex-col items-center mx-auto hover:bg-amber-100/70 p-1.5 rounded-lg transition-colors group cursor-pointer"
+                    title="Click to view items not done on time"
+                  >
                     <span className="text-base font-bold text-amber-700">
                       {summary.pctNotDoneOnTime !== null ? `${summary.pctNotDoneOnTime}%` : '—'}
                     </span>
-                    <span className="text-[10px] text-slate-400 mt-0.5">
-                      {summary.notDoneOnTime} items
+                    <span className="text-[10px] text-amber-600 font-medium mt-0.5 group-hover:underline">
+                      {summary.notDoneOnTime} items (Audit)
                     </span>
-                  </div>
+                  </button>
                 </td>
               </tr>
 
@@ -552,7 +651,24 @@ export default function ChecklistWeeklyReportPage() {
                       }`}
                     >
                       <td className="py-3 px-4 font-medium text-slate-800">
-                        {d.doerName}
+                        <div className="flex items-center justify-between gap-2">
+                          <span>{d.doerName}</span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setBreakdownModal({
+                                isOpen: true,
+                                filterType: 'person',
+                                title: `Items for ${d.doerName}`,
+                                personName: d.doerName,
+                              });
+                            }}
+                            className="text-[11px] text-blue-600 hover:text-blue-800 font-medium hover:underline px-2 py-0.5 rounded bg-blue-50/70"
+                          >
+                            Inspect ({d.planned})
+                          </button>
+                        </div>
                       </td>
                       <td className="py-3 px-4 text-center font-mono text-slate-700">
                         {d.planned}
@@ -577,6 +693,17 @@ export default function ChecklistWeeklyReportPage() {
           </div>
         </div>
       </div>
+      )}
+
+      {/* Checklist Audit Breakdown Modal */}
+      <ChecklistWeeklyItemBreakdownModal
+        isOpen={breakdownModal.isOpen}
+        onClose={() => setBreakdownModal((prev) => ({ ...prev, isOpen: false }))}
+        filterType={breakdownModal.filterType}
+        title={breakdownModal.title}
+        personName={breakdownModal.personName}
+        items={reportData?.items || []}
+      />
 
       {/* Add Checklist Drawer */}
       <ChecklistTaskDrawer

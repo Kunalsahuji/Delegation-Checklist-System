@@ -52,6 +52,11 @@ class ChecklistOccurrenceService {
     const limit = Math.min(100, Math.max(1, parseInt(params.limit || '20', 10)));
     const skip = (page - 1) * limit;
 
+    let sortObj = { createdAt: -1, plannedAt: -1 };
+    if (params.sortBy === 'planned_asc') sortObj = { plannedAt: 1, createdAt: -1 };
+    else if (params.sortBy === 'planned_desc') sortObj = { plannedAt: -1, createdAt: -1 };
+    else if (params.sortBy === 'oldest') sortObj = { createdAt: 1, plannedAt: 1 };
+
     const [total, items] = await Promise.all([
       ChecklistOccurrence.countDocuments(filter),
       ChecklistOccurrence.find(filter)
@@ -59,7 +64,7 @@ class ChecklistOccurrenceService {
         .populate('department', 'name key')
         .populate('project', 'name code')
         .populate('task', 'code title')
-        .sort({ plannedAt: -1, createdAt: -1 })
+        .sort(sortObj)
         .skip(skip)
         .limit(limit)
         .lean(),

@@ -17,6 +17,7 @@ import { axiosClient } from '../../../api/axiosClient';
 import AddDelegationModal from '../components/AddDelegationModal';
 import ChangeDateModal from '../components/ChangeDateModal';
 import DelegationReportDelayModal from '../components/DelegationReportDelayModal';
+import StatusDistributionCard from '../../../components/StatusDistributionCard';
 
 const formatCivilDate = (dateStr) => {
   if (!dateStr) return '-';
@@ -268,70 +269,51 @@ export default function DelegationDashboardPage() {
       {/* Middle Row: Status Distribution, Completion Overview, Top Employees */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Card 1: Status Distribution */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-          <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-4">
-            Status distribution
-          </h3>
-
-          <div className="flex items-center justify-around gap-4 my-auto">
-            {/* SVG Donut Ring */}
-            <div className="relative w-32 h-32 flex items-center justify-center flex-shrink-0">
-              <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                <circle cx="18" cy="18" r="14" fill="none" stroke="#f1f5f9" strokeWidth="4" />
-                {/* Completed slice */}
-                <circle
-                  cx="18" cy="18" r="14" fill="none" stroke="#10b981" strokeWidth="4"
-                  strokeDasharray={`${(completed / (total || 1)) * 88} 88`}
-                  strokeDashoffset="0"
-                />
-                {/* Overdue slice */}
-                <circle
-                  cx="18" cy="18" r="14" fill="none" stroke="#f43f5e" strokeWidth="4"
-                  strokeDasharray={`${(overdue / (total || 1)) * 88} 88`}
-                  strokeDashoffset={`-${(completed / (total || 1)) * 88}`}
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                <span className="text-xl font-bold text-slate-900 leading-none">{total}</span>
-                <span className="text-[10px] text-slate-400 uppercase mt-0.5">Total</span>
-              </div>
-            </div>
-
-            {/* Legend */}
-            <div className="space-y-1.5 text-xs">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span className="text-slate-600 text-[11px] min-w-[70px]">Completed</span>
-                <span className="font-semibold text-slate-800 text-[11px]">{completed}</span>
-                <span className="text-slate-400 text-[10px]">({total ? Math.round((completed / total) * 100) : 0}%)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <span className="text-slate-600 text-[11px] min-w-[70px]">Pending</span>
-                <span className="font-semibold text-slate-800 text-[11px]">{pending - overdue}</span>
-                <span className="text-slate-400 text-[10px]">({total ? Math.round(((pending - overdue) / total) * 100) : 0}%)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-orange-500" />
-                <span className="text-slate-600 text-[11px] min-w-[70px]">Week shifted</span>
-                <span className="font-semibold text-slate-800 text-[11px]">{weekShifted}</span>
-                <span className="text-slate-400 text-[10px]">({total ? Math.round((weekShifted / total) * 100) : 0}%)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                <span className="text-slate-600 text-[11px] min-w-[70px]">Overdue</span>
-                <span className="font-semibold text-slate-800 text-[11px]">{overdue}</span>
-                <span className="text-slate-400 text-[10px]">({total ? Math.round((overdue / total) * 100) : 0}%)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
-                <span className="text-slate-600 text-[11px] min-w-[70px]">Cancelled</span>
-                <span className="font-semibold text-slate-800 text-[11px]">{cancelled}</span>
-                <span className="text-slate-400 text-[10px]">({total ? Math.round((cancelled / total) * 100) : 0}%)</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <StatusDistributionCard
+          title="Status distribution"
+          total={total}
+          items={[
+            {
+              key: 'completed',
+              label: 'Completed',
+              count: completed,
+              percentage: total ? Math.round((completed / total) * 100) : 0,
+              color: '#10b981',
+            },
+            {
+              key: 'pending',
+              label: 'Pending',
+              count: Math.max(0, pending - overdue),
+              percentage: total ? Math.round((Math.max(0, pending - overdue) / total) * 100) : 0,
+              color: '#f59e0b',
+            },
+            {
+              key: 'weekShifted',
+              label: 'Week shifted',
+              count: weekShifted,
+              percentage: total ? Math.round((weekShifted / total) * 100) : 0,
+              color: '#f97316',
+            },
+            {
+              key: 'overdue',
+              label: 'Overdue',
+              count: overdue,
+              percentage: total ? Math.round((overdue / total) * 100) : 0,
+              color: '#f43f5e',
+            },
+            {
+              key: 'cancelled',
+              label: 'Cancelled',
+              count: cancelled,
+              percentage: total ? Math.round((cancelled / total) * 100) : 0,
+              color: '#94a3b8',
+            },
+          ]}
+          onSelectStatus={(statusKey) => {
+            if (!statusKey) navigate('/delegation/list');
+            else navigate(`/delegation/list?status=${statusKey}`);
+          }}
+        />
 
         {/* Card 2: Completion Overview */}
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">

@@ -127,6 +127,23 @@ class DelegationReportService {
         pctRed,
       },
       byDoer,
+      tasks: tasks.map((t) => ({
+        _id: t._id,
+        code: t.code,
+        legacyCode: t.legacyCode || null,
+        title: t.title,
+        doerName: t.assignedTo?.name || 'Unassigned',
+        doerId: t.assignedTo?._id ? String(t.assignedTo._id) : '',
+        departmentName: t.department?.name || 'Company-wide',
+        projectName: t.project?.name || 'Company-wide',
+        originalDueDate: t.originalDueDate,
+        dueDate: t.dueDate,
+        revisionCount: t.revisionCount || 0,
+        revisions: t.revisions || [],
+        status: t.status,
+        priority: t.priority || 'medium',
+        rygScore: (t.revisionCount || 0) === 0 ? 'green' : (t.revisionCount || 0) === 1 ? 'yellow' : 'red',
+      })),
     };
   }
 

@@ -9,11 +9,18 @@ import {
   Save, 
   Check, 
   HelpCircle,
-  RotateCcw
+  RotateCcw,
+  Info,
+  ExternalLink,
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react';
 import { delegationApi } from '../api/delegationApi';
 import { axiosClient } from '../../../api/axiosClient';
 import AddDelegationModal from '../components/AddDelegationModal';
+import DelegationRegisterReport from '../components/DelegationRegisterReport';
+import DelegationPersonPerformanceReport from '../components/DelegationPersonPerformanceReport';
+import DelegationWeeklyTaskBreakdownModal from '../components/DelegationWeeklyTaskBreakdownModal';
 
 const formatCivilDate = (dateStr) => {
   if (!dateStr) return '-';
@@ -45,6 +52,17 @@ export default function DelegationWeeklyReportPage() {
   const [nextGreen, setNextGreen] = useState('');
   const [savingPlan, setSavingPlan] = useState(false);
   const [planSavedNotice, setPlanSavedNotice] = useState(false);
+
+  // Report selector
+  const [reportKey, setReportKey] = useState('delegationWeekly');
+
+  // Breakdown Audit Modal
+  const [breakdownModal, setBreakdownModal] = useState({
+    isOpen: false,
+    category: 'all',
+    title: '',
+    doerName: '',
+  });
 
   // Modal
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -207,36 +225,40 @@ export default function DelegationWeeklyReportPage() {
       <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1 w-full sm:max-w-md min-w-0 flex-1">
-            <label className="text-xs font-medium text-slate-500 block">
+            <label className="text-xs font-semibold text-slate-700 block">
               What do you want to report on?
             </label>
             <select
-              value="ryg"
-              onChange={() => {}}
-              className="w-full max-w-full truncate text-xs sm:text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              value={reportKey}
+              onChange={(e) => setReportKey(e.target.value)}
+              className="w-full max-w-full truncate text-xs sm:text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
-              <option value="ryg">Weekly performance — Red / Yellow / Green</option>
+              <option value="delegationWeekly">Weekly performance — Red / Yellow / Green</option>
+              <option value="delegationRegister">Delegations — tasks, dates and revisions</option>
+              <option value="delegationPerformance">Person-wise performance — who did what</option>
             </select>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => setShowFilters(!showFilters)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
-                showFilters || selectedDept || selectedDoer || selectedProject
-                  ? 'bg-blue-50 border-blue-200 text-blue-700'
-                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-              }`}
-            >
-              <Filter className="w-3.5 h-3.5" />
-              <span>Filters {selectedDept || selectedDoer || selectedProject ? '(active)' : ''}</span>
-            </button>
-          </div>
+          {reportKey === 'delegationWeekly' && (
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                  showFilters || selectedDept || selectedDoer || selectedProject
+                    ? 'bg-blue-50 border-blue-200 text-blue-700'
+                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Filter className="w-3.5 h-3.5" />
+                <span>Filters {selectedDept || selectedDoer || selectedProject ? '(active)' : ''}</span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Collapsible Filter Bar */}
-        {showFilters && (
+        {/* Collapsible Filter Bar (Weekly View) */}
+        {reportKey === 'delegationWeekly' && showFilters && (
           <div className="pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <div>
               <label className="text-[11px] font-medium text-slate-500 block mb-1">
@@ -300,13 +322,18 @@ export default function DelegationWeeklyReportPage() {
         )}
 
         <div className="text-[11px] text-slate-400 font-medium">
-          Period: Weekly
+          Period: {reportKey === 'delegationWeekly' ? 'Weekly' : 'Comprehensive Register'}
         </div>
       </div>
 
-      {/* Main Card (Matching Screenshot 2) */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        {/* Card Header */}
+      {/* RENDER CONDITIONAL REPORT VIEW */}
+      {reportKey === 'delegationRegister' ? (
+        <DelegationRegisterReport departments={departments} users={users} projects={projects} />
+      ) : reportKey === 'delegationPerformance' ? (
+        <DelegationPersonPerformanceReport departments={departments} users={users} />
+      ) : (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          {/* Card Header */}
         <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-base font-bold text-slate-900">
@@ -399,6 +426,60 @@ export default function DelegationWeeklyReportPage() {
           </div>
         </div>
 
+        {/* Business Logic & Industry SLA Standards Guide */}
+        <div className="p-4 bg-slate-50/70 border-b border-slate-100">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5">
+            <ShieldCheck className="w-4 h-4 text-blue-600" />
+            <span>Business Logic & SLA Guidelines (Red / Yellow / Green)</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div className="bg-emerald-50 border border-emerald-200/80 rounded-lg p-3 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-emerald-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                  Green Score (On-Time)
+                </span>
+                <span className="text-[10px] font-bold bg-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded">
+                  Target: ≥ 85%
+                </span>
+              </div>
+              <p className="text-emerald-800 text-[11px] leading-relaxed">
+                Tasks delivered strictly on or before their committed due date with <strong>0 revisions</strong>. Demonstrates high scheduling accuracy and operational reliability.
+              </p>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200/80 rounded-lg p-3 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-amber-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                  Yellow Score (Managed Delay)
+                </span>
+                <span className="text-[10px] font-bold bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded">
+                  Tolerance: ≤ 10%
+                </span>
+              </div>
+              <p className="text-amber-800 text-[11px] leading-relaxed">
+                Tasks extended <strong>exactly 1 time</strong> with a recorded and approved reason. Acceptable buffer for unexpected supplier or client dependencies without chronic slippage.
+              </p>
+            </div>
+
+            <div className="bg-rose-50 border border-rose-200/80 rounded-lg p-3 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-rose-900 flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                  Red Score (High Risk)
+                </span>
+                <span className="text-[10px] font-bold bg-rose-200 text-rose-800 px-1.5 py-0.5 rounded">
+                  Tolerance: ≤ 5%
+                </span>
+              </div>
+              <p className="text-rose-800 text-[11px] leading-relaxed">
+                Tasks rescheduled <strong>2 or more times</strong>, or currently overdue past committed extensions. Critical risk indicator requiring direct executive intervention.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Scorecard Matrix */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[500px] text-left text-xs border-collapse">
@@ -447,37 +528,67 @@ export default function DelegationWeeklyReportPage() {
               {/* Row 2: Actual Score */}
               <tr className="bg-slate-50/50">
                 <td className="py-3.5 px-4 font-bold text-slate-900">
-                  Actual Score
+                  Actual Score (Click to Audit)
                 </td>
                 <td className="py-3.5 px-4 text-center bg-rose-50/50 border-x border-rose-100">
-                  <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={() => setBreakdownModal({
+                      isOpen: true,
+                      category: 'red',
+                      title: 'Red Score Tasks (2+ Revisions)',
+                      doerName: '',
+                    })}
+                    className="flex flex-col items-center mx-auto hover:bg-rose-100/70 p-1.5 rounded-lg transition-colors group cursor-pointer"
+                    title="Click to view all Red tasks"
+                  >
                     <span className="text-base font-bold text-rose-700">
                       {summary.pctRed !== null ? `${summary.pctRed}%` : '—'}
                     </span>
-                    <span className="text-[10px] text-slate-400 mt-0.5">
-                      {summary.red} tasks
+                    <span className="text-[10px] text-rose-600 font-medium mt-0.5 group-hover:underline">
+                      {summary.red} tasks (Audit)
                     </span>
-                  </div>
+                  </button>
                 </td>
                 <td className="py-3.5 px-4 text-center bg-amber-50/50 border-r border-amber-100">
-                  <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={() => setBreakdownModal({
+                      isOpen: true,
+                      category: 'yellow',
+                      title: 'Yellow Score Tasks (1 Revision)',
+                      doerName: '',
+                    })}
+                    className="flex flex-col items-center mx-auto hover:bg-amber-100/70 p-1.5 rounded-lg transition-colors group cursor-pointer"
+                    title="Click to view all Yellow tasks"
+                  >
                     <span className="text-base font-bold text-amber-700">
                       {summary.pctYellow !== null ? `${summary.pctYellow}%` : '—'}
                     </span>
-                    <span className="text-[10px] text-slate-400 mt-0.5">
-                      {summary.yellow} tasks
+                    <span className="text-[10px] text-amber-600 font-medium mt-0.5 group-hover:underline">
+                      {summary.yellow} tasks (Audit)
                     </span>
-                  </div>
+                  </button>
                 </td>
                 <td className="py-3.5 px-4 text-center bg-emerald-50/50">
-                  <div className="flex flex-col items-center">
+                  <button
+                    type="button"
+                    onClick={() => setBreakdownModal({
+                      isOpen: true,
+                      category: 'green',
+                      title: 'Green Score Tasks (0 Revisions / On-Time)',
+                      doerName: '',
+                    })}
+                    className="flex flex-col items-center mx-auto hover:bg-emerald-100/70 p-1.5 rounded-lg transition-colors group cursor-pointer"
+                    title="Click to view all Green tasks"
+                  >
                     <span className="text-base font-bold text-emerald-700">
                       {summary.pctGreen !== null ? `${summary.pctGreen}%` : '—'}
                     </span>
-                    <span className="text-[10px] text-slate-400 mt-0.5">
-                      {summary.green} tasks
+                    <span className="text-[10px] text-emerald-600 font-medium mt-0.5 group-hover:underline">
+                      {summary.green} tasks (Audit)
                     </span>
-                  </div>
+                  </button>
                 </td>
               </tr>
 
@@ -612,7 +723,24 @@ export default function DelegationWeeklyReportPage() {
                       }`}
                     >
                       <td className="py-3 px-4 font-medium text-slate-800">
-                        {d.doerName}
+                        <div className="flex items-center justify-between gap-2">
+                          <span>{d.doerName}</span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setBreakdownModal({
+                                isOpen: true,
+                                category: 'doer',
+                                title: `Tasks for ${d.doerName}`,
+                                doerName: d.doerName,
+                              });
+                            }}
+                            className="text-[11px] text-blue-600 hover:text-blue-800 font-medium hover:underline px-2 py-0.5 rounded bg-blue-50/70"
+                          >
+                            Inspect ({d.total})
+                          </button>
+                        </div>
                       </td>
                       <td className="py-3 px-4 text-center font-mono text-slate-700">
                         {d.total}
@@ -643,6 +771,17 @@ export default function DelegationWeeklyReportPage() {
           </div>
         </div>
       </div>
+      )}
+
+      {/* Task Audit Breakdown Modal */}
+      <DelegationWeeklyTaskBreakdownModal
+        isOpen={breakdownModal.isOpen}
+        onClose={() => setBreakdownModal((prev) => ({ ...prev, isOpen: false }))}
+        category={breakdownModal.category}
+        title={breakdownModal.title}
+        doerName={breakdownModal.doerName}
+        tasks={reportData?.tasks || []}
+      />
 
       {/* Add Delegation Modal */}
       <AddDelegationModal

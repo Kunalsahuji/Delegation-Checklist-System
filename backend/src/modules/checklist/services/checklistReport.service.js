@@ -123,6 +123,20 @@ class ChecklistReportService {
         pctNotDoneOnTime,
       },
       byDoer,
+      items: occurrences.map((occ) => ({
+        _id: occ._id,
+        title: occ.title,
+        personName: occ.assignedToName || occ.assignedTo?.name || 'Unassigned',
+        personId: occ.assignedTo?._id ? String(occ.assignedTo._id) : '',
+        departmentName: occ.departmentName || occ.department?.name || 'Company-wide',
+        plannedOn: occ.plannedOn,
+        plannedAt: occ.plannedAt,
+        frequency: occ.frequency,
+        status: occ.status,
+        completedAt: occ.completedAt,
+        remarks: occ.remarks || [],
+        isNotDone: occ.status !== 'done' || (occ.completedAt && new Date(occ.completedAt) > new Date(occ.plannedAt)),
+      })),
     };
   }
 

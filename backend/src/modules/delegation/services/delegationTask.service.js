@@ -237,6 +237,11 @@ class DelegationTaskService {
     const limit = Math.min(100, Math.max(1, parseInt(params.limit || '20', 10)));
     const skip = (page - 1) * limit;
 
+    let sortObj = { createdAt: -1, dueDate: -1 };
+    if (params.sortBy === 'dueDate_asc') sortObj = { dueDate: 1, createdAt: -1 };
+    else if (params.sortBy === 'dueDate_desc') sortObj = { dueDate: -1, createdAt: -1 };
+    else if (params.sortBy === 'oldest') sortObj = { createdAt: 1, dueDate: 1 };
+
     const [total, items] = await Promise.all([
       DelegationTask.countDocuments(filter),
       DelegationTask.find(filter)
@@ -244,7 +249,7 @@ class DelegationTaskService {
         .populate('assignedBy', 'name email')
         .populate('department', 'name key')
         .populate('project', 'name code')
-        .sort({ dueDate: 1, createdAt: -1 })
+        .sort(sortObj)
         .skip(skip)
         .limit(limit)
         .lean(),

@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const login = {
   body: Joi.object({
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email({ tlds: { allow: false } }).required().messages({
       'any.required': 'Email is required',
       'string.email': 'A valid email is required',
     }),
@@ -15,7 +15,7 @@ const login = {
 const register = {
   body: Joi.object({
     name: Joi.string().trim().min(2).max(120).required(),
-    email: Joi.string().email().required(),
+    email: Joi.string().email({ tlds: { allow: false } }).required(),
     password: Joi.string().min(6).required(),
     phone: Joi.string().allow('').optional(),
     role: Joi.string().valid('Administrator', 'Manager', 'Employee').default('Employee'),

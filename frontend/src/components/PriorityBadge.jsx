@@ -28,3 +28,5 @@ export function PriorityBadge({ priority = 'medium', className = '' }) {
     </span>
   );
 }
+
+export default PriorityBadge;

@@ -16,6 +16,7 @@ class ChecklistOccurrenceService {
     if (params.department) filter.department = params.department;
     if (params.frequency) filter.frequency = params.frequency;
     if (params.assignee) filter.assignedTo = params.assignee;
+    if (params.taskId || params.task) filter.task = params.taskId || params.task;
 
     if (params.from || params.to) {
       filter.plannedOn = {};

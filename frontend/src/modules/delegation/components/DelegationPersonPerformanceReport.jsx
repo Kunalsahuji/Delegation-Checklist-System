@@ -24,8 +24,9 @@ export default function DelegationPersonPerformanceReport({ departments = [], us
       setLoading(true);
       try {
         // Fetch full delegation items to aggregate person-wise metrics
-        const res = await delegationApi.list({ limit: 1000 });
-        const items = res?.items || res?.data?.items || [];
+        const fetchFn = delegationApi.list || delegationApi.getTasks;
+        const res = await fetchFn({ limit: 1000 });
+        const items = Array.isArray(res) ? res : res?.items || res?.data?.items || res?.data || [];
 
         const map = new Map();
 

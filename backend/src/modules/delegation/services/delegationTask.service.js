@@ -339,6 +339,44 @@ class DelegationTaskService {
       followUpDue,
     };
   }
+
+  async deleteTask(id, user) {
+    const task = await DelegationTask.findOne({ _id: id, deletedAt: null });
+    if (!task) throw new Error('Delegation task not found');
+    task.deletedAt = new Date();
+    task.updatedBy = user?._id;
+    await task.save();
+    return { success: true, message: 'Delegation task deleted' };
+  }
+
+  async addComment(id, { text }, user) {
+    const task = await DelegationTask.findOne({ _id: id, deletedAt: null });
+    if (!task) throw new Error('Delegation task not found');
+    const comment = {
+      author: user?.name || 'Administrator',
+      text,
+      at: new Date(),
+    };
+    if (!task.comments) task.comments = [];
+    task.comments.push(comment);
+    await task.save();
+    return task;
+  }
+
+  async addAttachment(id, { name, size, url }, user) {
+    const task = await DelegationTask.findOne({ _id: id, deletedAt: null });
+    if (!task) throw new Error('Delegation task not found');
+    const file = {
+      name: name || 'Document',
+      size: size || 1024,
+      url: url || '#',
+      uploadedAt: new Date(),
+    };
+    if (!task.attachments) task.attachments = [];
+    task.attachments.push(file);
+    await task.save();
+    return task;
+  }
 }
 
 module.exports = new DelegationTaskService();

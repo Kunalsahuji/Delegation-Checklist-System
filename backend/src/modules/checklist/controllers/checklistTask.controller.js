@@ -63,6 +63,24 @@ const preview = async (req, res, next) => {
   }
 };
 
+const addComment = async (req, res, next) => {
+  try {
+    const task = await checklistTaskService.addComment(req.params.id, req.body, req.user);
+    res.status(200).json({ success: true, data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addAttachment = async (req, res, next) => {
+  try {
+    const task = await checklistTaskService.addAttachment(req.params.id, req.body, req.user);
+    res.status(200).json({ success: true, data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   list,
@@ -71,4 +89,6 @@ module.exports = {
   toggleActive,
   remove,
   preview,
+  addComment,
+  addAttachment,
 };

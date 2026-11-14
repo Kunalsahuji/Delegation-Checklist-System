@@ -130,6 +130,22 @@ const delegationTaskSchema = new mongoose.Schema(
     completedByName: { type: String, trim: true, default: '' },
     cancelReason: { type: String, trim: true, default: '', maxlength: 500 },
 
+    comments: [
+      {
+        author: { type: String, trim: true, default: 'Administrator' },
+        text: { type: String, trim: true, required: true },
+        at: { type: Date, default: Date.now },
+      },
+    ],
+    attachments: [
+      {
+        name: { type: String, trim: true, required: true },
+        size: { type: Number, default: 0 },
+        url: { type: String, default: '#' },
+        uploadedAt: { type: Date, default: Date.now },
+      },
+    ],
+
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     deletedAt: { type: Date, default: null, index: true },

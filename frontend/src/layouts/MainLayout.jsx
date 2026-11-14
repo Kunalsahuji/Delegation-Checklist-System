@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
+import PageLoader from '../components/PageLoader';
 
 export const MainLayout = () => {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 font-sans text-slate-800">
+      {/* Route change transition micro-loader */}
+      <PageLoader />
+
       {/* Sidebar with mobile drawer support */}
       <Sidebar
         mobileOpen={mobileSidebarOpen}

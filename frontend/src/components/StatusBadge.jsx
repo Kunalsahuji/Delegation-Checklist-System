@@ -53,3 +53,5 @@ export function StatusBadge({ status = 'pending', className = '' }) {
     </span>
   );
 }
+
+export default StatusBadge;

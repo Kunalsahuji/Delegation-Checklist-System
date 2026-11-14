@@ -12,11 +12,13 @@ import { ChecklistTaskDrawer } from '../components/ChecklistTaskDrawer';
 import { ReportDelayModal } from '../components/ReportDelayModal';
 import { SkipModal } from '../components/SkipModal';
 import { ReassignModal } from '../components/ReassignModal';
+import ChecklistDetailPage from '../components/ChecklistDetailPage';
 
 export const ChecklistWorkspacePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const toast = useToast();
 
+  const openTaskId = searchParams.get('open');
   const activeTab = searchParams.get('tab') === 'setup' ? 'setup' : 'items';
   const page = parseInt(searchParams.get('page') || '1', 10);
 
@@ -244,102 +246,134 @@ export const ChecklistWorkspacePage = () => {
 
   return (
     <div className="space-y-4 w-full">
-      {/* Breadcrumb & Header matching Delegation and Dashboard */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-0.5">
-            <span className="text-slate-400">Checklist</span>
-            <span className="text-slate-400">/</span>
-            <span className="text-slate-800 font-semibold">{activeTab === 'items' ? 'Checklists' : 'Setup'}</span>
-            <HelpCircle className="w-3.5 h-3.5 text-slate-400 ml-1 cursor-pointer hover:text-slate-600" />
-          </div>
-          <p className="text-xs text-slate-500">
-            Recurring operational work: daily/weekly compliance, due-time tracking, and progress notes
-          </p>
-        </div>
-
-        {/* Top Controls: Segmented View + Add Button */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3">
-          {/* Segmented Tab Buttons matching Screenshot 5 */}
-          <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-xs text-xs font-medium">
-            <button
-              onClick={() => handleTabChange('items')}
-              className={`px-3 py-1.5 rounded-md transition-colors ${
-                activeTab === 'items'
-                  ? 'bg-slate-100 text-slate-900 font-semibold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Items to tick
-            </button>
-            <button
-              onClick={() => handleTabChange('setup')}
-              className={`px-3 py-1.5 rounded-md transition-colors ${
-                activeTab === 'setup'
-                  ? 'bg-slate-100 text-slate-900 font-semibold shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              Checklist setup
-            </button>
-          </div>
-
-          {/* Add Checklist Button */}
-          <button
-            onClick={() => {
-              setSelectedTask(null);
-              setDrawerOpen(true);
-            }}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Checklist</span>
-          </button>
-        </div>
-      </div>
-
-      {/* KPI strip (visible in Items to tick mode) */}
-      {activeTab === 'items' && (
-        <ChecklistKpis
-          stats={stats}
-          activeFilter={filters.slice || filters.status}
-          onSelectFilter={handleKpiSelect}
-        />
-      )}
-
-      {/* Filters Bar */}
-      <ChecklistFilters
-        filters={filters}
-        onChange={handleFilterChange}
-        onReset={handleResetFilters}
-        departments={departments}
-        users={users}
-      />
-
-      {/* Data Table */}
-      {activeTab === 'items' ? (
-        <ItemsToTickTable
-          items={occurrences}
-          loading={loading}
-          pagination={pagination}
-          onPageChange={handlePageChange}
-          onMarkDone={handleMarkDone}
-          onSkip={(item) => setSkipItem(item)}
-          onReportDelay={(item) => setDelayItem(item)}
-          onReassign={(item) => setReassignItem(item)}
-          onUndo={handleUndo}
-        />
-      ) : (
-        <ChecklistSetupTable
-          tasks={tasks}
-          loading={loading}
+      {openTaskId ? (
+        <ChecklistDetailPage
+          taskId={openTaskId}
+          onBack={() => {
+            const next = new URLSearchParams(searchParams);
+            next.delete('open');
+            setSearchParams(next);
+          }}
           onEdit={(task) => {
             setSelectedTask(task);
             setDrawerOpen(true);
           }}
-          onToggleActive={handleToggleTaskActive}
-          onDelete={handleDeleteTask}
+          onChanged={fetchData}
         />
+      ) : (
+        <>
+          {/* Breadcrumb & Header matching Delegation and Dashboard */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-0.5">
+                <span className="text-slate-400">Checklist</span>
+                <span className="text-slate-400">/</span>
+                <span className="text-slate-800 font-semibold">{activeTab === 'items' ? 'Checklists' : 'Setup'}</span>
+                <HelpCircle className="w-3.5 h-3.5 text-slate-400 ml-1 cursor-pointer hover:text-slate-600" />
+              </div>
+              <p className="text-xs text-slate-500">
+                Recurring operational work: daily/weekly compliance, due-time tracking, and progress notes
+              </p>
+            </div>
+
+            {/* Top Controls: Segmented View + Add Button */}
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3">
+              {/* Segmented Tab Buttons matching Screenshot 5 */}
+              <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-xs text-xs font-medium">
+                <button
+                  onClick={() => handleTabChange('items')}
+                  className={`px-3 py-1.5 rounded-md transition-colors ${
+                    activeTab === 'items'
+                      ? 'bg-slate-100 text-slate-900 font-semibold shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Items to tick
+                </button>
+                <button
+                  onClick={() => handleTabChange('setup')}
+                  className={`px-3 py-1.5 rounded-md transition-colors ${
+                    activeTab === 'setup'
+                      ? 'bg-slate-100 text-slate-900 font-semibold shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Checklist setup
+                </button>
+              </div>
+
+              {/* Add Checklist Button */}
+              <button
+                onClick={() => {
+                  setSelectedTask(null);
+                  setDrawerOpen(true);
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Checklist</span>
+              </button>
+            </div>
+          </div>
+
+          {/* KPI strip (visible in Items to tick mode) */}
+          {activeTab === 'items' && (
+            <ChecklistKpis
+              stats={stats}
+              activeFilter={filters.slice || filters.status}
+              onSelectFilter={handleKpiSelect}
+            />
+          )}
+
+          {/* Filters Bar */}
+          <ChecklistFilters
+            filters={filters}
+            onChange={handleFilterChange}
+            onReset={handleResetFilters}
+            departments={departments}
+            users={users}
+          />
+
+          {/* Data Table */}
+          {activeTab === 'items' ? (
+            <ItemsToTickTable
+              items={occurrences}
+              loading={loading}
+              pagination={pagination}
+              onPageChange={handlePageChange}
+              onOpenChecklist={(taskId) => {
+                if (taskId) {
+                  const next = new URLSearchParams(searchParams);
+                  next.set('open', taskId);
+                  setSearchParams(next);
+                }
+              }}
+              onMarkDone={handleMarkDone}
+              onSkip={(item) => setSkipItem(item)}
+              onReportDelay={(item) => setDelayItem(item)}
+              onReassign={(item) => setReassignItem(item)}
+              onUndo={handleUndo}
+            />
+          ) : (
+            <ChecklistSetupTable
+              tasks={tasks}
+              loading={loading}
+              onOpenChecklist={(taskId) => {
+                if (taskId) {
+                  const next = new URLSearchParams(searchParams);
+                  next.set('open', taskId);
+                  setSearchParams(next);
+                }
+              }}
+              onEdit={(task) => {
+                setSelectedTask(task);
+                setDrawerOpen(true);
+              }}
+              onToggleActive={handleToggleTaskActive}
+              onDelete={handleDeleteTask}
+            />
+          )}
+        </>
       )}
 
       {/* Slide-Over Drawer for Add/Edit Checklist Definition */}

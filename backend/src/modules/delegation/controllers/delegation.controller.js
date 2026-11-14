@@ -81,6 +81,33 @@ const stats = async (req, res, next) => {
   }
 };
 
+const remove = async (req, res, next) => {
+  try {
+    const result = await delegationTaskService.deleteTask(req.params.id, req.user);
+    res.status(200).json({ success: true, ...result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addComment = async (req, res, next) => {
+  try {
+    const task = await delegationTaskService.addComment(req.params.id, req.body, req.user);
+    res.status(200).json({ success: true, data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const addAttachment = async (req, res, next) => {
+  try {
+    const task = await delegationTaskService.addAttachment(req.params.id, req.body, req.user);
+    res.status(200).json({ success: true, data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   list,
@@ -91,4 +118,7 @@ module.exports = {
   reassign,
   followUp,
   stats,
+  remove,
+  addComment,
+  addAttachment,
 };

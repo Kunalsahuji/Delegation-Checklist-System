@@ -19,6 +19,8 @@ router.get('/tasks', rbac('checklist:read'), taskCtrl.list);
 router.post('/tasks/preview', rbac('checklist:create'), validate(v.preview), taskCtrl.preview);
 router.post('/tasks', rbac('checklist:create'), validate(v.createTask), taskCtrl.create);
 router.get('/tasks/:id', rbac('checklist:read'), taskCtrl.getOne);
+router.post('/tasks/:id/comment', rbac('checklist:read'), taskCtrl.addComment);
+router.post('/tasks/:id/attachment', rbac('checklist:read'), taskCtrl.addAttachment);
 router.patch('/tasks/:id', rbac('checklist:update'), validate(v.updateTask), taskCtrl.update);
 router.patch('/tasks/:id/active', rbac('checklist:update'), taskCtrl.toggleActive);
 router.delete('/tasks/:id', rbac('checklist:delete'), taskCtrl.remove);

@@ -16,6 +16,11 @@ export const delegationApi = {
     return res;
   },
 
+  list: async (params = {}) => {
+    const res = await axiosClient.get('/delegation', { params: cleanParams(params) });
+    return res;
+  },
+
   getStats: async (params = {}) => {
     const res = await axiosClient.get('/delegation/stats', { params: cleanParams(params) });
     return res?.data !== undefined ? res.data : res;
@@ -33,6 +38,21 @@ export const delegationApi = {
 
   updateTask: async (id, payload) => {
     const res = await axiosClient.patch(`/delegation/${id}`, payload);
+    return res?.data !== undefined ? res.data : res;
+  },
+
+  deleteTask: async (id) => {
+    const res = await axiosClient.delete(`/delegation/${id}`);
+    return res?.data !== undefined ? res.data : res;
+  },
+
+  addComment: async (id, { text }) => {
+    const res = await axiosClient.post(`/delegation/${id}/comment`, { text });
+    return res?.data !== undefined ? res.data : res;
+  },
+
+  addAttachment: async (id, { name, size, url }) => {
+    const res = await axiosClient.post(`/delegation/${id}/attachment`, { name, size, url });
     return res?.data !== undefined ? res.data : res;
   },
 

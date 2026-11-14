@@ -10,12 +10,14 @@ import AddDelegationModal from '../components/AddDelegationModal';
 import ChangeDateModal from '../components/ChangeDateModal';
 import DelegationReportDelayModal from '../components/DelegationReportDelayModal';
 import DelegationDetailDrawer from '../components/DelegationDetailDrawer';
+import DelegationDetailPage from '../components/DelegationDetailPage';
 
 export default function DelegationWorkspacePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlStatus = searchParams.get('status') || 'all';
   const urlSlice = searchParams.get('slice') || '';
   const initialSlice = urlSlice || (urlStatus !== 'all' ? urlStatus : 'all');
+  const openTaskId = searchParams.get('open');
 
   const [stats, setStats] = useState(null);
   const [tasks, setTasks] = useState([]);
@@ -247,71 +249,95 @@ export default function DelegationWorkspacePage() {
         </div>
       )}
 
-      {/* Breadcrumb & Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-0.5">
-            <span className="text-slate-400">Delegation</span>
-            <span className="text-slate-400">/</span>
-            <span className="text-slate-800 font-semibold">Delegation</span>
-            <HelpCircle className="w-3.5 h-3.5 text-slate-400 ml-1 cursor-pointer hover:text-slate-600" />
+      {openTaskId ? (
+        <DelegationDetailPage
+          taskId={openTaskId}
+          onBack={() => {
+            const next = new URLSearchParams(searchParams);
+            next.delete('open');
+            setSearchParams(next);
+            setSelectedTask(null);
+          }}
+          onReviseDate={(task) => setReviseTask(task)}
+          onReportDelay={(task) => setDelayTask(task)}
+          onChanged={() => {
+            loadTasks();
+            loadStats();
+          }}
+        />
+      ) : (
+        <>
+          {/* Breadcrumb & Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-0.5">
+                <span className="text-slate-400">Delegation</span>
+                <span className="text-slate-400">/</span>
+                <span className="text-slate-800 font-semibold">Delegation</span>
+                <HelpCircle className="w-3.5 h-3.5 text-slate-400 ml-1 cursor-pointer hover:text-slate-600" />
+              </div>
+              <p className="text-xs text-slate-500">
+                Assigned work and due-date tracking
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => { loadTasks(); loadStats(); }}
+                className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
+                title="Refresh list"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsAddOpen(true)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Delegation</span>
+              </button>
+            </div>
           </div>
-          <p className="text-xs text-slate-500">
-            Assigned work and due-date tracking
-          </p>
-        </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => { loadTasks(); loadStats(); }}
-            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
-            title="Refresh list"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
+          {/* KPI Cards */}
+          <DelegationKpis
+            stats={stats}
+            activeSlice={activeSlice}
+            onSelectSlice={handleSliceSelect}
+            loading={statsLoading}
+          />
 
-          <button
-            type="button"
-            onClick={() => setIsAddOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Delegation</span>
-          </button>
-        </div>
-      </div>
+          {/* Filter Bar */}
+          <DelegationFilters
+            filters={filters}
+            onChange={handleFilterChange}
+            onReset={handleResetFilters}
+            users={users}
+            departments={departments}
+            projects={projects}
+          />
 
-      {/* KPI Cards */}
-      <DelegationKpis
-        stats={stats}
-        activeSlice={activeSlice}
-        onSelectSlice={handleSliceSelect}
-        loading={statsLoading}
-      />
-
-      {/* Filter Bar */}
-      <DelegationFilters
-        filters={filters}
-        onChange={handleFilterChange}
-        onReset={handleResetFilters}
-        users={users}
-        departments={departments}
-        projects={projects}
-      />
-
-      {/* Delegation Data Table */}
-      <DelegationTable
-        tasks={tasks}
-        pagination={pagination}
-        loading={loading}
-        onPageChange={handlePageChange}
-        onOpenTask={(task) => setSelectedTask(task)}
-        onComplete={handleComplete}
-        onReopen={handleReopen}
-        onReviseDate={(task) => setReviseTask(task)}
-        onReportDelay={(task) => setDelayTask(task)}
-      />
+          {/* Delegation Data Table */}
+          <DelegationTable
+            tasks={tasks}
+            pagination={pagination}
+            loading={loading}
+            onPageChange={handlePageChange}
+            onOpenTask={(task) => {
+              const next = new URLSearchParams(searchParams);
+              next.set('open', task._id);
+              setSearchParams(next);
+            }}
+            onComplete={handleComplete}
+            onReopen={handleReopen}
+            onReviseDate={(task) => setReviseTask(task)}
+            onReportDelay={(task) => setDelayTask(task)}
+          />
+        </>
+      )}
 
       {/* Modals & Drawers */}
       <AddDelegationModal

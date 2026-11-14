@@ -10,23 +10,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
-
-const formatCivilDate = (dateStr) => {
-  if (!dateStr) return '-';
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return '-';
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const day = String(d.getUTCDate()).padStart(2, '0');
-  const month = months[d.getUTCMonth()];
-  const year = d.getUTCFullYear();
-  return `${day}-${month}-${year}`;
-};
-
-const getInitials = (name = '') => {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
+import { formatCivilDate } from '../../../utils/civilDate';
 
 export default function DelegationTable({
   tasks = [],
@@ -46,23 +30,23 @@ export default function DelegationTable({
   today.setUTCHours(0, 0, 0, 0);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden flex flex-col w-full">
       {/* Scrollable table container */}
-      <div className="overflow-x-auto min-h-[380px]">
+      <div className="overflow-x-auto min-h-[380px] w-full">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="bg-slate-50/75 border-b border-slate-200 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-              <th className="py-3 px-3 w-12 text-center">S. No.</th>
-              <th className="py-3 px-3 min-w-[150px]">Doer Name</th>
-              <th className="py-3 px-3 min-w-[240px]">Task</th>
-              <th className="py-3 px-3 min-w-[100px]">Planned Date</th>
-              <th className="py-3 px-3 min-w-[100px]">Current Due</th>
-              <th className="py-3 px-3 min-w-[110px]">Revision</th>
-              <th className="py-3 px-3 min-w-[130px]">Project</th>
-              <th className="py-3 px-3 min-w-[80px]">Priority</th>
-              <th className="py-3 px-3 min-w-[120px]">Status</th>
-              <th className="py-3 px-3 min-w-[190px] text-right">Action</th>
-              <th className="py-3 px-2 w-10 text-center">Files</th>
+              <th className="py-2.5 px-2 w-10 text-center">S. No.</th>
+              <th className="py-2.5 px-2.5 min-w-[130px] max-w-[160px]">Doer Name</th>
+              <th className="py-2.5 px-2.5 min-w-[200px]">Task</th>
+              <th className="py-2.5 px-2 min-w-[90px] whitespace-nowrap">Planned Date</th>
+              <th className="py-2.5 px-2 min-w-[90px] whitespace-nowrap">Current Due</th>
+              <th className="py-2.5 px-2 min-w-[80px] whitespace-nowrap">Revision</th>
+              <th className="py-2.5 px-2 min-w-[110px]">Project</th>
+              <th className="py-2.5 px-2 min-w-[75px]">Priority</th>
+              <th className="py-2.5 px-2 min-w-[100px]">Status</th>
+              <th className="py-2.5 px-2 min-w-[150px] text-right">Action</th>
+              <th className="py-2.5 px-1.5 w-10 text-center">Files</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -98,56 +82,51 @@ export default function DelegationTable({
                     className="hover:bg-blue-50/30 transition-colors group"
                   >
                     {/* S. No */}
-                    <td className="py-3 px-3 text-center text-slate-500 font-mono text-[11px]">
+                    <td className="py-2.5 px-2 text-center text-slate-500 font-mono text-[11px]">
                       {sNo}
                     </td>
 
-                    {/* Doer Name */}
-                    <td className="py-3 px-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-semibold text-[11px] flex items-center justify-center flex-shrink-0">
-                          {getInitials(task.assignedToName)}
-                        </div>
-                        <span className="font-medium text-slate-800 truncate max-w-[130px]" title={task.assignedToName}>
-                          {task.assignedToName || 'Unassigned'}
-                        </span>
-                      </div>
+                    {/* Doer Name (clean text, no initials badge - matching Tangdi Image 1) */}
+                    <td className="py-2.5 px-2.5">
+                      <span className="font-medium text-slate-800 text-xs truncate block" title={task.assignedToName}>
+                        {task.assignedToName || 'Unassigned'}
+                      </span>
                     </td>
 
-                    {/* Task Title + Code */}
-                    <td className="py-3 px-3">
+                    {/* Task Title + Code with hover underline effect */}
+                    <td className="py-2.5 px-2.5">
                       <div className="flex flex-col">
                         <button
                           type="button"
                           onClick={() => onOpenTask(task)}
-                          className="text-left font-medium text-slate-800 hover:text-blue-600 transition-colors line-clamp-1"
+                          className="text-left font-medium text-slate-900 hover:text-blue-600 hover:underline transition-colors line-clamp-1 cursor-pointer block text-xs"
                           title={task.title}
                         >
                           {task.title}
+                          <span className="ml-1.5 font-mono text-[10px] text-slate-400 font-normal">
+                            {task.code}
+                          </span>
                         </button>
-                        <span className="text-[10px] font-mono text-slate-400 mt-0.5">
-                          {task.code}
-                        </span>
                       </div>
                     </td>
 
                     {/* Planned Date */}
-                    <td className="py-3 px-3 text-slate-600 whitespace-nowrap">
+                    <td className="py-2.5 px-2 text-slate-600 whitespace-nowrap text-xs">
                       {formatCivilDate(task.originalDueDate)}
                     </td>
 
                     {/* Current Due */}
-                    <td className="py-3 px-3 whitespace-nowrap">
+                    <td className="py-2.5 px-2 whitespace-nowrap text-xs">
                       <span className={`font-medium ${isOverdue ? 'text-rose-600 font-semibold' : 'text-slate-700'}`}>
                         {formatCivilDate(task.dueDate)}
                       </span>
                     </td>
 
                     {/* Revision */}
-                    <td className="py-3 px-3 whitespace-nowrap">
+                    <td className="py-2.5 px-2 whitespace-nowrap text-xs">
                       {task.revisionCount > 0 ? (
                         <div className="flex flex-col">
-                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                          <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
                             Revised {task.revisionCount}x
                           </span>
                           {task.revisions?.[task.revisions.length - 1]?.diffDays && (
@@ -162,14 +141,14 @@ export default function DelegationTable({
                     </td>
 
                     {/* Project */}
-                    <td className="py-3 px-3">
-                      <span className="inline-block max-w-[130px] truncate text-slate-600 bg-slate-100/70 px-2 py-0.5 rounded text-[11px]">
+                    <td className="py-2.5 px-2">
+                      <span className="inline-block max-w-[120px] truncate text-slate-600 bg-slate-100/70 px-1.5 py-0.5 rounded text-[11px]">
                         {task.project?.name || 'Company-wide'}
                       </span>
                     </td>
 
                     {/* Priority */}
-                    <td className="py-3 px-3">
+                    <td className="py-2.5 px-2">
                       <span className={`inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide ${
                         task.priority === 'high'
                           ? 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -182,8 +161,8 @@ export default function DelegationTable({
                     </td>
 
                     {/* Status */}
-                    <td className="py-3 px-3">
-                      <div className="flex flex-col gap-1 items-start">
+                    <td className="py-2.5 px-2">
+                      <div className="flex flex-col gap-0.5 items-start">
                         {task.status === 'completed' && (
                           <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -222,28 +201,28 @@ export default function DelegationTable({
                     </td>
 
                     {/* Actions */}
-                    <td className="py-3 px-3 text-right">
-                      <div className="inline-flex items-center justify-end gap-1.5 flex-wrap">
+                    <td className="py-2.5 px-2 text-right">
+                      <div className="inline-flex items-center justify-end gap-1 flex-wrap">
                         {task.status === 'pending' ? (
                           <>
                             <button
                               type="button"
                               onClick={() => onComplete(task)}
-                              className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                              className="px-2 py-0.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
                             >
                               Complete
                             </button>
                             <button
                               type="button"
                               onClick={() => onReportDelay(task)}
-                              className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                              className="px-1.5 py-0.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
                             >
                               Report delay
                             </button>
                             <button
                               type="button"
                               onClick={() => onReviseDate(task)}
-                              className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                              className="px-1.5 py-0.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
                             >
                               Change date
                             </button>
@@ -252,7 +231,7 @@ export default function DelegationTable({
                           <button
                             type="button"
                             onClick={() => onReopen(task)}
-                            className="px-2.5 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded text-[11px] font-medium transition-colors"
+                            className="px-2 py-0.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded text-[11px] font-medium transition-colors"
                           >
                             Reopen
                           </button>
@@ -260,9 +239,16 @@ export default function DelegationTable({
                       </div>
                     </td>
 
-                    {/* Files */}
-                    <td className="py-3 px-2 text-center text-slate-400 hover:text-slate-600 cursor-pointer">
-                      <Paperclip className="w-3.5 h-3.5 mx-auto" />
+                    {/* Files / Attachments */}
+                    <td className="py-2.5 px-1.5 text-center">
+                      <button
+                        type="button"
+                        onClick={() => onOpenTask(task)}
+                        className="p-1 text-slate-400 hover:text-blue-600 transition-colors inline-flex items-center justify-center rounded hover:bg-slate-100"
+                        title="View attachments"
+                      >
+                        <Paperclip className="w-3.5 h-3.5" />
+                      </button>
                     </td>
                   </tr>
                 );
@@ -273,7 +259,7 @@ export default function DelegationTable({
       </div>
 
       {/* Responsive Pagination Footer */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 border-t border-slate-200 bg-white text-xs text-slate-500">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 border-t border-slate-200 bg-white text-xs text-slate-500">
         <div className="text-center sm:text-left">
           Showing <span className="font-semibold text-slate-700">{total === 0 ? 0 : startIndex + 1}</span> to{' '}
           <span className="font-semibold text-slate-700">{Math.min(startIndex + limit, total)}</span> of{' '}
@@ -285,13 +271,13 @@ export default function DelegationTable({
             type="button"
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
-            className="inline-flex items-center gap-1 px-3 py-1.5 border border-slate-200 rounded-md bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors text-slate-700"
+            className="inline-flex items-center gap-1 px-2.5 py-1 border border-slate-200 rounded-md bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors text-slate-700 text-xs"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             <span>Previous</span>
           </button>
 
-          <span className="px-2 font-medium text-slate-600">
+          <span className="px-2 font-medium text-slate-600 text-xs">
             Page {page} of {totalPages || 1}
           </span>
 
@@ -299,7 +285,7 @@ export default function DelegationTable({
             type="button"
             disabled={page >= totalPages}
             onClick={() => onPageChange(page + 1)}
-            className="inline-flex items-center gap-1 px-3 py-1.5 border border-slate-200 rounded-md bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors text-slate-700"
+            className="inline-flex items-center gap-1 px-2.5 py-1 border border-slate-200 rounded-md bg-white hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors text-slate-700 text-xs"
           >
             <span>Next</span>
             <ChevronRight className="w-3.5 h-3.5" />

@@ -241,6 +241,35 @@ class ChecklistTaskService {
       instant: plannedInstant(d, options.dueTime || '18:00'),
     }));
   }
+
+  async addComment(id, { text }, user) {
+    const task = await ChecklistTask.findOne({ _id: id, deletedAt: null });
+    if (!task) throw new Error('Checklist task not found');
+    const comment = {
+      author: user?.name || 'Administrator',
+      text,
+      at: new Date(),
+    };
+    if (!task.comments) task.comments = [];
+    task.comments.push(comment);
+    await task.save();
+    return task;
+  }
+
+  async addAttachment(id, { name, size, url }, user) {
+    const task = await ChecklistTask.findOne({ _id: id, deletedAt: null });
+    if (!task) throw new Error('Checklist task not found');
+    const file = {
+      name: name || 'Document',
+      size: size || 1024,
+      url: url || '#',
+      uploadedAt: new Date(),
+    };
+    if (!task.attachments) task.attachments = [];
+    task.attachments.push(file);
+    await task.save();
+    return task;
+  }
 }
 
 module.exports = new ChecklistTaskService();

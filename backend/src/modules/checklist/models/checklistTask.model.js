@@ -18,6 +18,21 @@ const checklistTaskSchema = new mongoose.Schema(
     skipHolidays: { type: Boolean, default: false },
     project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', default: null, index: true },
     active: { type: Boolean, default: true, index: true },
+    comments: [
+      {
+        author: { type: String, trim: true, default: 'Administrator' },
+        text: { type: String, trim: true, required: true },
+        at: { type: Date, default: Date.now },
+      },
+    ],
+    attachments: [
+      {
+        name: { type: String, trim: true, required: true },
+        size: { type: Number, default: 0 },
+        url: { type: String, default: '#' },
+        uploadedAt: { type: Date, default: Date.now },
+      },
+    ],
     materialisedThrough: { type: Date, default: null },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },

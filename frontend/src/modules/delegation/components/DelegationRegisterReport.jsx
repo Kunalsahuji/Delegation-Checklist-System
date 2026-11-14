@@ -57,8 +57,9 @@ export default function DelegationRegisterReport({ departments = [], users = [],
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     try {
+      const fetchFn = delegationApi.list || delegationApi.getTasks;
       const [res, statsRes] = await Promise.all([
-        delegationApi.list({
+        fetchFn({
           page,
           limit,
           q: search,

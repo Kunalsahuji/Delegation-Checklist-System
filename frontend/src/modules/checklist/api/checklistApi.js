@@ -47,5 +47,7 @@ export const checklistApi = {
   updateTask: (id, data) => axiosClient.patch(`/checklist/tasks/${id}`, data),
   toggleTaskActive: (id) => axiosClient.patch(`/checklist/tasks/${id}/active`),
   deleteTask: (id) => axiosClient.delete(`/checklist/tasks/${id}`),
+  addComment: (id, data) => axiosClient.post(`/checklist/tasks/${id}/comment`, data),
+  addAttachment: (id, data) => axiosClient.post(`/checklist/tasks/${id}/attachment`, data),
   previewDates: (data) => axiosClient.post('/checklist/tasks/preview', data),
 };

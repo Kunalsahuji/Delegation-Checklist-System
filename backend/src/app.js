@@ -18,12 +18,30 @@ app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, postman) or matching origins
-      if (!origin || config.corsOrigin.includes(origin) || origin.startsWith('http://localhost:')) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
+      // Allow requests with no origin (like mobile apps, curl, postman)
+      if (!origin) return callback(null, true);
+
+      // Check wildcard or exact match in configured corsOrigin
+      if (config.corsOrigin.includes('*') || config.corsOrigin.includes(origin)) {
+        return callback(null, true);
       }
+
+      // Allow local development servers
+      if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+        return callback(null, true);
+      }
+
+      // Allow Vercel deployments (*.vercel.app)
+      try {
+        const hostname = new URL(origin).hostname;
+        if (hostname.endsWith('.vercel.app') || hostname.endsWith('.onrender.com')) {
+          return callback(null, true);
+        }
+      } catch (e) {
+        // invalid URL format, ignore
+      }
+
+      return callback(new Error(`Not allowed by CORS: ${origin}`));
     },
     credentials: true,
   })
@@ -37,13 +55,14 @@ if (config.env === 'development') {
   app.use(morgan('dev'));
 }
 
-// Health check endpoint
-app.get(`${config.apiPrefix}/health`, (req, res) => {
+// Health check endpoints (supports Render default `/` or `/health` and `/api/v1/health`)
+app.get(['/', '/health', `${config.apiPrefix}/health`], (req, res) => {
   res.status(200).json({
     status: 'OK',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
     service: 'TaskFlow ERP API',
+    env: config.env,
   });
 });
 

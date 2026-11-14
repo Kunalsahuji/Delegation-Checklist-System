@@ -56,3 +56,7 @@ ehthumbs.db
 # Uploads & User Generated Files
 uploads/
 backend/uploads/
+
+# Documentation & Internal Specs
+docs/
+docs

@@ -1,0 +1,20 @@
+{
+  "name": "taskflow-erp",
+  "private": true,
+  "version": "1.0.0",
+  "description": "TaskFlow ERP - Delegation & Checklist Management System",
+  "scripts": {
+    "install:backend": "npm --prefix backend install",
+    "install:frontend": "npm --prefix frontend install",
+    "install:all": "npm install && npm run install:backend && npm run install:frontend",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "concurrently --names BACKEND,FRONTEND --prefix-colors cyan,magenta --kill-others-on-fail \"npm:dev:backend\" \"npm:dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

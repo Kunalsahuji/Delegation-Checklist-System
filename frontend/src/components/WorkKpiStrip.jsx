@@ -1,4 +1,5 @@
 import React from 'react';
+import MetricInfoBadge from './MetricInfoBadge';
 
 const TONES = {
   default: 'text-slate-900',
@@ -42,9 +43,18 @@ export default function WorkKpiStrip({
                 onClick={item.onClick}
                 className="flex h-full w-full flex-col items-start justify-start px-3.5 py-2.5 text-left outline-none transition-colors hover:bg-slate-50 focus-visible:bg-slate-50"
               >
-                <span className="block w-full truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">
-                  {item.label}
-                </span>
+                <div className="flex items-center justify-between w-full gap-1 mb-0.5">
+                  <span className="block truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">
+                    {item.label}
+                  </span>
+                  {item.info && (
+                    <MetricInfoBadge
+                      title={item.info.title || item.label}
+                      summary={item.info.summary}
+                      calculation={item.info.calculation}
+                    />
+                  )}
+                </div>
                 {loading ? (
                   <span className="mt-1 block h-6 w-12 animate-pulse rounded bg-slate-200/70" />
                 ) : (

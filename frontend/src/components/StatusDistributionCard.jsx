@@ -1,4 +1,5 @@
 import React from 'react';
+import MetricInfoBadge from './MetricInfoBadge';
 
 /**
  * Enterprise Status Distribution Card
@@ -36,9 +37,16 @@ export default function StatusDistributionCard({
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col justify-between min-w-0">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-[13px] font-semibold text-slate-800">
-          {title}
-        </h3>
+        <div className="flex items-center gap-1.5">
+          <h3 className="text-[13px] font-semibold text-slate-800">
+            {title}
+          </h3>
+          <MetricInfoBadge
+            title="Status Distribution"
+            summary="Visual breakdown of work by execution status."
+            calculation="Count in each status divided by total active tasks (excluding cancelled tasks)."
+          />
+        </div>
         {activeStatus && (
           <button
             type="button"

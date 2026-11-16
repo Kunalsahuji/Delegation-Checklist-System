@@ -19,6 +19,7 @@ import ChangeDateModal from '../components/ChangeDateModal';
 import DelegationReportDelayModal from '../components/DelegationReportDelayModal';
 import StatusDistributionCard from '../../../components/StatusDistributionCard';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
+import MetricInfoBadge from '../../../components/MetricInfoBadge';
 
 const formatCivilDate = (dateStr) => {
   if (!dateStr) return '-';
@@ -192,6 +193,11 @@ export default function DelegationDashboardPage() {
             tone: 'default',
             hint: 'Including completed and cancelled',
             onClick: () => navigate('/delegation/list?status=all'),
+            info: {
+              title: 'Total Work',
+              summary: 'Every delegated task in the company within the current scope.',
+              calculation: 'Completed + Pending + Overdue + Week Shifted + Cancelled tasks in the system.',
+            },
           },
           {
             key: 'completed',
@@ -200,6 +206,11 @@ export default function DelegationDashboardPage() {
             tone: completed > 0 ? 'success' : 'default',
             hint: `${completionRate}% completion rate`,
             onClick: () => navigate('/delegation/list?status=completed'),
+            info: {
+              title: 'Completed Tasks',
+              summary: 'Delegated tasks successfully finished and signed off.',
+              calculation: 'Tasks with status = "completed". Excludes ongoing or cancelled tasks.',
+            },
           },
           {
             key: 'pending',
@@ -208,6 +219,11 @@ export default function DelegationDashboardPage() {
             tone: 'default',
             hint: overdue ? `${overdue} of them overdue` : 'Awaiting action',
             onClick: () => navigate('/delegation/list?status=pending'),
+            info: {
+              title: 'Pending Tasks',
+              summary: 'Active tasks awaiting action that are not yet finished or cancelled.',
+              calculation: 'Tasks with status = "pending" or "weekShifted" (including those overdue).',
+            },
           },
           {
             key: 'overdue',
@@ -216,6 +232,11 @@ export default function DelegationDashboardPage() {
             tone: overdue > 0 ? 'danger' : 'default',
             hint: 'Past due deadline',
             onClick: () => navigate('/delegation/list?status=overdue'),
+            info: {
+              title: 'Overdue Work',
+              summary: 'Pending tasks whose due date has passed.',
+              calculation: 'Status in [pending, weekShifted] AND due date < today (00:00 IST).',
+            },
           },
           {
             key: 'weekShifted',
@@ -224,6 +245,11 @@ export default function DelegationDashboardPage() {
             tone: weekShifted > 0 ? 'orange' : 'default',
             hint: 'Did not happen in the week it was due',
             onClick: () => navigate('/delegation/list?slice=weekShifted'),
+            info: {
+              title: 'Week Shifted Tasks',
+              summary: 'Tasks whose due date has moved beyond the original week it was due.',
+              calculation: 'Tasks whose due date was postponed into a later calendar week.',
+            },
           },
         ]}
       />
@@ -280,9 +306,16 @@ export default function DelegationDashboardPage() {
         {/* Card 2: Completion Overview */}
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col justify-between min-w-0">
           <div className="space-y-3">
-            <h3 className="text-[13px] font-semibold text-slate-800">
-              Completion overview
-            </h3>
+            <div className="flex items-center gap-1.5">
+              <h3 className="text-[13px] font-semibold text-slate-800">
+                Completion overview
+              </h3>
+              <MetricInfoBadge
+                title="Completion Overview"
+                summary="On-time vs delayed completion metrics across active tasks."
+                calculation="Completed tasks / Total active tasks (excluding cancelled) * 100%."
+              />
+            </div>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-semibold tabular-nums text-slate-900 leading-none">
                 {completionRate}%
@@ -313,9 +346,16 @@ export default function DelegationDashboardPage() {
         {/* Card 3: Top Employees Leaderboard */}
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col justify-between min-w-0">
           <div>
-            <h3 className="mb-3 text-[13px] font-semibold text-slate-800">
-              Top employees
-            </h3>
+            <div className="flex items-center gap-1.5 mb-3">
+              <h3 className="text-[13px] font-semibold text-slate-800">
+                Top employees
+              </h3>
+              <MetricInfoBadge
+                title="Top Employees Leaderboard"
+                summary="Individual compliance score and completed volume per employee."
+                calculation="Completed tasks / Assigned tasks * 100% per user, ranked by score."
+              />
+            </div>
 
             <div className="space-y-2.5">
               <ul className="space-y-2.5">
@@ -366,6 +406,11 @@ export default function DelegationDashboardPage() {
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               OVERDUE {overdueTasks.length}
             </h3>
+            <MetricInfoBadge
+              title="Overdue Tasks"
+              summary="Direct list of all past-due delegated tasks needing immediate completion or rescheduling."
+              calculation="Tasks with status pending or weekShifted and due date < today."
+            />
           </div>
           <button
             type="button"
@@ -491,6 +536,11 @@ export default function DelegationDashboardPage() {
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               WEEK SHIFTED & REVISED {revisedTasks.length}
             </h3>
+            <MetricInfoBadge
+              title="Week Shifted & Revised"
+              summary="Tasks whose deadline has moved from the original plan, tracking revisions and slipped days."
+              calculation="Tasks with revisionCount > 0 or status = 'weekShifted'."
+            />
           </div>
           <button
             type="button"

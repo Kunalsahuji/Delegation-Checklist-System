@@ -19,6 +19,7 @@ import { SkipModal } from '../components/SkipModal';
 import { ReassignModal } from '../components/ReassignModal';
 import StatusDistributionCard from '../../../components/StatusDistributionCard';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
+import MetricInfoBadge from '../../../components/MetricInfoBadge';
 import { formatCivilDate, formatBusinessTime } from '../../../utils/civilDate';
 
 export default function ChecklistDashboardPage() {
@@ -194,6 +195,11 @@ export default function ChecklistDashboardPage() {
             tone: 'default',
             hint: 'Everything due up to today',
             onClick: () => navigate('/checklist/list?status=all'),
+            info: {
+              title: 'Total Work',
+              summary: 'All recurring operational compliance occurrences due up to today.',
+              calculation: 'Completed + Pending + Overdue + Skipped occurrences through today.',
+            },
           },
           {
             key: 'done',
@@ -202,6 +208,11 @@ export default function ChecklistDashboardPage() {
             tone: completed > 0 ? 'success' : 'default',
             hint: `${completionRate}% completed`,
             onClick: () => navigate('/checklist/list?status=done'),
+            info: {
+              title: 'Completed Occurrences',
+              summary: 'Checklist items verified and ticked Done.',
+              calculation: 'Occurrences with status = "done".',
+            },
           },
           {
             key: 'pending',
@@ -210,6 +221,11 @@ export default function ChecklistDashboardPage() {
             tone: 'default',
             hint: overdue ? `${overdue} of them overdue` : 'Up to date',
             onClick: () => navigate('/checklist/list?status=pending'),
+            info: {
+              title: 'Pending Checklist Work',
+              summary: 'Scheduled checklist occurrences currently open and awaiting completion.',
+              calculation: 'Occurrences with status = "pending" scheduled for today or overdue.',
+            },
           },
           {
             key: 'overdue',
@@ -218,6 +234,11 @@ export default function ChecklistDashboardPage() {
             tone: overdue > 0 ? 'danger' : 'default',
             hint: 'Requires immediate action',
             onClick: () => navigate('/checklist/list?status=overdue'),
+            info: {
+              title: 'Overdue Checklist Items',
+              summary: 'Occurrences whose scheduled deadline (date and IST time) has passed.',
+              calculation: 'Status = "pending" AND plannedAt < current time.',
+            },
           },
           {
             key: 'today',
@@ -226,6 +247,11 @@ export default function ChecklistDashboardPage() {
             tone: dueToday > 0 ? 'sky' : 'default',
             hint: 'Due before end of day',
             onClick: () => navigate('/checklist/list?slice=today'),
+            info: {
+              title: 'Due Today',
+              summary: 'Checklist occurrences whose planned execution date is today.',
+              calculation: 'Occurrences with plannedOn = today.',
+            },
           },
         ]}
       />
@@ -275,9 +301,16 @@ export default function ChecklistDashboardPage() {
         {/* Card 2: Completion Overview */}
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col justify-between min-w-0">
           <div className="space-y-3">
-            <h3 className="text-[13px] font-semibold text-slate-800">
-              Completion overview
-            </h3>
+            <div className="flex items-center gap-1.5">
+              <h3 className="text-[13px] font-semibold text-slate-800">
+                Completion overview
+              </h3>
+              <MetricInfoBadge
+                title="Completion Overview"
+                summary="Overall percentage of compliance items completed out of items fallen due."
+                calculation="Completed items / Due items (skipped excluded) * 100%."
+              />
+            </div>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-semibold tabular-nums text-slate-900 leading-none">
                 {completionRate}%
@@ -307,9 +340,16 @@ export default function ChecklistDashboardPage() {
         {/* Card 3: Top Employees */}
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs flex flex-col justify-between min-w-0">
           <div>
-            <h3 className="mb-3 text-[13px] font-semibold text-slate-800">
-              Top employees
-            </h3>
+            <div className="flex items-center gap-1.5 mb-3">
+              <h3 className="text-[13px] font-semibold text-slate-800">
+                Top employees
+              </h3>
+              <MetricInfoBadge
+                title="Top Employees"
+                summary="Top individual compliance performers by completion rate and completed items."
+                calculation="Completed checklist occurrences / assigned occurrences * 100%."
+              />
+            </div>
 
             <div className="space-y-2.5">
               <ul className="space-y-2.5">
@@ -356,9 +396,16 @@ export default function ChecklistDashboardPage() {
       {/* OVERDUE Section */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-            OVERDUE {overdueItems.length}
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              OVERDUE {overdueItems.length}
+            </h3>
+            <MetricInfoBadge
+              title="Overdue Checklist Items"
+              summary="Recurring operational items whose scheduled date and time has passed without being marked Done."
+              calculation="Occurrences with status pending and plannedAt < current time."
+            />
+          </div>
           <button
             type="button"
             onClick={() => navigate('/checklist/list?status=overdue')}
@@ -474,6 +521,11 @@ export default function ChecklistDashboardPage() {
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
               WEEK SHIFTED & REVISED {revisedItems.length}
             </h3>
+            <MetricInfoBadge
+              title="Week Shifted & Revised Checklists"
+              summary="Checklist items with recorded delay progress notes, shifted expected dates, or reassignments."
+              calculation="Occurrences with progressCount > 0, expectedDate set, or reassignmentCount > 0."
+            />
           </div>
           <button
             type="button"

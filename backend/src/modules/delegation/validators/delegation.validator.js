@@ -100,7 +100,7 @@ const list = {
     department: Joi.string().hex().length(24).allow('', null).optional(),
     project: Joi.string().hex().length(24).allow('', null).optional(),
     priority: Joi.string().valid('low', 'medium', 'high', '').allow('').optional(),
-    slice: Joi.string().valid('all', 'pending', 'completed', 'dueToday', 'overdue', 'weekShifted', 'followUpDue', '').allow('', null).optional(),
+    slice: Joi.string().valid('all', 'pending', 'completed', 'dueToday', 'overdue', 'weekShifted', 'revised', 'followUpDue', '').allow('', null).optional(),
     from: Joi.date().iso().allow('', null).optional(),
     to: Joi.date().iso().allow('', null).optional(),
     page: Joi.number().integer().min(1).default(1),

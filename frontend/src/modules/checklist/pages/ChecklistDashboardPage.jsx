@@ -18,14 +18,7 @@ import { ReportDelayModal } from '../components/ReportDelayModal';
 import { SkipModal } from '../components/SkipModal';
 import { ReassignModal } from '../components/ReassignModal';
 import StatusDistributionCard from '../../../components/StatusDistributionCard';
-
-const formatCivilDate = (dateStr) => {
-  if (!dateStr) return '-';
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return '-';
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return `${String(d.getUTCDate()).padStart(2, '0')}-${months[d.getUTCMonth()]}-${d.getUTCFullYear()}`;
-};
+import { formatCivilDate, formatBusinessTime } from '../../../utils/civilDate';
 
 export default function ChecklistDashboardPage() {
   const navigate = useNavigate();
@@ -412,50 +405,78 @@ export default function ChecklistDashboardPage() {
               No overdue checklist items! All recurring operational tasks are up to date.
             </div>
           ) : (
-            overdueItems.map((item) => (
-              <div key={item._id} className="p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
-                <div>
-                  <h4 className="text-xs font-semibold text-slate-800">{item.taskTitle}</h4>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    {item.assignedToName || 'Unassigned'} • {item.project?.name || 'Company-wide'} • {item.frequency || 'Daily'}
-                  </p>
-                </div>
+            overdueItems.map((item) => {
+              const taskId = item.task?._id || item.task || item._id;
+              const title = item.title || item.task?.title || item.taskTitle || 'Untitled task';
+              const time = formatBusinessTime(item.plannedAt);
+              const freq = item.frequency
+                ? item.frequency.charAt(0).toUpperCase() + item.frequency.slice(1)
+                : '';
+              const subtitle = [
+                item.assignedToName || 'Unassigned',
+                item.departmentName,
+                item.project?.name,
+                freq,
+              ]
+                .filter(Boolean)
+                .join(' · ');
 
-                <div className="flex items-center gap-2 self-start md:self-auto flex-wrap">
-                  <span className="text-xs font-semibold text-rose-600">
-                    {formatCivilDate(item.plannedOn)}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleComplete(item)}
-                    className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
-                  >
-                    Done
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSkipOcc(item)}
-                    className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                  >
-                    Skip
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDelayOcc(item)}
-                    className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                  >
-                    Report delay
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setReassignOcc(item)}
-                    className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                  >
-                    Reassign task
-                  </button>
+              return (
+                <div key={item._id} className="p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/checklist/list?open=${taskId}`)}
+                      className="text-left font-semibold text-slate-900 hover:text-blue-600 hover:underline transition-colors block text-xs cursor-pointer truncate max-w-full"
+                    >
+                      {title}
+                    </button>
+                    <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                      {subtitle}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-start md:self-auto flex-wrap shrink-0">
+                    <span className="text-xs font-semibold text-rose-600 whitespace-nowrap">
+                      {formatCivilDate(item.plannedOn || item.plannedAt)}
+                      {time && (
+                        <span className="text-[11px] text-slate-500 font-normal">
+                          {` · by ${time}`}
+                        </span>
+                      )}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleComplete(item)}
+                      className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                    >
+                      Done
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSkipOcc(item)}
+                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                    >
+                      Skip
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDelayOcc(item)}
+                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                    >
+                      Report delay
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setReassignOcc(item)}
+                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                    >
+                      Reassign task
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

@@ -218,6 +218,12 @@ class DelegationTaskService {
       filter.status = 'cancelled';
     } else if (params.status === 'weekShifted' || params.slice === 'weekShifted') {
       filter.status = 'weekShifted';
+    } else if (params.slice === 'revised') {
+      filter.$or = [
+        { revisionCount: { $gt: 0 } },
+        { status: 'weekShifted' },
+        { 'revisions.0': { $exists: true } },
+      ];
     } else if (params.status === 'overdue' || params.slice === 'overdue') {
       filter.status = 'pending';
       filter.dueDate = { $lt: today };
@@ -238,7 +244,8 @@ class DelegationTaskService {
     const skip = (page - 1) * limit;
 
     let sortObj = { createdAt: -1, dueDate: -1 };
-    if (params.sortBy === 'dueDate_asc') sortObj = { dueDate: 1, createdAt: -1 };
+    if (params.slice === 'revised') sortObj = { revisionCount: -1, updatedAt: -1 };
+    else if (params.sortBy === 'dueDate_asc') sortObj = { dueDate: 1, createdAt: -1 };
     else if (params.sortBy === 'dueDate_desc') sortObj = { dueDate: -1, createdAt: -1 };
     else if (params.sortBy === 'oldest') sortObj = { createdAt: 1, dueDate: 1 };
 
@@ -261,10 +268,15 @@ class DelegationTaskService {
         task.dueDate &&
         toCivilDate(task.dueDate) < today;
 
+      const origDate = task.originalDueDate ? new Date(task.originalDueDate).getTime() : null;
+      const dueDate = task.dueDate ? new Date(task.dueDate).getTime() : null;
+      const slippedDays = (origDate && dueDate) ? Math.max(0, Math.round((dueDate - origDate) / (1000 * 60 * 60 * 24))) : 0;
+
       return {
         ...task,
         isOverdue,
         derivedStatus: isOverdue ? 'overdue' : task.status,
+        slippedDays,
       };
     });
 

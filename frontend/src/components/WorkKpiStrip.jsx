@@ -38,10 +38,17 @@ export default function WorkKpiStrip({
                 isOddLast ? 'col-span-2 sm:col-span-1' : ''
               }`}
             >
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={item.onClick}
-                className="flex h-full w-full flex-col items-start justify-start px-3.5 py-2.5 text-left outline-none transition-colors hover:bg-slate-50 focus-visible:bg-slate-50"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.onClick?.();
+                  }
+                }}
+                className="flex h-full w-full flex-col items-start justify-start px-3.5 py-2.5 text-left outline-none transition-colors hover:bg-slate-50 focus-visible:bg-slate-50 cursor-pointer select-none"
               >
                 <div className="flex items-center justify-between w-full gap-1 mb-0.5">
                   <span className="block truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">
@@ -67,7 +74,7 @@ export default function WorkKpiStrip({
                     {item.hint}
                   </span>
                 )}
-              </button>
+              </div>
             </div>
           );
         })}

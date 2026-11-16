@@ -11,6 +11,7 @@ const authRoutes = require('./modules/auth/routes/auth.route');
 const masterRoutes = require('./modules/master/routes/master.route');
 const checklistRoutes = require('./modules/checklist/routes/checklist.route');
 const delegationRoutes = require('./modules/delegation/routes/delegation.route');
+const crmRoutes = require('./modules/crm/routes/crm.route');
 
 const app = express();
 
@@ -71,6 +72,7 @@ app.use(`${config.apiPrefix}/auth`, authRoutes);
 app.use(`${config.apiPrefix}/master`, masterRoutes);
 app.use(`${config.apiPrefix}/checklist`, checklistRoutes);
 app.use(`${config.apiPrefix}/delegation`, delegationRoutes);
+app.use(`${config.apiPrefix}/crm`, crmRoutes);
 
 // Master shortcuts / aliases (/api/v1/users, /api/v1/departments, /api/v1/projects)
 app.use(`${config.apiPrefix}/users`, (req, res, next) => {

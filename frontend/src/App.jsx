@@ -14,6 +14,7 @@ import ChecklistWeeklyReportPage from './modules/checklist/pages/ChecklistWeekly
 import DelegationWorkspacePage from './modules/delegation/pages/DelegationWorkspacePage';
 import DelegationDashboardPage from './modules/delegation/pages/DelegationDashboardPage';
 import DelegationWeeklyReportPage from './modules/delegation/pages/DelegationWeeklyReportPage';
+import ProjectsPage from './modules/crm/pages/ProjectsPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -61,6 +62,9 @@ export default function App() {
               <Route path="delegation/dashboard" element={<DelegationDashboardPage />} />
               <Route path="delegation/list" element={<DelegationWorkspacePage />} />
               <Route path="delegation/report" element={<DelegationWeeklyReportPage />} />
+
+              {/* CRM routes */}
+              <Route path="crm/projects" element={<ProjectsPage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

@@ -13,6 +13,7 @@ import {
   LogOut,
   ShieldCheck,
   ChevronsUpDown,
+  Building2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -25,6 +26,9 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
   );
   const [delegationOpen, setDelegationOpen] = useState(
     location.pathname.startsWith('/delegation')
+  );
+  const [crmOpen, setCrmOpen] = useState(
+    location.pathname.startsWith('/crm') || true
   );
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -204,6 +208,41 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                 }
               >
                 Weekly Report
+              </NavLink>
+            </div>
+          )}
+        </div>
+
+        {/* CRM Section */}
+        <div className="pt-2">
+          <button
+            onClick={() => setCrmOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <Building2 className="w-4 h-4 text-brand-600" />
+              <span>CRM</span>
+            </div>
+            {crmOpen ? (
+              <ChevronDown className="w-4 h-4 text-slate-400" />
+            ) : (
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            )}
+          </button>
+
+          {crmOpen && (
+            <div className="ml-7 pl-2 mt-1 space-y-0.5 border-l border-slate-200">
+              <NavLink
+                to="/crm/projects"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Projects & Inventory
               </NavLink>
             </div>
           )}

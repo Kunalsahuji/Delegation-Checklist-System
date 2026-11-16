@@ -56,6 +56,11 @@ export const delegationApi = {
     return res?.data !== undefined ? res.data : res;
   },
 
+  deleteAttachment: async (id, attachmentId) => {
+    const res = await axiosClient.delete(`/delegation/${id}/attachment/${attachmentId}`);
+    return res?.data !== undefined ? res.data : res;
+  },
+
   reviseDate: async (id, { newDueDate, reason, kind = 'revise' }) => {
     const res = await axiosClient.post(`/delegation/${id}/revise`, { newDueDate, reason, kind });
     return res?.data !== undefined ? res.data : res;

@@ -108,8 +108,27 @@ const addAttachment = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const task = await delegationTaskService.updateTask(req.params.id, req.body, req.user);
+    res.status(200).json({ success: true, data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeAttachment = async (req, res, next) => {
+  try {
+    const task = await delegationTaskService.deleteAttachment(req.params.id, req.params.attachmentId, req.user);
+    res.status(200).json({ success: true, data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   create,
+  update,
   list,
   getOne,
   revise,
@@ -121,4 +140,5 @@ module.exports = {
   remove,
   addComment,
   addAttachment,
+  removeAttachment,
 };

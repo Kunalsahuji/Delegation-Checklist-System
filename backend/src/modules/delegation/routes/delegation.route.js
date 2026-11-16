@@ -18,9 +18,11 @@ router.get('/stats', rbac('delegation:read'), ctrl.stats);
 router.post('/', rbac('delegation:create'), validate(v.create), ctrl.create);
 
 router.get('/:id', rbac('delegation:read'), ctrl.getOne);
+router.patch('/:id', rbac('delegation:update'), validate(v.update), ctrl.update);
 router.delete('/:id', rbac('delegation:delete'), ctrl.remove);
 router.post('/:id/comment', rbac('delegation:read'), ctrl.addComment);
 router.post('/:id/attachment', rbac('delegation:read'), ctrl.addAttachment);
+router.delete('/:id/attachment/:attachmentId', rbac('delegation:read'), ctrl.removeAttachment);
 router.post('/:id/revise', rbac('delegation:revise'), validate(v.revise), ctrl.revise);
 router.patch('/:id/status', rbac('delegation:read'), validate(v.setStatus), ctrl.setStatus);
 router.post('/:id/progress', rbac('delegation:read'), validate(v.reportProgress), ctrl.reportProgress);

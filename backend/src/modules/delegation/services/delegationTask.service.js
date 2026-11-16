@@ -83,6 +83,70 @@ class DelegationTaskService {
     return task;
   }
 
+  async updateTask(id, data, user) {
+    const task = await DelegationTask.findOne({ _id: id, deletedAt: null });
+    if (!task) throw new Error('Delegation task not found');
+
+    if (data.title !== undefined) task.title = data.title;
+    if (data.description !== undefined) task.description = data.description;
+    if (data.priority !== undefined) task.priority = data.priority;
+    if (data.workType !== undefined) task.workType = data.workType;
+    if (data.proofRequired !== undefined) task.proofRequired = Boolean(data.proofRequired);
+    if (data.verificationRequired !== undefined) task.verificationRequired = Boolean(data.verificationRequired);
+
+    if (data.startDate !== undefined) {
+      task.startDate = data.startDate ? toCivilDate(data.startDate) : null;
+    }
+
+    if (data.department !== undefined) {
+      if (data.department) {
+        const dept = await Department.findById(data.department);
+        task.department = dept ? dept._id : null;
+        task.departmentName = dept ? dept.name : '';
+      } else {
+        task.department = null;
+        task.departmentName = '';
+      }
+    }
+
+    if (data.project !== undefined) {
+      task.project = data.project || null;
+    }
+
+    const newAssigneeId = data.assignedToId || data.assignedTo;
+    if (newAssigneeId && String(newAssigneeId) !== String(task.assignedTo)) {
+      const targetUser = await User.findById(newAssigneeId);
+      if (targetUser) {
+        task.reassignments.push({
+          fromUser: task.assignedTo,
+          fromUserName: task.assignedToName,
+          toUser: targetUser._id,
+          toUserName: targetUser.name,
+          reason: data.reassignReason || 'Reassigned during task edit',
+          requestedBy: user._id,
+          requestedAt: new Date(),
+        });
+        task.reassignmentCount = task.reassignments.length;
+        task.assignedTo = targetUser._id;
+        task.assignedToName = targetUser.name;
+      }
+    }
+
+    if (data.followUpRequired !== undefined) {
+      task.followUp = task.followUp || {};
+      task.followUp.required = Boolean(data.followUpRequired);
+      if (data.followUpOn) {
+        task.followUp.nextOn = toCivilDate(data.followUpOn);
+      } else if (!data.followUpRequired) {
+        task.followUp.nextOn = null;
+      }
+    }
+
+    task.updatedBy = user._id;
+    await task.save();
+    return task;
+  }
+
   async setStatus(id, { status, cancelReason = '' }, user) {
     const task = await DelegationTask.findOne({ _id: id, deletedAt: null });
     if (!task) throw new Error('Delegation task not found');
@@ -386,6 +450,17 @@ class DelegationTaskService {
     };
     if (!task.attachments) task.attachments = [];
     task.attachments.push(file);
+    await task.save();
+    return task;
+  }
+
+  async deleteAttachment(id, attachmentId, user) {
+    const task = await DelegationTask.findOne({ _id: id, deletedAt: null });
+    if (!task) throw new Error('Delegation task not found');
+    task.attachments = (task.attachments || []).filter(
+      (a) => String(a._id) !== String(attachmentId)
+    );
+    task.updatedBy = user?._id;
     await task.save();
     return task;
   }

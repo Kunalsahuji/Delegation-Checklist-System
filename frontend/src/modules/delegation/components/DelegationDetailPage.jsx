@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   ArrowLeft,
   Calendar,
@@ -9,6 +9,7 @@ import {
   FolderKanban,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   RotateCcw,
   Trash2,
   Paperclip,
@@ -18,11 +19,22 @@ import {
   MessageSquare,
   Activity,
   Plus,
+  UserCheck,
+  Edit,
+  Download,
+  ExternalLink,
+  Ban,
+  Check,
 } from 'lucide-react';
 import { delegationApi } from '../api/delegationApi';
 import StatusBadge from '../../../components/StatusBadge';
 import PriorityBadge from '../../../components/PriorityBadge';
 import { formatCivilDate } from '../../../utils/civilDate';
+import ChangeDateModal from './ChangeDateModal';
+import DelegationReportDelayModal from './DelegationReportDelayModal';
+import EditDelegationModal from './EditDelegationModal';
+import ReassignTaskModal from './ReassignTaskModal';
+import CancelTaskModal from './CancelTaskModal';
 
 const formatDateTime = (date) => {
   if (!date) return '—';
@@ -37,11 +49,21 @@ const formatDateTime = (date) => {
   });
 };
 
+const getFileExtension = (name = '') => {
+  const parts = name.split('.');
+  if (parts.length > 1) {
+    return parts.pop().toUpperCase().slice(0, 4);
+  }
+  return 'FILE';
+};
+
+const isImageFile = (name = '', url = '') => {
+  return /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(name) || (typeof url === 'string' && url.startsWith('data:image/'));
+};
+
 export default function DelegationDetailPage({
   taskId,
   onBack,
-  onReviseDate,
-  onReportDelay,
   onChanged,
 }) {
   const [task, setTask] = useState(null);
@@ -49,7 +71,16 @@ export default function DelegationDetailPage({
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState('');
   const [commentText, setCommentText] = useState('');
+
+  // Modals state
+  const [showChangeDateModal, setShowChangeDateModal] = useState(false);
+  const [showReportDelayModal, setShowReportDelayModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showReassignModal, setShowReassignModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const fileInputRef = useRef(null);
 
   const fetchTask = useCallback(async () => {
     try {
@@ -71,6 +102,7 @@ export default function DelegationDetailPage({
     }
   }, [taskId, fetchTask]);
 
+  // Actions
   const handleComplete = async () => {
     try {
       setBusy('complete');
@@ -119,6 +151,7 @@ export default function DelegationDetailPage({
       await delegationApi.addComment(task._id, { text: commentText.trim() });
       setCommentText('');
       await fetchTask();
+      onChanged?.();
     } catch (err) {
       alert(err.message || 'Failed to add comment');
     } finally {
@@ -126,22 +159,85 @@ export default function DelegationDetailPage({
     }
   };
 
-  const handleAddAttachment = async () => {
-    const fileName = window.prompt('Enter attachment name or document title:', 'Inspection_Report.pdf');
-    if (!fileName) return;
+  // Real File Upload
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
+    if (!files.length) return;
+
     try {
       setBusy('attach');
-      await delegationApi.addAttachment(task._id, {
-        name: fileName,
-        size: Math.floor(Math.random() * 800 + 120) * 1024,
-        url: '#',
-      });
+      for (const file of files) {
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        await delegationApi.addAttachment(task._id, {
+          name: file.name,
+          size: file.size,
+          url: dataUrl,
+        });
+      }
       await fetchTask();
+      onChanged?.();
     } catch (err) {
       alert(err.message || 'Failed to attach file');
     } finally {
       setBusy('');
     }
+  };
+
+  const handleDeleteAttachment = async (attachmentId) => {
+    if (!window.confirm('Are you sure you want to remove this attachment?')) return;
+    try {
+      setBusy(`delete-file-${attachmentId}`);
+      await delegationApi.deleteAttachment(task._id, attachmentId);
+      await fetchTask();
+      onChanged?.();
+    } catch (err) {
+      alert(err.message || 'Failed to delete attachment');
+    } finally {
+      setBusy('');
+    }
+  };
+
+  // Modal Handlers
+  const handleReviseDateSubmit = async (id, data) => {
+    await delegationApi.reviseDate(id, data);
+    setShowChangeDateModal(false);
+    await fetchTask();
+    onChanged?.();
+  };
+
+  const handleReportDelaySubmit = async (id, data) => {
+    await delegationApi.reportProgress(id, data);
+    setShowReportDelayModal(false);
+    await fetchTask();
+    onChanged?.();
+  };
+
+  const handleEditSubmit = async (id, data) => {
+    await delegationApi.updateTask(id, data);
+    setShowEditModal(false);
+    await fetchTask();
+    onChanged?.();
+  };
+
+  const handleReassignSubmit = async (id, data) => {
+    await delegationApi.reassign(id, data);
+    setShowReassignModal(false);
+    await fetchTask();
+    onChanged?.();
+  };
+
+  const handleCancelSubmit = async (id, reason) => {
+    await delegationApi.setStatus(id, { status: 'cancelled', cancelReason: reason });
+    setShowCancelModal(false);
+    await fetchTask();
+    onChanged?.();
   };
 
   if (loading) {
@@ -174,13 +270,17 @@ export default function DelegationDetailPage({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const dueDateObj = new Date(task.dueDate);
-  const isOverdue = task.status === 'pending' && dueDateObj < today;
+  const isOverdue = (task.status === 'pending' || task.status === 'weekShifted') && dueDateObj < today;
   const isCompleted = task.status === 'completed';
+  const isCancelled = task.status === 'cancelled';
+  const isOpen = task.status === 'pending' || task.status === 'weekShifted';
   const revisions = task.revisions || [];
   const comments = task.comments || [];
   const attachments = task.attachments || [];
+  const reassignments = task.reassignments || [];
+  const progressRemarks = task.progressRemarks || [];
 
-  // Stage timeline calculation
+  // Stage timeline matching Tangdi
   const steps = [
     {
       key: 'delegated',
@@ -190,23 +290,39 @@ export default function DelegationDetailPage({
     },
     {
       key: 'due',
-      state: isCompleted ? 'done' : isOverdue ? 'problem' : 'active',
+      state: isCompleted ? 'done' : isCancelled ? 'problem' : isOverdue ? 'problem' : 'active',
       label: 'Due',
       sub: formatCivilDate(task.dueDate),
     },
-    {
-      key: 'completed',
-      state: isCompleted ? 'done' : 'pending',
-      label: 'Completed',
-      sub: isCompleted ? formatCivilDate(task.completedAt || task.updatedAt) : '',
-    },
+    isCancelled
+      ? {
+          key: 'cancelled',
+          state: 'problem',
+          label: 'Cancelled',
+          sub: formatCivilDate(task.updatedAt),
+        }
+      : {
+          key: 'completed',
+          state: isCompleted ? 'done' : 'pending',
+          label: 'Completed',
+          sub: isCompleted ? formatCivilDate(task.completedAt || task.updatedAt) : '',
+        },
   ];
 
   return (
     <div className="space-y-3.5 w-full max-w-7xl mx-auto pb-10">
+      {/* Hidden File Picker Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+
       {/* Top Header & Actions Card */}
       <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
           <div className="min-w-0 flex-1">
             {/* Badges strip */}
             <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -244,59 +360,105 @@ export default function DelegationDetailPage({
             )}
           </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-2 shrink-0 self-start md:self-auto">
-            {isCompleted ? (
+          {/* Action buttons matching Tangdi Screenshot 1 */}
+          <div className="flex flex-col items-start lg:items-end gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              {isOpen && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleComplete}
+                    disabled={Boolean(busy)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors min-h-[34px]"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Complete</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowReportDelayModal(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg shadow-xs transition-colors min-h-[34px]"
+                  >
+                    <Clock className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Report delay</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowChangeDateModal(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg shadow-xs transition-colors min-h-[34px]"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Change date</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowReassignModal(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg shadow-xs transition-colors min-h-[34px]"
+                  >
+                    <UserCheck className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Reassign task</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg shadow-xs transition-colors min-h-[34px]"
+                  >
+                    <Edit className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Edit</span>
+                  </button>
+                </>
+              )}
+
+              {(isCompleted || isCancelled) && (
+                <button
+                  type="button"
+                  onClick={handleReopen}
+                  disabled={busy === 'reopen'}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-colors min-h-[34px]"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Reopen</span>
+                </button>
+              )}
+            </div>
+
+            {/* Row 2: Cancel task & Delete links */}
+            <div className="flex items-center gap-3 text-xs pt-0.5">
+              {isOpen && (
+                <button
+                  type="button"
+                  onClick={() => setShowCancelModal(true)}
+                  className="text-slate-600 hover:text-slate-900 font-medium hover:underline transition-colors"
+                >
+                  Cancel task
+                </button>
+              )}
               <button
                 type="button"
-                onClick={handleReopen}
-                disabled={busy === 'reopen'}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-colors"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="text-rose-600 hover:text-rose-700 font-medium hover:underline transition-colors"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reopen</span>
+                Delete
               </button>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={handleComplete}
-                  disabled={busy === 'complete'}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Complete</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onReviseDate?.(task)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-colors"
-                >
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>Change date</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onReportDelay?.(task)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg shadow-xs transition-colors"
-                >
-                  <Clock className="w-3.5 h-3.5" />
-                  <span>Report delay</span>
-                </button>
-              </>
-            )}
-
-            <button
-              type="button"
-              onClick={() => setShowDeleteConfirm(true)}
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg text-xs font-semibold transition-colors"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Delete</span>
-            </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Cancellation Banner */}
+      {isCancelled && (
+        <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex items-start gap-3 text-xs text-rose-800">
+          <Ban className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-bold block">This task was cancelled</span>
+            <span className="text-rose-700">Reason: {task.cancelReason || 'Cancelled by manager'}</span>
+          </div>
+        </div>
+      )}
 
       {/* Details Card: Information Grid */}
       <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs">
@@ -395,7 +557,6 @@ export default function DelegationDetailPage({
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-4">
               Progress
             </h3>
-            {/* Horizontal Timeline Track matching Tangdi StageTrack */}
             <ol className="flex items-start">
               {steps.map((s, i) => (
                 <li key={s.key} className="relative flex min-w-0 flex-1 flex-col items-center text-center">
@@ -427,6 +588,34 @@ export default function DelegationDetailPage({
             </ol>
           </div>
 
+          {/* Progress Remarks (Delays) if any */}
+          {progressRemarks.length > 0 && (
+            <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs">
+              <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-amber-500" />
+                Progress & Delay Updates ({progressRemarks.length})
+              </h3>
+              <div className="space-y-2.5 divide-y divide-slate-100">
+                {progressRemarks.map((pr, idx) => (
+                  <div key={pr._id || idx} className="pt-2 first:pt-0 text-xs">
+                    <div className="flex items-center justify-between text-[11px] mb-0.5">
+                      <span className="font-semibold text-slate-800">
+                        {pr.byName || 'Assignee'}
+                      </span>
+                      <span className="text-slate-400 font-mono text-[10px]">
+                        {formatDateTime(pr.at)}
+                      </span>
+                    </div>
+                    <p className="text-slate-700 italic">"{pr.note}"</p>
+                    <div className="text-[10px] text-amber-700 font-medium mt-1">
+                      Expected completion: {formatCivilDate(pr.expectedDate)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Date History Card */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs">
             <div className="flex items-center justify-between mb-3">
@@ -437,45 +626,47 @@ export default function DelegationDetailPage({
               <span className="text-[11px] text-slate-400">Never overwritten</span>
             </div>
 
-            <div className="space-y-2.5">
-              <div className="flex items-start gap-2.5 text-xs pb-2 border-b border-slate-100">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-slate-800">
-                    Original date {formatCivilDate(task.originalDueDate)}
-                  </div>
-                  <div className="text-[11px] text-slate-400">
-                    {revisions.length === 0
-                      ? 'The date has never been moved.'
-                      : 'Initial target baseline recorded at assignment.'}
-                  </div>
-                </div>
-              </div>
+            <ol className="relative space-y-4 border-l border-slate-200 pl-5 text-xs">
+              <li className="relative">
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full bg-blue-600 ring-4 ring-white"
+                />
+                <p className="font-semibold text-slate-900">
+                  Original date {formatCivilDate(task.originalDueDate)}
+                </p>
+                <p className="text-[11px] text-slate-500">Never overwritten.</p>
+              </li>
 
               {revisions.map((rev, idx) => (
-                <div key={rev._id || idx} className="flex items-start gap-2.5 text-xs pb-2 border-b border-slate-100 last:border-0">
-                  <div className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-semibold text-slate-800">
-                        Revision #{idx + 1}: Moved to {formatCivilDate(rev.toDate)}
-                      </span>
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        {formatDateTime(rev.changedAt)}
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-slate-500 italic mt-0.5">
-                      "{rev.reason}"
-                    </div>
-                    {rev.changedByName && (
-                      <div className="text-[10px] text-slate-400 mt-0.5">
-                        by {rev.changedByName}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <li key={rev._id || idx} className="relative">
+                  <span
+                    aria-hidden="true"
+                    className={`absolute -left-[25px] top-1.5 h-2.5 w-2.5 rounded-full ring-4 ring-white ${
+                      rev.kind === 'weekShift' ? 'bg-amber-500' : 'bg-slate-400'
+                    }`}
+                  />
+                  <p className="flex flex-wrap items-center gap-2 font-medium text-slate-900">
+                    <span>
+                      {formatCivilDate(rev.fromDate)} → {formatCivilDate(rev.toDate)}
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600">
+                      {rev.kind === 'weekShift' ? 'Week shifted' : 'Revised'}
+                    </span>
+                  </p>
+                  <p className="text-[11px] text-slate-700 mt-0.5">"{rev.reason || '—'}"</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">
+                    {rev.changedByName || 'Administrator'} · {formatDateTime(rev.changedAt)}
+                  </p>
+                </li>
               ))}
-            </div>
+
+              {revisions.length === 0 && (
+                <li className="text-[11px] text-slate-400 italic">
+                  The date has never been moved.
+                </li>
+              )}
+            </ol>
           </div>
 
           {/* Comments Section */}
@@ -491,7 +682,7 @@ export default function DelegationDetailPage({
                 onChange={(e) => setCommentText(e.target.value)}
                 placeholder="Add a comment..."
                 rows={2}
-                className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none text-slate-800"
+                className="w-full text-xs p-2.5 border border-slate-200 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none text-slate-800"
               />
               <div className="flex justify-end mt-1.5">
                 <button
@@ -534,12 +725,12 @@ export default function DelegationDetailPage({
               </h3>
               <button
                 type="button"
-                onClick={handleAddAttachment}
+                onClick={() => fileInputRef.current?.click()}
                 disabled={busy === 'attach'}
                 className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
               >
                 <Plus className="w-3 h-3" />
-                <span>Add file</span>
+                <span>+ Add file</span>
               </button>
             </div>
 
@@ -551,37 +742,90 @@ export default function DelegationDetailPage({
               </div>
             ) : (
               <div className="space-y-2">
-                {attachments.map((file, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between p-2 rounded-lg border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors text-xs"
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <FileText className="w-4 h-4 text-blue-500 shrink-0" />
-                      <div className="truncate">
-                        <p className="font-medium text-slate-800 truncate">{file.name}</p>
-                        <p className="text-[10px] text-slate-400">{Math.round((file.size || 1024) / 1024)} KB</p>
+                {attachments.map((file, idx) => {
+                  const isImg = isImageFile(file.name, file.url);
+                  const ext = getFileExtension(file.name);
+                  const isBusyDeleting = busy === `delete-file-${file._id}`;
+
+                  return (
+                    <div
+                      key={file._id || idx}
+                      className="flex items-center justify-between p-2 rounded-lg border border-slate-100 bg-slate-50/70 hover:bg-slate-100/70 transition-colors text-xs group"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        {isImg && file.url && file.url !== '#' ? (
+                          <a
+                            href={file.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block h-9 w-9 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-white"
+                          >
+                            <img src={file.url} alt={file.name} className="h-full w-full object-cover" />
+                          </a>
+                        ) : (
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-[9px] font-bold text-slate-600">
+                            {ext}
+                          </span>
+                        )}
+
+                        <div className="truncate min-w-0 flex-1">
+                          <a
+                            href={file.url && file.url !== '#' ? file.url : undefined}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="font-medium text-slate-800 hover:text-blue-600 truncate block transition-colors"
+                            title={file.name}
+                          >
+                            {file.name}
+                          </a>
+                          <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                            <span>{Math.round((file.size || 1024) / 1024)} KB</span>
+                            <span>•</span>
+                            <span>{formatCivilDate(file.uploadedAt)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 shrink-0 ml-2">
+                        {file.url && file.url !== '#' && (
+                          <a
+                            href={file.url}
+                            download={file.name}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1 text-slate-400 hover:text-blue-600 rounded transition-colors"
+                            title="Download file"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteAttachment(file._id)}
+                          disabled={isBusyDeleting}
+                          className="p-1 text-slate-400 hover:text-rose-600 rounded transition-colors opacity-70 group-hover:opacity-100"
+                          title="Remove attachment"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     </div>
-                    <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-2">
-                      {formatCivilDate(file.uploadedAt)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
 
-          {/* Activity Timeline Card */}
+          {/* Activity Timeline Card matching Tangdi Screenshot 1 */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs">
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
               <Activity className="w-3.5 h-3.5 text-slate-400" />
               Activity
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-3 text-xs">
               {isCompleted && (
-                <div className="flex items-start gap-2.5 text-xs">
+                <div className="flex items-start gap-2.5">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-slate-800">Marked complete</p>
@@ -592,8 +836,38 @@ export default function DelegationDetailPage({
                 </div>
               )}
 
+              {isCancelled && (
+                <div className="flex items-start gap-2.5">
+                  <div className="w-2 h-2 rounded-full bg-rose-500 mt-1.5 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-slate-800">Cancelled</p>
+                    <p className="text-[10px] text-slate-400">
+                      {task.cancelReason} · {formatDateTime(task.updatedAt)}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {reassignments.map((ra, i) => (
+                <div key={ra._id || i} className="flex items-start gap-2.5">
+                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-slate-800">Reassigned</p>
+                    <p className="text-[11px] text-slate-600">
+                      From {ra.fromUserName} to {ra.toUserName}
+                    </p>
+                    {ra.reason && (
+                      <p className="text-[10px] text-slate-400 italic">"{ra.reason}"</p>
+                    )}
+                    <p className="text-[10px] text-slate-400 mt-0.5">
+                      {formatDateTime(ra.requestedAt)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
               {revisions.map((r, i) => (
-                <div key={i} className="flex items-start gap-2.5 text-xs">
+                <div key={r._id || i} className="flex items-start gap-2.5">
                   <div className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-slate-800">Due date revised</p>
@@ -604,7 +878,7 @@ export default function DelegationDetailPage({
                 </div>
               ))}
 
-              <div className="flex items-start gap-2.5 text-xs">
+              <div className="flex items-start gap-2.5">
                 <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-slate-800">Created</p>
@@ -617,6 +891,46 @@ export default function DelegationDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Change Date Modal */}
+      <ChangeDateModal
+        task={task}
+        isOpen={showChangeDateModal}
+        onClose={() => setShowChangeDateModal(false)}
+        onSubmit={handleReviseDateSubmit}
+      />
+
+      {/* Report Delay Modal */}
+      <DelegationReportDelayModal
+        task={task}
+        isOpen={showReportDelayModal}
+        onClose={() => setShowReportDelayModal(false)}
+        onSubmit={handleReportDelaySubmit}
+      />
+
+      {/* Edit Delegation Modal */}
+      <EditDelegationModal
+        task={task}
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSaved={handleEditSubmit}
+      />
+
+      {/* Reassign Task Modal */}
+      <ReassignTaskModal
+        task={task}
+        isOpen={showReassignModal}
+        onClose={() => setShowReassignModal(false)}
+        onReassigned={handleReassignSubmit}
+      />
+
+      {/* Cancel Task Modal */}
+      <CancelTaskModal
+        task={task}
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        onCancel={handleCancelSubmit}
+      />
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (

@@ -376,6 +376,18 @@ export default function DelegationDashboardPage() {
           </button>
         </div>
 
+        {/* Table column headers */}
+        <div className="hidden lg:flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+          <div className="flex-1 min-w-0 pr-4">Task Title & Doer / Project</div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="w-24 text-left">Planned Date</span>
+            <span className="w-24 text-left">Due Date</span>
+            <span className="w-24 text-center">Status</span>
+            <span className="w-20 text-center">Revisions</span>
+            <span className="w-56 text-right pr-1">Actions</span>
+          </div>
+        </div>
+
         <div className="divide-y divide-slate-100">
           {overdueTasks.length === 0 ? (
             <div className="p-6 text-center text-xs text-slate-400">
@@ -392,8 +404,8 @@ export default function DelegationDashboardPage() {
                 .join(' · ');
 
               return (
-                <div key={t._id} className="p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
-                  <div className="min-w-0 flex-1">
+                <div key={t._id} className="p-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="min-w-0 flex-1 pr-4">
                     <button
                       type="button"
                       onClick={() => navigate(`/delegation/list?open=${t._id}`)}
@@ -412,47 +424,58 @@ export default function DelegationDashboardPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 self-start md:self-auto flex-wrap shrink-0">
-                    <span className="text-xs font-semibold text-rose-600 whitespace-nowrap">
+                  <div className="flex items-center gap-3 self-start lg:self-auto flex-wrap lg:flex-nowrap shrink-0">
+                    <span className="w-24 text-xs text-slate-600 whitespace-nowrap text-left">
+                      {formatCivilDate(t.originalDueDate || t.dueDate)}
+                    </span>
+                    <span className="w-24 text-xs font-semibold text-rose-600 whitespace-nowrap text-left">
                       {formatCivilDate(t.dueDate)}
                     </span>
-                    {t.status === 'weekShifted' ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                        Week shifted
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                        Pending
-                      </span>
-                    )}
-                    {t.revisionCount > 0 && (
-                      <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-medium whitespace-nowrap">
-                        Revised {t.revisionCount}x
-                      </span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => handleComplete(t)}
-                      className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
-                    >
-                      Complete
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDelayTask(t)}
-                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                    >
-                      Report delay
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setReviseTask(t)}
-                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                    >
-                      Change date
-                    </button>
+                    <div className="w-24 flex items-center justify-center">
+                      {t.status === 'weekShifted' ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 whitespace-nowrap">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          Week shifted
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 whitespace-nowrap">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          Pending
+                        </span>
+                      )}
+                    </div>
+                    <div className="w-20 flex items-center justify-center">
+                      {t.revisionCount > 0 ? (
+                        <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-medium whitespace-nowrap">
+                          {t.revisionCount}x
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-slate-400">—</span>
+                      )}
+                    </div>
+                    <div className="w-56 flex items-center justify-end gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleComplete(t)}
+                        className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                      >
+                        Complete
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDelayTask(t)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Report delay
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setReviseTask(t)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Change date
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -478,6 +501,18 @@ export default function DelegationDashboardPage() {
           </button>
         </div>
 
+        {/* Table column headers */}
+        <div className="hidden lg:flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+          <div className="flex-1 min-w-0 pr-4">Task Title & Doer / Project</div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="w-24 text-left">Original Date</span>
+            <span className="w-24 text-left">Current Due</span>
+            <span className="w-24 text-center">Status</span>
+            <span className="w-24 text-center">Revisions / Slip</span>
+            <span className="w-56 text-right pr-1">Actions</span>
+          </div>
+        </div>
+
         <div className="divide-y divide-slate-100">
           {revisedTasks.length === 0 ? (
             <div className="p-6 text-center text-xs text-slate-400">
@@ -495,8 +530,8 @@ export default function DelegationDashboardPage() {
                 .join(' · ');
 
               return (
-                <div key={t._id} className="p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
-                  <div className="min-w-0 flex-1">
+                <div key={t._id} className="p-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="min-w-0 flex-1 pr-4">
                     <button
                       type="button"
                       onClick={() => navigate(`/delegation/list?open=${t._id}`)}
@@ -515,65 +550,76 @@ export default function DelegationDashboardPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 self-start md:self-auto flex-wrap shrink-0">
-                    <span className={`text-xs whitespace-nowrap ${isOverdue ? 'font-semibold text-rose-600' : 'text-slate-600'}`}>
+                  <div className="flex items-center gap-3 self-start lg:self-auto flex-wrap lg:flex-nowrap shrink-0">
+                    <span className="w-24 text-xs text-slate-500 whitespace-nowrap text-left line-through">
+                      {formatCivilDate(t.originalDueDate || t.dueDate)}
+                    </span>
+                    <span className={`w-24 text-xs whitespace-nowrap text-left ${isOverdue ? 'font-semibold text-rose-600' : 'text-slate-700'}`}>
                       {formatCivilDate(t.dueDate)}
                     </span>
-                    {t.status === 'completed' ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        Completed
-                      </span>
-                    ) : t.status === 'weekShifted' ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                        Week shifted
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                        Pending
-                      </span>
-                    )}
-                    {t.revisionCount > 0 && (
-                      <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-medium whitespace-nowrap">
-                        Revised {t.revisionCount}x
-                      </span>
-                    )}
+                    <div className="w-24 flex items-center justify-center">
+                      {t.status === 'completed' ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 whitespace-nowrap">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          Completed
+                        </span>
+                      ) : t.status === 'weekShifted' ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 whitespace-nowrap">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          Week shifted
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 whitespace-nowrap">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          Pending
+                        </span>
+                      )}
+                    </div>
+                    <div className="w-24 flex items-center justify-center">
+                      {t.revisionCount > 0 ? (
+                        <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-medium whitespace-nowrap">
+                          Revised {t.revisionCount}x{slipped > 0 ? ` (+${slipped}d)` : ''}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-slate-400">—</span>
+                      )}
+                    </div>
 
-                    {t.status === 'pending' || t.status === 'weekShifted' || t.status === 'overdue' ? (
-                      <>
+                    <div className="w-56 flex items-center justify-end gap-1.5">
+                      {t.status === 'pending' || t.status === 'weekShifted' || t.status === 'overdue' ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleComplete(t)}
+                            className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                          >
+                            Complete
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDelayTask(t)}
+                            className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                          >
+                            Report delay
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setReviseTask(t)}
+                            className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                          >
+                            Change date
+                          </button>
+                        </>
+                      ) : (
                         <button
                           type="button"
-                          onClick={() => handleComplete(t)}
-                          className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                          onClick={() => handleReopen(t)}
+                          className="px-2.5 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded text-[11px] font-medium transition-colors"
                         >
-                          Complete
+                          Reopen
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => setDelayTask(t)}
-                          className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                        >
-                          Report delay
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setReviseTask(t)}
-                          className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                        >
-                          Change date
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleReopen(t)}
-                        className="px-2.5 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded text-[11px] font-medium transition-colors"
-                      >
-                        Reopen
-                      </button>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               );

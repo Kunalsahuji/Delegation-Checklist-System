@@ -26,6 +26,7 @@ export default function ChecklistDashboardPage() {
 
   const [stats, setStats] = useState(null);
   const [overdueItems, setOverdueItems] = useState([]);
+  const [revisedItems, setRevisedItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Departments for top right filter
@@ -51,9 +52,10 @@ export default function ChecklistDashboardPage() {
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [statsData, overdueRes, dRes, uRes] = await Promise.all([
+      const [statsData, overdueRes, allOccRes, dRes, uRes] = await Promise.all([
         checklistApi.getStats({ department: selectedDept }),
         checklistApi.getOccurrences({ status: 'overdue', department: selectedDept, limit: 10 }),
+        checklistApi.getOccurrences({ department: selectedDept, limit: 50 }),
         axiosClient.get('/master/departments'),
         axiosClient.get('/master/users'),
       ]);
@@ -61,6 +63,13 @@ export default function ChecklistDashboardPage() {
       const statsObj = statsData?.data || statsData;
       setStats(statsObj);
       setOverdueItems(overdueRes?.items || overdueRes?.data || []);
+
+      const allOccs = allOccRes?.items || allOccRes?.data || [];
+      const delayedOrReassigned = allOccs.filter(
+        (it) => it.progressCount > 0 || it.latestProgress?.expectedDate || it.reassignmentCount > 0
+      );
+      setRevisedItems(delayedOrReassigned);
+
       setDepartments(Array.isArray(dRes?.data) ? dRes.data : Array.isArray(dRes) ? dRes : []);
       setUsers(Array.isArray(uRes?.data) ? uRes.data : Array.isArray(uRes) ? uRes : []);
     } catch (err) {
@@ -359,6 +368,17 @@ export default function ChecklistDashboardPage() {
           </button>
         </div>
 
+        {/* Table column headers */}
+        <div className="hidden lg:flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+          <div className="flex-1 min-w-0 pr-4">Task & Assignee / Department</div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="w-28 text-left">Planned Date</span>
+            <span className="w-20 text-left">Due Time</span>
+            <span className="w-20 text-center">Status</span>
+            <span className="w-64 text-right pr-1">Actions</span>
+          </div>
+        </div>
+
         <div className="divide-y divide-slate-100">
           {overdueItems.length === 0 ? (
             <div className="p-6 text-center text-xs text-slate-400">
@@ -382,8 +402,8 @@ export default function ChecklistDashboardPage() {
                 .join(' · ');
 
               return (
-                <div key={item._id} className="p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
-                  <div className="min-w-0 flex-1">
+                <div key={item._id} className="p-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="min-w-0 flex-1 pr-4">
                     <button
                       type="button"
                       onClick={() => navigate(`/checklist/list?open=${taskId}`)}
@@ -396,43 +416,171 @@ export default function ChecklistDashboardPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 self-start md:self-auto flex-wrap shrink-0">
-                    <span className="text-xs font-semibold text-rose-600 whitespace-nowrap">
+                  <div className="flex items-center gap-3 self-start lg:self-auto flex-wrap lg:flex-nowrap shrink-0">
+                    <span className="w-28 text-xs font-semibold text-rose-600 whitespace-nowrap text-left">
                       {formatCivilDate(item.plannedOn || item.plannedAt)}
-                      {time && (
-                        <span className="text-[11px] text-slate-500 font-normal">
-                          {` · by ${time}`}
-                        </span>
-                      )}
                     </span>
+                    <span className="w-20 text-[11px] text-slate-500 font-normal whitespace-nowrap text-left">
+                      {time ? `by ${time}` : '18:00'}
+                    </span>
+                    <div className="w-20 flex items-center justify-center">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200 whitespace-nowrap">
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                        Overdue
+                      </span>
+                    </div>
+                    <div className="w-64 flex items-center justify-end gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleComplete(item)}
+                        className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                      >
+                        Done
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSkipOcc(item)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Skip
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDelayOcc(item)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Report delay
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setReassignOcc(item)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Reassign task
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      </div>
+
+      {/* WEEK SHIFTED & REVISED Section */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden mt-6">
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              WEEK SHIFTED & REVISED {revisedItems.length}
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate('/checklist/list')}
+            className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            View all
+          </button>
+        </div>
+
+        {/* Table column headers */}
+        <div className="hidden lg:flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+          <div className="flex-1 min-w-0 pr-4">Task & Assignee / Department</div>
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="w-28 text-left">Planned Date</span>
+            <span className="w-28 text-left">Expected Due</span>
+            <span className="w-24 text-center">Status / Note</span>
+            <span className="w-64 text-right pr-1">Actions</span>
+          </div>
+        </div>
+
+        <div className="divide-y divide-slate-100">
+          {revisedItems.length === 0 ? (
+            <div className="p-6 text-center text-xs text-slate-400">
+              No week-shifted or revised checklist items.
+            </div>
+          ) : (
+            revisedItems.map((item) => {
+              const taskId = item.task?._id || item.task || item._id;
+              const title = item.title || item.task?.title || item.taskTitle || 'Untitled task';
+              const freq = item.frequency
+                ? item.frequency.charAt(0).toUpperCase() + item.frequency.slice(1)
+                : '';
+              const subtitle = [
+                item.assignedToName || 'Unassigned',
+                item.departmentName,
+                item.project?.name,
+                freq,
+              ]
+                .filter(Boolean)
+                .join(' · ');
+
+              const expectedStr = item.latestProgress?.expectedDate
+                ? formatCivilDate(item.latestProgress.expectedDate)
+                : '—';
+
+              return (
+                <div key={item._id} className="p-3.5 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="min-w-0 flex-1 pr-4">
                     <button
                       type="button"
-                      onClick={() => handleComplete(item)}
-                      className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                      onClick={() => navigate(`/checklist/list?open=${taskId}`)}
+                      className="text-left font-semibold text-slate-900 hover:text-blue-600 hover:underline transition-colors block text-xs cursor-pointer truncate max-w-full"
                     >
-                      Done
+                      {title}
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setSkipOcc(item)}
-                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                    >
-                      Skip
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDelayOcc(item)}
-                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                    >
-                      Report delay
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setReassignOcc(item)}
-                      className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
-                    >
-                      Reassign task
-                    </button>
+                    <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                      {subtitle}
+                      {item.latestProgress?.note && (
+                        <span className="text-amber-600"> · Note: {item.latestProgress.note}</span>
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 self-start lg:self-auto flex-wrap lg:flex-nowrap shrink-0">
+                    <span className="w-28 text-xs text-slate-500 whitespace-nowrap text-left line-through">
+                      {formatCivilDate(item.plannedOn || item.plannedAt)}
+                    </span>
+                    <span className="w-28 text-xs font-semibold text-amber-700 whitespace-nowrap text-left">
+                      {expectedStr}
+                    </span>
+                    <div className="w-24 flex items-center justify-center">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200 whitespace-nowrap">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                        {item.reassignmentCount > 0 ? 'Reassigned' : 'Delay reported'}
+                      </span>
+                    </div>
+                    <div className="w-64 flex items-center justify-end gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleComplete(item)}
+                        className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded text-[11px] transition-colors shadow-xs"
+                      >
+                        Done
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSkipOcc(item)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Skip
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDelayOcc(item)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Report delay
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setReassignOcc(item)}
+                        className="px-2 py-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded text-[11px] transition-colors"
+                      >
+                        Reassign task
+                      </button>
+                    </div>
                   </div>
                 </div>
               );

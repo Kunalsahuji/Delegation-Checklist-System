@@ -139,13 +139,21 @@ class ChecklistTaskService {
       .populate('department', 'name key')
       .populate('assignedTo', 'name email phone')
       .populate('project', 'name code');
-    if (!task) throw new Error('Checklist task not found');
+    if (!task) {
+      const err = new Error('Checklist task not found');
+      err.statusCode = 404;
+      throw err;
+    }
     return task;
   }
 
   async updateTask(id, data, user) {
     const task = await ChecklistTask.findOne({ _id: id, deletedAt: null });
-    if (!task) throw new Error('Checklist task not found');
+    if (!task) {
+      const err = new Error('Checklist task not found');
+      err.statusCode = 404;
+      throw err;
+    }
 
     const updateFields = { ...data, updatedBy: user._id };
 
@@ -184,7 +192,11 @@ class ChecklistTaskService {
 
   async toggleActive(id, user) {
     const task = await ChecklistTask.findOne({ _id: id, deletedAt: null });
-    if (!task) throw new Error('Checklist task not found');
+    if (!task) {
+      const err = new Error('Checklist task not found');
+      err.statusCode = 404;
+      throw err;
+    }
 
     const nextActive = !task.active;
     task.active = nextActive;
@@ -213,14 +225,15 @@ class ChecklistTaskService {
       { deletedAt: new Date(), updatedBy: user._id, active: false },
       { new: true }
     );
-    if (!task) throw new Error('Checklist task not found');
+    if (!task) {
+      const err = new Error('Checklist task not found');
+      err.statusCode = 404;
+      throw err;
+    }
 
-    // Remove future pending occurrences
-    const today = civilToday();
+    // Completely remove all occurrences of this deleted checklist task so they never linger on dashboards, items to tick, or reports
     await ChecklistOccurrence.deleteMany({
       task: task._id,
-      status: 'pending',
-      plannedOn: { $gt: today },
     });
 
     return task;
@@ -244,7 +257,11 @@ class ChecklistTaskService {
 
   async addComment(id, { text }, user) {
     const task = await ChecklistTask.findOne({ _id: id, deletedAt: null });
-    if (!task) throw new Error('Checklist task not found');
+    if (!task) {
+      const err = new Error('Checklist task not found');
+      err.statusCode = 404;
+      throw err;
+    }
     const comment = {
       author: user?.name || 'Administrator',
       text,
@@ -258,7 +275,11 @@ class ChecklistTaskService {
 
   async addAttachment(id, { name, size, url }, user) {
     const task = await ChecklistTask.findOne({ _id: id, deletedAt: null });
-    if (!task) throw new Error('Checklist task not found');
+    if (!task) {
+      const err = new Error('Checklist task not found');
+      err.statusCode = 404;
+      throw err;
+    }
     const file = {
       name: name || 'Document',
       size: size || 1024,

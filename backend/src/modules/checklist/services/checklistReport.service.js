@@ -1,4 +1,5 @@
 const ChecklistOccurrence = require('../models/checklistOccurrence.model');
+const ChecklistTask = require('../models/checklistTask.model');
 const ChecklistWeeklyPlan = require('../models/checklistWeeklyPlan.model');
 const User = require('../../auth/models/user.model');
 const { toCivilDate, addDays, civilToday } = require('../../../utils/recurrence');
@@ -29,9 +30,13 @@ class ChecklistReportService {
     const weekNumber = getISOWeek(weekStart);
     const isCurrentWeek = weekStart.getTime() === currentWeekMonday.getTime();
 
-    // Occurrence query for the 7 days of this week
+    // Occurrence query for the 7 days of this week (excluding deleted tasks)
+    const activeTasks = await ChecklistTask.find({ deletedAt: null }).select('_id').lean();
+    const activeTaskIds = activeTasks.map((t) => t._id);
+
     const filter = {
       plannedOn: { $gte: weekStart, $lte: weekEnd },
+      task: { $in: activeTaskIds },
     };
 
     if (params.department) filter.department = params.department;

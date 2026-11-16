@@ -1,4 +1,5 @@
 const ChecklistOccurrence = require('../models/checklistOccurrence.model');
+const ChecklistTask = require('../models/checklistTask.model');
 const User = require('../../auth/models/user.model');
 const {
   civilToday,
@@ -13,10 +14,34 @@ class ChecklistOccurrenceService {
     const now = new Date();
     const filter = {};
 
+    // Filter out occurrences belonging to deleted checklist tasks
+    const activeTasks = await ChecklistTask.find({ deletedAt: null }).select('_id').lean();
+    const activeTaskIds = activeTasks.map((t) => t._id);
+
+    if (params.taskId || params.task) {
+      const requestedId = params.taskId || params.task;
+      const isTaskActive = activeTaskIds.some((id) => String(id) === String(requestedId));
+      if (!isTaskActive) {
+        const page = Math.max(1, parseInt(params.page || '1', 10));
+        const limit = Math.min(5000, Math.max(1, parseInt(params.limit || '20', 10)));
+        return {
+          items: [],
+          pagination: {
+            total: 0,
+            page,
+            limit,
+            totalPages: 1,
+          },
+        };
+      }
+      filter.task = requestedId;
+    } else {
+      filter.task = { $in: activeTaskIds };
+    }
+
     if (params.department) filter.department = params.department;
     if (params.frequency) filter.frequency = params.frequency;
     if (params.assignee) filter.assignedTo = params.assignee;
-    if (params.taskId || params.task) filter.task = params.taskId || params.task;
 
     if (params.from || params.to) {
       filter.plannedOn = {};
@@ -94,6 +119,11 @@ class ChecklistOccurrenceService {
     const now = new Date();
     const baseFilter = {};
 
+    // Filter out occurrences belonging to deleted checklist tasks
+    const activeTasks = await ChecklistTask.find({ deletedAt: null }).select('_id').lean();
+    const activeTaskIds = activeTasks.map((t) => t._id);
+    baseFilter.task = { $in: activeTaskIds };
+
     if (query.department) baseFilter.department = query.department;
     if (query.assignee) baseFilter.assignedTo = query.assignee;
     if (query.project) baseFilter.project = query.project;
@@ -128,7 +158,11 @@ class ChecklistOccurrenceService {
 
   async setStatus(id, { status, remarks = '' }, user) {
     const occurrence = await ChecklistOccurrence.findById(id);
-    if (!occurrence) throw new Error('Checklist occurrence not found');
+    if (!occurrence) {
+      const err = new Error('Checklist occurrence not found');
+      err.statusCode = 404;
+      throw err;
+    }
 
     if (status === 'done') {
       occurrence.status = 'done';
@@ -149,7 +183,9 @@ class ChecklistOccurrenceService {
       occurrence.completedByName = '';
       occurrence.remarks = '';
     } else {
-      throw new Error(`Invalid status: ${status}`);
+      const err = new Error(`Invalid status: ${status}`);
+      err.statusCode = 400;
+      throw err;
     }
 
     await occurrence.save();
@@ -158,7 +194,11 @@ class ChecklistOccurrenceService {
 
   async reportProgress(id, { note, expectedDate }, user) {
     const occurrence = await ChecklistOccurrence.findById(id);
-    if (!occurrence) throw new Error('Checklist occurrence not found');
+    if (!occurrence) {
+      const err = new Error('Checklist occurrence not found');
+      err.statusCode = 404;
+      throw err;
+    }
 
     const entry = {
       at: new Date(),
@@ -185,10 +225,18 @@ class ChecklistOccurrenceService {
 
   async reassignItem(id, { toUserId, reason = '' }, user) {
     const occurrence = await ChecklistOccurrence.findById(id);
-    if (!occurrence) throw new Error('Checklist occurrence not found');
+    if (!occurrence) {
+      const err = new Error('Checklist occurrence not found');
+      err.statusCode = 404;
+      throw err;
+    }
 
     const targetUser = await User.findById(toUserId);
-    if (!targetUser) throw new Error('Target user not found');
+    if (!targetUser) {
+      const err = new Error('Target user not found');
+      err.statusCode = 404;
+      throw err;
+    }
 
     const reassignmentEntry = {
       fromUser: occurrence.assignedTo,

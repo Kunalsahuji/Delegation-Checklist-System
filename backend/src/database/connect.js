@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const config = require('../config');
 const logger = require('../utils/logger');
+const { cleanupOrphanedOccurrences } = require('../utils/cleanupOrphanedChecklists');
 
 const connectDB = async () => {
   try {
@@ -11,6 +12,9 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 15000,
     });
     logger.info(`MongoDB connected to cluster: ${mongoose.connection.host}`);
+    
+    // Purge any lingering occurrences for deleted tasks
+    await cleanupOrphanedOccurrences();
   } catch (error) {
     logger.error('MongoDB connection failure', { error: error.message });
     process.exit(1);

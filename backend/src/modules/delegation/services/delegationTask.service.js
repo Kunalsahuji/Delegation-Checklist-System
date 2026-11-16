@@ -41,6 +41,16 @@ class DelegationTaskService {
       status: 'pending',
       revisions: [],
       revisionCount: 0,
+      activities: [
+        {
+          action: 'created',
+          title: 'Created',
+          detail: `Assigned to ${assignee.name} by ${creatorUser.name}`,
+          by: creatorUser._id,
+          byName: creatorUser.name,
+          at: new Date(),
+        },
+      ],
       createdBy: creatorUser._id,
     });
 
@@ -78,6 +88,16 @@ class DelegationTaskService {
     } else if (task.status === 'weekShifted') {
       task.status = 'pending';
     }
+
+    if (!task.activities) task.activities = [];
+    task.activities.push({
+      action: 'revised',
+      title: kind === 'weekShift' ? 'Week shifted' : 'Due date revised',
+      detail: `to ${toCivilDate(nextCivilDate)}: "${reason.trim()}"`,
+      by: user._id,
+      byName: user.name || 'Administrator',
+      at: new Date(),
+    });
 
     await task.save();
     return task;
@@ -142,6 +162,16 @@ class DelegationTaskService {
       }
     }
 
+    if (!task.activities) task.activities = [];
+    task.activities.push({
+      action: 'edited',
+      title: 'Task details updated',
+      detail: data.title ? `Title: ${data.title}` : 'Delegation properties modified',
+      by: user._id,
+      byName: user.name || 'Administrator',
+      at: new Date(),
+    });
+
     task.updatedBy = user._id;
     await task.save();
     return task;
@@ -151,20 +181,46 @@ class DelegationTaskService {
     const task = await DelegationTask.findOne({ _id: id, deletedAt: null });
     if (!task) throw new Error('Delegation task not found');
 
+    if (!task.activities) task.activities = [];
+
     if (status === 'completed') {
       task.status = 'completed';
       task.completedAt = new Date();
       task.completedBy = user._id;
       task.completedByName = user.name;
+      task.activities.push({
+        action: 'completed',
+        title: 'Marked complete',
+        detail: `by ${user.name || 'Administrator'}`,
+        by: user._id,
+        byName: user.name || 'Administrator',
+        at: new Date(),
+      });
     } else if (status === 'cancelled') {
       task.status = 'cancelled';
       task.cancelReason = cancelReason || 'Cancelled by manager';
+      task.activities.push({
+        action: 'cancelled',
+        title: 'Cancelled',
+        detail: task.cancelReason,
+        by: user._id,
+        byName: user.name || 'Administrator',
+        at: new Date(),
+      });
     } else if (status === 'pending') {
       task.status = 'pending';
       task.completedAt = null;
       task.completedBy = null;
       task.completedByName = '';
       task.cancelReason = '';
+      task.activities.push({
+        action: 'reopened',
+        title: 'Reopened',
+        detail: `by ${user.name || 'Administrator'}`,
+        by: user._id,
+        byName: user.name || 'Administrator',
+        at: new Date(),
+      });
     } else {
       throw new Error(`Invalid status: ${status}`);
     }
@@ -196,6 +252,17 @@ class DelegationTaskService {
       note: entry.note,
       expectedDate: entry.expectedDate,
     };
+
+    if (!task.activities) task.activities = [];
+    task.activities.push({
+      action: 'progress',
+      title: 'Progress reported',
+      detail: `Expected ${toCivilDate(expectedDate)}: "${note}"`,
+      by: user._id,
+      byName: user.name || 'Assignee',
+      at: new Date(),
+    });
+
     task.updatedBy = user._id;
 
     await task.save();
@@ -224,6 +291,16 @@ class DelegationTaskService {
     task.assignedTo = targetUser._id;
     task.assignedToName = targetUser.name;
     task.updatedBy = user._id;
+
+    if (!task.activities) task.activities = [];
+    task.activities.push({
+      action: 'reassigned',
+      title: 'Reassigned task',
+      detail: `From ${task.assignedToName} to ${targetUser.name}${reason ? `: "${reason}"` : ''}`,
+      by: user._id,
+      byName: user.name || 'Administrator',
+      at: new Date(),
+    });
 
     await task.save();
     return task;
@@ -435,6 +512,15 @@ class DelegationTaskService {
     };
     if (!task.comments) task.comments = [];
     task.comments.push(comment);
+    if (!task.activities) task.activities = [];
+    task.activities.push({
+      action: 'comment',
+      title: 'Added comment',
+      detail: text,
+      by: user?._id,
+      byName: user?.name || 'Administrator',
+      at: new Date(),
+    });
     await task.save();
     return task;
   }
@@ -450,6 +536,15 @@ class DelegationTaskService {
     };
     if (!task.attachments) task.attachments = [];
     task.attachments.push(file);
+    if (!task.activities) task.activities = [];
+    task.activities.push({
+      action: 'attachment',
+      title: 'Attached file',
+      detail: file.name,
+      by: user?._id,
+      byName: user?.name || 'Administrator',
+      at: new Date(),
+    });
     await task.save();
     return task;
   }

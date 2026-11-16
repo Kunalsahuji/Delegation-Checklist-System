@@ -72,6 +72,20 @@ app.use(`${config.apiPrefix}/master`, masterRoutes);
 app.use(`${config.apiPrefix}/checklist`, checklistRoutes);
 app.use(`${config.apiPrefix}/delegation`, delegationRoutes);
 
+// Master shortcuts / aliases (/api/v1/users, /api/v1/departments, /api/v1/projects)
+app.use(`${config.apiPrefix}/users`, (req, res, next) => {
+  req.url = `/users${req.url === '/' ? '' : req.url}`;
+  masterRoutes(req, res, next);
+});
+app.use(`${config.apiPrefix}/departments`, (req, res, next) => {
+  req.url = `/departments${req.url === '/' ? '' : req.url}`;
+  masterRoutes(req, res, next);
+});
+app.use(`${config.apiPrefix}/projects`, (req, res, next) => {
+  req.url = `/projects${req.url === '/' ? '' : req.url}`;
+  masterRoutes(req, res, next);
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({

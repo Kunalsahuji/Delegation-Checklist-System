@@ -3,6 +3,11 @@ import { createPortal } from 'react-dom';
 import { X, Clock, AlertCircle } from 'lucide-react';
 
 export default function DelegationReportDelayModal({ task, isOpen, onClose, onSubmit }) {
+  const [note, setNote] = useState('');
+  const [expectedDate, setExpectedDate] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
   React.useEffect(() => {
     if (!isOpen) return;
     const originalOverflow = document.body.style.overflow;
@@ -12,17 +17,19 @@ export default function DelegationReportDelayModal({ task, isOpen, onClose, onSu
     };
   }, [isOpen]);
 
-  if (!isOpen || !task) return null;
-
-  const [note, setNote] = useState('');
-  const [expectedDate, setExpectedDate] = useState(() => {
-    if (task.dueDate) {
-      return new Date(task.dueDate).toISOString().split('T')[0];
+  React.useEffect(() => {
+    if (task && isOpen) {
+      if (task.dueDate) {
+        setExpectedDate(new Date(task.dueDate).toISOString().split('T')[0]);
+      } else {
+        setExpectedDate('');
+      }
+      setNote('');
+      setError('');
     }
-    return '';
-  });
-  const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  }, [task, isOpen]);
+
+  if (!isOpen || !task) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

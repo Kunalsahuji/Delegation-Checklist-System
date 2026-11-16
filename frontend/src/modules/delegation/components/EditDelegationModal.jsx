@@ -41,9 +41,9 @@ export default function EditDelegationModal({
       try {
         setLoadingOptions(true);
         const [uRes, dRes, pRes] = await Promise.all([
-          propUsers?.length ? null : axiosClient.get('/users'),
-          propDepartments?.length ? null : axiosClient.get('/departments'),
-          propProjects?.length ? null : axiosClient.get('/projects'),
+          propUsers?.length ? null : axiosClient.get('/master/users').catch(() => axiosClient.get('/users')),
+          propDepartments?.length ? null : axiosClient.get('/master/departments').catch(() => axiosClient.get('/departments')),
+          propProjects?.length ? null : axiosClient.get('/master/projects').catch(() => axiosClient.get('/projects')),
         ]);
         if (uRes) setUsers(uRes?.data || uRes || []);
         if (dRes) setDepartments(dRes?.data || dRes || []);

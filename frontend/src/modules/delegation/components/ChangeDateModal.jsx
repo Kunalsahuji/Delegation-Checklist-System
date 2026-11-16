@@ -11,6 +11,12 @@ const formatCivilDate = (dateStr) => {
 };
 
 export default function ChangeDateModal({ task, isOpen, onClose, onSubmit }) {
+  const [newDueDate, setNewDueDate] = useState('');
+  const [reason, setReason] = useState('');
+  const [kind, setKind] = useState('revise');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
   React.useEffect(() => {
     if (!isOpen) return;
     const originalOverflow = document.body.style.overflow;
@@ -20,18 +26,20 @@ export default function ChangeDateModal({ task, isOpen, onClose, onSubmit }) {
     };
   }, [isOpen]);
 
-  if (!isOpen || !task) return null;
-
-  const [newDueDate, setNewDueDate] = useState(() => {
-    if (task.dueDate) {
-      return new Date(task.dueDate).toISOString().split('T')[0];
+  React.useEffect(() => {
+    if (task && isOpen) {
+      if (task.dueDate) {
+        setNewDueDate(new Date(task.dueDate).toISOString().split('T')[0]);
+      } else {
+        setNewDueDate('');
+      }
+      setReason('');
+      setKind('revise');
+      setError('');
     }
-    return '';
-  });
-  const [reason, setReason] = useState('');
-  const [kind, setKind] = useState('revise');
-  const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  }, [task, isOpen]);
+
+  if (!isOpen || !task) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

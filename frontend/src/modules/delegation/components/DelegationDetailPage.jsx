@@ -730,7 +730,7 @@ export default function DelegationDetailPage({
                 className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
               >
                 <Plus className="w-3 h-3" />
-                <span>+ Add file</span>
+                <span>Add file</span>
               </button>
             </div>
 
@@ -824,69 +824,101 @@ export default function DelegationDetailPage({
             </h3>
 
             <div className="space-y-3 text-xs">
-              {isCompleted && (
-                <div className="flex items-start gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-800">Marked complete</p>
-                    <p className="text-[10px] text-slate-400">
-                      by {task.completedByName || 'Administrator'} · {formatDateTime(task.completedAt)}
-                    </p>
-                  </div>
-                </div>
-              )}
+              {(() => {
+                // If backend provides task.activities array, use it sorted newest first
+                if (task.activities && task.activities.length > 0) {
+                  const sorted = [...task.activities].sort(
+                    (a, b) => new Date(b.at || b.createdAt).getTime() - new Date(a.at || a.createdAt).getTime()
+                  );
+                  return sorted.map((act, i) => {
+                    const dotColor =
+                      act.action === 'completed'
+                        ? 'bg-emerald-500'
+                        : act.action === 'reopened'
+                        ? 'bg-blue-500'
+                        : act.action === 'cancelled'
+                        ? 'bg-rose-500'
+                        : act.action === 'revised'
+                        ? 'bg-amber-500'
+                        : act.action === 'reassigned'
+                        ? 'bg-purple-500'
+                        : act.action === 'progress'
+                        ? 'bg-amber-500'
+                        : 'bg-blue-500';
 
-              {isCancelled && (
-                <div className="flex items-start gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-rose-500 mt-1.5 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-800">Cancelled</p>
-                    <p className="text-[10px] text-slate-400">
-                      {task.cancelReason} · {formatDateTime(task.updatedAt)}
-                    </p>
-                  </div>
-                </div>
-              )}
+                    return (
+                      <div key={act._id || i} className="flex items-start gap-2.5">
+                        <div className={`w-2 h-2 rounded-full ${dotColor} mt-1.5 shrink-0`} />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-800">{act.title}</p>
+                          {act.detail && <p className="text-[11px] text-slate-600 mt-0.5">{act.detail}</p>}
+                          <p className="text-[10px] text-slate-400 mt-0.5">
+                            {act.byName || 'Administrator'} · {formatDateTime(act.at || act.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  });
+                }
 
-              {reassignments.map((ra, i) => (
-                <div key={ra._id || i} className="flex items-start gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-800">Reassigned</p>
-                    <p className="text-[11px] text-slate-600">
-                      From {ra.fromUserName} to {ra.toUserName}
-                    </p>
-                    {ra.reason && (
-                      <p className="text-[10px] text-slate-400 italic">"{ra.reason}"</p>
-                    )}
-                    <p className="text-[10px] text-slate-400 mt-0.5">
-                      {formatDateTime(ra.requestedAt)}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                // Fallback synthesis for existing tasks that don't have task.activities yet
+                const events = [];
+                if (task.completedAt) {
+                  events.push({
+                    title: 'Marked complete',
+                    dot: 'bg-emerald-500',
+                    sub: `by ${task.completedByName || 'Administrator'} · ${formatDateTime(task.completedAt)}`,
+                    time: new Date(task.completedAt).getTime(),
+                  });
+                }
+                if (task.status === 'cancelled') {
+                  events.push({
+                    title: 'Cancelled',
+                    dot: 'bg-rose-500',
+                    detail: task.cancelReason,
+                    sub: formatDateTime(task.updatedAt),
+                    time: new Date(task.updatedAt).getTime(),
+                  });
+                }
+                (reassignments || []).forEach((ra) => {
+                  events.push({
+                    title: 'Reassigned',
+                    dot: 'bg-purple-500',
+                    detail: `From ${ra.fromUserName} to ${ra.toUserName}${ra.reason ? `: "${ra.reason}"` : ''}`,
+                    sub: formatDateTime(ra.requestedAt),
+                    time: new Date(ra.requestedAt).getTime(),
+                  });
+                });
+                (revisions || []).forEach((r) => {
+                  events.push({
+                    title: 'Due date revised',
+                    dot: 'bg-amber-500',
+                    detail: `to ${formatCivilDate(r.toDate)}${r.reason ? ` ("${r.reason}")` : ''}`,
+                    sub: `${r.changedByName || 'Administrator'} · ${formatDateTime(r.changedAt)}`,
+                    time: new Date(r.changedAt).getTime(),
+                  });
+                });
+                events.push({
+                  title: 'Created',
+                  dot: 'bg-blue-500',
+                  detail: `Assigned to ${task.assignedToName} by ${task.assignedByName || 'Administrator'}`,
+                  sub: formatDateTime(task.assignedAt || task.createdAt),
+                  time: new Date(task.assignedAt || task.createdAt).getTime(),
+                });
 
-              {revisions.map((r, i) => (
-                <div key={r._id || i} className="flex items-start gap-2.5">
-                  <div className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-slate-800">Due date revised</p>
-                    <p className="text-[10px] text-slate-400">
-                      to {formatCivilDate(r.toDate)} · {formatDateTime(r.changedAt)}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                events.sort((a, b) => b.time - a.time);
 
-              <div className="flex items-start gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-800">Created</p>
-                  <p className="text-[10px] text-slate-400">
-                    Assigned to {task.assignedToName} by {task.assignedByName || 'Administrator'} · {formatDateTime(task.assignedAt || task.createdAt)}
-                  </p>
-                </div>
-              </div>
+                return events.map((ev, i) => (
+                  <div key={i} className="flex items-start gap-2.5">
+                    <div className={`w-2 h-2 rounded-full ${ev.dot} mt-1.5 shrink-0`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-800">{ev.title}</p>
+                      {ev.detail && <p className="text-[11px] text-slate-600 mt-0.5">{ev.detail}</p>}
+                      {ev.sub && <p className="text-[10px] text-slate-400 mt-0.5">{ev.sub}</p>}
+                    </div>
+                  </div>
+                ));
+              })()}
             </div>
           </div>
         </div>

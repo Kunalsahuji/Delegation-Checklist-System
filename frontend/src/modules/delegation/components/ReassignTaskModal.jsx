@@ -20,9 +20,13 @@ export default function ReassignTaskModal({
     if (propUsers && propUsers.length > 0) {
       setUsers(propUsers);
     } else {
-      axiosClient.get('/users').then((res) => {
+      axiosClient.get('/master/users').then((res) => {
         setUsers(res?.data || res || []);
-      }).catch((e) => console.error('Failed to load users for reassignment', e));
+      }).catch(() => {
+        axiosClient.get('/users').then((res) => {
+          setUsers(res?.data || res || []);
+        }).catch((e) => console.error('Failed to load users for reassignment', e));
+      });
     }
     setTargetUserId('');
     setReason('');

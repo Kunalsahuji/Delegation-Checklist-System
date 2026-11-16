@@ -48,6 +48,22 @@ const reassignmentSchema = new mongoose.Schema(
   { _id: true }
 );
 
+const activitySchema = new mongoose.Schema(
+  {
+    action: {
+      type: String,
+      enum: ['created', 'completed', 'reopened', 'revised', 'reassigned', 'cancelled', 'comment', 'attachment', 'progress', 'edited'],
+      required: true,
+    },
+    title: { type: String, required: true },
+    detail: { type: String, default: '' },
+    by: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+    byName: { type: String, default: '' },
+    at: { type: Date, default: Date.now },
+  },
+  { _id: true }
+);
+
 const delegationTaskSchema = new mongoose.Schema(
   {
     code: { type: String, unique: true, index: true }, // e.g. DLG-000001
@@ -145,6 +161,7 @@ const delegationTaskSchema = new mongoose.Schema(
         uploadedAt: { type: Date, default: Date.now },
       },
     ],
+    activities: { type: [activitySchema], default: [] },
 
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },

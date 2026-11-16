@@ -234,7 +234,7 @@ class DelegationTaskService {
     }
 
     const page = Math.max(1, parseInt(params.page || '1', 10));
-    const limit = Math.min(100, Math.max(1, parseInt(params.limit || '20', 10)));
+    const limit = Math.min(5000, Math.max(1, parseInt(params.limit || '20', 10)));
     const skip = (page - 1) * limit;
 
     let sortObj = { createdAt: -1, dueDate: -1 };

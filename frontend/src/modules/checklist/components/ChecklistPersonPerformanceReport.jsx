@@ -21,8 +21,32 @@ export default function ChecklistPersonPerformanceReport({ departments = [], use
     const loadPerformance = async () => {
       setLoading(true);
       try {
-        const res = await checklistApi.listOccurrences({ limit: 1000 });
-        const items = res?.items || res?.data?.items || [];
+        let items = [];
+        try {
+          const res = await checklistApi.listOccurrences({ limit: 1000 });
+          items = res?.items || res?.data?.items || [];
+        } catch (err) {
+          const msg = String(err?.message || err?.response?.data?.message || '');
+          if (msg.includes('limit') || msg.includes('100')) {
+            // Fallback for backend instances with max limit 100
+            const firstPage = await checklistApi.listOccurrences({ limit: 100, page: 1 });
+            items = firstPage?.items || firstPage?.data?.items || [];
+            const totalPages = firstPage?.pagination?.totalPages || 1;
+            if (totalPages > 1) {
+              const pages = [];
+              for (let p = 2; p <= Math.min(totalPages, 25); p++) {
+                pages.push(checklistApi.listOccurrences({ limit: 100, page: p }));
+              }
+              const extraRes = await Promise.all(pages);
+              extraRes.forEach((r) => {
+                const pageItems = r?.items || r?.data?.items || [];
+                items = items.concat(pageItems);
+              });
+            }
+          } else {
+            throw err;
+          }
+        }
 
         const map = new Map();
 

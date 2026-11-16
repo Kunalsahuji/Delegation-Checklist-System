@@ -25,8 +25,32 @@ export default function DelegationPersonPerformanceReport({ departments = [], us
       try {
         // Fetch full delegation items to aggregate person-wise metrics
         const fetchFn = delegationApi.list || delegationApi.getTasks;
-        const res = await fetchFn({ limit: 1000 });
-        const items = Array.isArray(res) ? res : res?.items || res?.data?.items || res?.data || [];
+        let items = [];
+        try {
+          const res = await fetchFn({ limit: 1000 });
+          items = Array.isArray(res) ? res : res?.items || res?.data?.items || res?.data || [];
+        } catch (err) {
+          const msg = String(err?.message || err?.response?.data?.message || '');
+          if (msg.includes('limit') || msg.includes('100')) {
+            // Fallback for backend instances with max limit 100
+            const firstPage = await fetchFn({ limit: 100, page: 1 });
+            items = firstPage?.items || firstPage?.data?.items || firstPage?.data || [];
+            const totalPages = firstPage?.pagination?.totalPages || 1;
+            if (totalPages > 1) {
+              const pages = [];
+              for (let p = 2; p <= Math.min(totalPages, 25); p++) {
+                pages.push(fetchFn({ limit: 100, page: p }));
+              }
+              const extraRes = await Promise.all(pages);
+              extraRes.forEach((r) => {
+                const pageItems = r?.items || r?.data?.items || r?.data || [];
+                items = items.concat(pageItems);
+              });
+            }
+          } else {
+            throw err;
+          }
+        }
 
         const map = new Map();
 

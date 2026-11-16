@@ -341,22 +341,20 @@ export default function ChecklistItemsReport({ departments = [], users = [] }) {
                         {(page - 1) * limit + idx + 1}
                       </td>
                       <td className="py-3 px-3">
-                        <div className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center flex-shrink-0">
-                            {(it.assignedToName || it.assignedTo?.name || 'NA')
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')
-                              .slice(0, 2)
-                              .toUpperCase()}
-                          </span>
-                          <span className="font-semibold text-slate-800 truncate max-w-[120px]">
-                            {it.assignedToName || it.assignedTo?.name || 'Unassigned'}
-                          </span>
-                        </div>
+                        <span
+                          className="font-semibold text-slate-800 text-xs block whitespace-nowrap"
+                          title={it.assignedToName || it.assignedTo?.name || 'Unassigned'}
+                        >
+                          {it.assignedToName || it.assignedTo?.name || 'Unassigned'}
+                        </span>
                       </td>
-                      <td className="py-3 px-4">
-                        <p className="font-medium text-slate-900 line-clamp-1">{it.title}</p>
+                      <td className="py-3 px-4 min-w-[200px]">
+                        <p
+                          className="font-medium text-slate-900 line-clamp-1 hover:text-blue-600 cursor-default transition-colors"
+                          title={it.title}
+                        >
+                          {it.title}
+                        </p>
                         {it.task?.code && (
                           <span className="text-[10px] font-mono text-slate-400 mt-0.5 block">
                             {it.task.code}
@@ -372,8 +370,13 @@ export default function ChecklistItemsReport({ departments = [], users = [] }) {
                       <td className="py-3 px-3 capitalize text-slate-600 font-medium">
                         {it.frequency || 'daily'}
                       </td>
-                      <td className="py-3 px-3 text-slate-600">
-                        {it.departmentName || it.department?.name || 'Company-wide'}
+                      <td className="py-3 px-3 min-w-[130px]">
+                        <span
+                          className="inline-block max-w-[170px] truncate text-slate-700 bg-slate-100/80 hover:bg-blue-50 hover:text-blue-700 hover:ring-1 hover:ring-blue-300 px-2 py-0.5 rounded text-[11px] font-medium cursor-default transition-all duration-150"
+                          title={it.departmentName || it.department?.name || 'Company-wide'}
+                        >
+                          {it.departmentName || it.department?.name || 'Company-wide'}
+                        </span>
                       </td>
                       <td className="py-3 px-3">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border capitalize ${stateBadge}`}>

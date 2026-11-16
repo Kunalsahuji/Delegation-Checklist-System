@@ -422,27 +422,33 @@ export default function DelegationRegisterReport({ departments = [], users = [],
                         {(page - 1) * limit + idx + 1}
                       </td>
                       <td className="py-2.5 px-3">
-                        <div className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center flex-shrink-0">
-                            {t.assignedTo?.name
-                              ? t.assignedTo.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()
-                              : 'NA'}
-                          </span>
-                          <span className="font-semibold text-slate-800 truncate max-w-[120px]">
-                            {t.assignedTo?.name || 'Unassigned'}
-                          </span>
-                        </div>
+                        <span
+                          className="font-semibold text-slate-800 text-xs block whitespace-nowrap"
+                          title={t.assignedTo?.name || 'Unassigned'}
+                        >
+                          {t.assignedTo?.name || 'Unassigned'}
+                        </span>
                       </td>
-                      <td className="py-2.5 px-4">
-                        <p className="font-medium text-slate-900 line-clamp-1">{t.title}</p>
+                      <td className="py-2.5 px-4 min-w-[200px]">
+                        <p
+                          className="font-medium text-slate-900 line-clamp-1 hover:text-blue-600 cursor-default transition-colors"
+                          title={t.title}
+                        >
+                          {t.title}
+                        </p>
                         <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
                           <span className="font-mono text-slate-500">{t.code}</span>
                           {t.legacyCode && <span>Old: {t.legacyCode}</span>}
-                          {t.department?.name && <span>• {t.department.name}</span>}
+                          {t.department?.name && <span title={t.department.name}>• {t.department.name}</span>}
                         </div>
                       </td>
-                      <td className="py-2.5 px-3 text-slate-600 truncate max-w-[110px]">
-                        {t.project?.name || 'Company-wide'}
+                      <td className="py-2.5 px-3 min-w-[130px]">
+                        <span
+                          className="inline-block max-w-[170px] truncate text-slate-700 bg-slate-100/80 hover:bg-blue-50 hover:text-blue-700 hover:ring-1 hover:ring-blue-300 px-2 py-0.5 rounded text-[11px] font-medium cursor-default transition-all duration-150"
+                          title={t.project?.name || 'Company-wide'}
+                        >
+                          {t.project?.name || 'Company-wide'}
+                        </span>
                       </td>
                       <td className="py-2.5 px-3 font-mono text-slate-600">
                         {formatCivilDate(t.originalDueDate)}
@@ -471,7 +477,7 @@ export default function DelegationRegisterReport({ departments = [], users = [],
                         {t.revisions && t.revisions.length > 0 ? (
                           <div className="space-y-0.5">
                             {t.revisions.slice(-2).map((rev, rIdx) => (
-                              <p key={rIdx} className="truncate max-w-[240px]">
+                              <p key={rIdx} className="truncate max-w-[240px]" title={`${formatCivilDate(rev.toDate)}: ${rev.reason || 'Reason not stated'}`}>
                                 <span className="font-medium text-slate-700">{formatCivilDate(rev.toDate)}:</span>{' '}
                                 <span className="text-slate-500 italic">{rev.reason || 'Reason not stated'}</span>
                               </p>

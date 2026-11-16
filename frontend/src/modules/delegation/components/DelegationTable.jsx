@@ -141,8 +141,11 @@ export default function DelegationTable({
                     </td>
 
                     {/* Project */}
-                    <td className="py-2.5 px-2">
-                      <span className="inline-block max-w-[120px] truncate text-slate-600 bg-slate-100/70 px-1.5 py-0.5 rounded text-[11px]">
+                    <td className="py-2.5 px-2 min-w-[130px]">
+                      <span
+                        className="inline-block max-w-[170px] truncate text-slate-700 bg-slate-100/80 hover:bg-blue-50 hover:text-blue-700 hover:ring-1 hover:ring-blue-300 px-2 py-0.5 rounded text-[11px] font-medium cursor-default transition-all duration-150"
+                        title={task.project?.name || 'Company-wide'}
+                      >
                         {task.project?.name || 'Company-wide'}
                       </span>
                     </td>

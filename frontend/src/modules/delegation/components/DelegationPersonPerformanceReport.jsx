@@ -273,14 +273,11 @@ export default function DelegationPersonPerformanceReport({ departments = [], us
                       {idx + 1}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="flex items-center gap-2.5">
-                        <span className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
-                          {row.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
-                        </span>
-                        <div>
-                          <p className="font-semibold text-slate-900">{row.name}</p>
-                          <p className="text-[10px] text-slate-400">{row.role}</p>
-                        </div>
+                      <div>
+                        <p className="font-semibold text-slate-900 text-xs" title={row.name}>
+                          {row.name}
+                        </p>
+                        <p className="text-[10px] text-slate-400">{row.role}</p>
                       </div>
                     </td>
                     <td className="py-3 px-3 text-slate-600">

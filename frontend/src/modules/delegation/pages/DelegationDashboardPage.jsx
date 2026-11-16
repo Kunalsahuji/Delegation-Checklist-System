@@ -179,20 +179,20 @@ export default function DelegationDashboardPage() {
       </p>
 
       {/* Top 5 Metric Cards (Matching Screenshot 3) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
         {/* TOTAL WORK */}
         <button
           type="button"
           onClick={() => navigate('/delegation/list?status=all')}
-          className="text-left p-3.5 bg-white rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-sm transition-all"
+          className="text-left p-3 sm:p-3.5 bg-white rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-xs transition-all min-w-0"
         >
-          <div className="text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1">
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1 truncate">
             TOTAL WORK
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900">
             {loading ? '-' : total}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1 truncate">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
             Including completed and cancelled
           </p>
         </button>
@@ -201,15 +201,15 @@ export default function DelegationDashboardPage() {
         <button
           type="button"
           onClick={() => navigate('/delegation/list?status=completed')}
-          className="text-left p-3.5 bg-white rounded-xl border border-slate-200 hover:border-emerald-400 hover:shadow-sm transition-all"
+          className="text-left p-3 sm:p-3.5 bg-white rounded-xl border border-slate-200 hover:border-emerald-400 hover:shadow-xs transition-all min-w-0"
         >
-          <div className="text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1">
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1 truncate">
             COMPLETED
           </div>
-          <div className="text-2xl font-bold text-emerald-600">
+          <div className="text-xl sm:text-2xl font-bold text-emerald-600">
             {loading ? '-' : completed}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1 truncate">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
             {completionRate}% completion rate
           </p>
         </button>
@@ -218,15 +218,15 @@ export default function DelegationDashboardPage() {
         <button
           type="button"
           onClick={() => navigate('/delegation/list?status=pending')}
-          className="text-left p-3.5 bg-white rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-sm transition-all"
+          className="text-left p-3 sm:p-3.5 bg-white rounded-xl border border-slate-200 hover:border-amber-400 hover:shadow-xs transition-all min-w-0"
         >
-          <div className="text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1">
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1 truncate">
             PENDING
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900">
             {loading ? '-' : pending}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1 truncate">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
             Awaiting action
           </p>
         </button>
@@ -235,15 +235,15 @@ export default function DelegationDashboardPage() {
         <button
           type="button"
           onClick={() => navigate('/delegation/list?status=overdue')}
-          className="text-left p-3.5 bg-white rounded-xl border border-slate-200 hover:border-rose-400 hover:shadow-sm transition-all"
+          className="text-left p-3 sm:p-3.5 bg-white rounded-xl border border-slate-200 hover:border-rose-400 hover:shadow-xs transition-all min-w-0"
         >
-          <div className="text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1">
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1 truncate">
             OVERDUE
           </div>
-          <div className="text-2xl font-bold text-rose-600">
+          <div className="text-xl sm:text-2xl font-bold text-rose-600">
             {loading ? '-' : overdue}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1 truncate">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
             Past due deadline
           </p>
         </button>
@@ -252,22 +252,22 @@ export default function DelegationDashboardPage() {
         <button
           type="button"
           onClick={() => navigate('/delegation/list?slice=weekShifted')}
-          className="text-left p-3.5 bg-white rounded-xl border border-slate-200 hover:border-orange-400 hover:shadow-sm transition-all col-span-2 sm:col-span-1"
+          className="text-left p-3 sm:p-3.5 bg-white rounded-xl border border-slate-200 hover:border-orange-400 hover:shadow-xs transition-all col-span-2 sm:col-span-1 min-w-0"
         >
-          <div className="text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1">
+          <div className="text-[10px] sm:text-[11px] font-semibold text-slate-500 tracking-wide uppercase mb-1 truncate">
             WEEK SHIFTED
           </div>
-          <div className="text-2xl font-bold text-orange-600">
+          <div className="text-xl sm:text-2xl font-bold text-orange-600">
             {loading ? '-' : weekShifted}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1 truncate">
+          <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
             Did not happen in the week it was due
           </p>
         </button>
       </div>
 
       {/* Middle Row: Status Distribution, Completion Overview, Top Employees */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Card 1: Status Distribution */}
         <StatusDistributionCard
           title="Status distribution"
@@ -316,9 +316,9 @@ export default function DelegationDashboardPage() {
         />
 
         {/* Card 2: Completion Overview */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs flex flex-col justify-between min-w-0">
           <div>
-            <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+            <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2 truncate">
               Completion overview
             </h3>
             <div className="flex items-baseline gap-2 mb-3">
@@ -354,9 +354,9 @@ export default function DelegationDashboardPage() {
         </div>
 
         {/* Card 3: Top Employees Leaderboard */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs flex flex-col justify-between lg:col-span-2 xl:col-span-1 min-w-0">
           <div>
-            <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-semibold text-slate-700 uppercase tracking-wider mb-3 truncate">
               Top employees
             </h3>
 

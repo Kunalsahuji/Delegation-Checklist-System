@@ -314,15 +314,15 @@ export default function ChecklistItemsReport({ departments = [], users = [] }) {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                  <th className="py-3 px-3 w-12 text-center">S.No</th>
-                  <th className="py-3 px-3">Person</th>
-                  <th className="py-3 px-4 min-w-[200px]">Checklist Task</th>
-                  <th className="py-3 px-3">Due Date</th>
-                  <th className="py-3 px-3">Frequency</th>
-                  <th className="py-3 px-3">Department</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-4 min-w-[180px]">Remarks / Reason</th>
+                <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                  <th className="py-3 px-3 w-12 text-center whitespace-nowrap">S.No</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[120px]">Person</th>
+                  <th className="py-3 px-4 min-w-[200px] whitespace-nowrap">Checklist Task</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[110px]">Due Date</th>
+                  <th className="py-3 px-3 whitespace-nowrap">Frequency</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[130px]">Department</th>
+                  <th className="py-3 px-3 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 min-w-[180px] whitespace-nowrap">Remarks / Reason</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -361,7 +361,7 @@ export default function ChecklistItemsReport({ departments = [], users = [] }) {
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-3 font-mono text-slate-700">
+                      <td className="py-3 px-3 font-mono text-slate-700 whitespace-nowrap min-w-[110px]">
                         <div>{formatCivilDate(it.plannedOn)}</div>
                         <span className="text-[10px] text-slate-400">
                           {it.plannedAt ? new Date(it.plannedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '18:00'}

@@ -391,19 +391,19 @@ export default function DelegationRegisterReport({ departments = [], users = [],
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                  <th className="py-3 px-3 w-12 text-center">S.No</th>
-                  <th className="py-3 px-3">Doer</th>
-                  <th className="py-3 px-4 min-w-[200px]">Task</th>
-                  <th className="py-3 px-3">Project</th>
-                  <th className="py-3 px-3">First Date</th>
-                  <th className="py-3 px-3">Revision 1</th>
-                  <th className="py-3 px-3">Revision 2</th>
-                  <th className="py-3 px-3">Latest Due</th>
-                  <th className="py-3 px-3 text-center">Revisions</th>
-                  <th className="py-3 px-3">Priority</th>
-                  <th className="py-3 px-3">Status</th>
-                  <th className="py-3 px-4 min-w-[220px]">Date History & Reason</th>
+                <tr className="border-b border-slate-200 bg-slate-50/80 text-[11px] font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap">
+                  <th className="py-3 px-3 w-12 text-center whitespace-nowrap">S.No</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[120px]">Doer</th>
+                  <th className="py-3 px-4 min-w-[220px] whitespace-nowrap">Task</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[130px]">Project</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[105px]">First Date</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[105px]">Revision 1</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[105px]">Revision 2</th>
+                  <th className="py-3 px-3 whitespace-nowrap min-w-[105px]">Latest Due</th>
+                  <th className="py-3 px-3 text-center whitespace-nowrap">Revisions</th>
+                  <th className="py-3 px-3 whitespace-nowrap">Priority</th>
+                  <th className="py-3 px-3 whitespace-nowrap">Status</th>
+                  <th className="py-3 px-4 min-w-[240px] whitespace-nowrap">Date History & Reason</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -450,17 +450,27 @@ export default function DelegationRegisterReport({ departments = [], users = [],
                           {t.project?.name || 'Company-wide'}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 font-mono text-slate-600">
+                      <td className="py-2.5 px-3 font-mono text-slate-600 whitespace-nowrap">
                         {formatCivilDate(t.originalDueDate)}
                       </td>
-                      <td className="py-2.5 px-3 font-mono text-slate-500">
-                        {t.revisions?.[0]?.toDate ? formatCivilDate(t.revisions[0].toDate) : '-'}
+                      <td className="py-2.5 px-3 font-mono text-slate-500 whitespace-nowrap">
+                        {t.revisions?.[0]?.toDate ? (
+                          formatCivilDate(t.revisions[0].toDate)
+                        ) : (
+                          <span className="text-slate-300 font-normal">—</span>
+                        )}
                       </td>
-                      <td className="py-2.5 px-3 font-mono text-slate-500">
-                        {t.revisions?.[1]?.toDate ? formatCivilDate(t.revisions[1].toDate) : '-'}
+                      <td className="py-2.5 px-3 font-mono text-slate-500 whitespace-nowrap">
+                        {t.revisions?.[1]?.toDate ? (
+                          formatCivilDate(t.revisions[1].toDate)
+                        ) : (
+                          <span className="text-slate-300 font-normal">—</span>
+                        )}
                       </td>
-                      <td className="py-2.5 px-3 font-mono font-medium text-slate-900">
-                        {formatCivilDate(t.dueDate)}
+                      <td className="py-2.5 px-3 font-mono whitespace-nowrap">
+                        <span className={t.isOverdue ? 'text-rose-600 font-bold' : 'font-medium text-slate-900'}>
+                          {formatCivilDate(t.dueDate)}
+                        </span>
                       </td>
                       <td className="py-2.5 px-3 text-center">
                         <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${revColor}`}>

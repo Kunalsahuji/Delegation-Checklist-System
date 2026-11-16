@@ -233,6 +233,126 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
           {crmOpen && (
             <div className="ml-7 pl-2 mt-1 space-y-0.5 border-l border-slate-200">
               <NavLink
+                to="/crm/dashboard"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/crm/enquiries"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Enquiries
+              </NavLink>
+              <NavLink
+                to="/crm/lead-assignments"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Lead Assignment
+              </NavLink>
+              <NavLink
+                to="/crm/leads"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Leads
+              </NavLink>
+              <NavLink
+                to="/crm/visits"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Visit
+              </NavLink>
+              <NavLink
+                to="/crm/followups"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Follow-ups
+              </NavLink>
+              <NavLink
+                to="/crm/special-followups"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Special Follow-Ups
+              </NavLink>
+              <NavLink
+                to="/crm/calendar"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Calendar
+              </NavLink>
+              <NavLink
+                to="/crm/bulk-message"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Bulk Message
+              </NavLink>
+              <NavLink
+                to="/crm/meta-leads"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Meta Leads
+              </NavLink>
+              <NavLink
                 to="/crm/projects"
                 className={({ isActive }) =>
                   `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
@@ -242,7 +362,31 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Projects & Inventory
+                Projects
+              </NavLink>
+              <NavLink
+                to="/crm/brokers"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Brokers
+              </NavLink>
+              <NavLink
+                to="/crm/network"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Network
               </NavLink>
             </div>
           )}

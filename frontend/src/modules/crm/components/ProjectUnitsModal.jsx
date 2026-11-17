@@ -6,7 +6,7 @@ import { useToast } from '../../../context/ToastContext';
 
 export default function ProjectUnitsModal({ isOpen, onClose, project, onUpdated }) {
   const { showSuccess, showError } = useToast();
-  const [units, setUnits] = useState([]);
+  const [units, setUnits] = useState(project?.units || []);
   const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -38,8 +38,13 @@ export default function ProjectUnitsModal({ isOpen, onClose, project, onUpdated 
   const [editForm, setEditForm] = useState({});
 
   useEffect(() => {
-    if (isOpen && project?._id) {
-      loadProjectDetails();
+    if (isOpen && project) {
+      if (project.units && Array.isArray(project.units)) {
+        setUnits(project.units);
+      }
+      if (project._id) {
+        loadProjectDetails();
+      }
     }
   }, [isOpen, project?._id]);
 
@@ -47,9 +52,13 @@ export default function ProjectUnitsModal({ isOpen, onClose, project, onUpdated 
     try {
       setLoading(true);
       const res = await crmProjectApi.getProject(project._id);
-      if (res.data?.units) {
-        setUnits(res.data.units);
-      }
+      const unitList =
+        res?.data?.units ||
+        res?.units ||
+        (Array.isArray(res?.data) ? res.data : []) ||
+        project?.units ||
+        [];
+      setUnits(unitList);
     } catch (err) {
       showError(err.message || 'Failed to load project inventory');
     } finally {
@@ -224,7 +233,9 @@ export default function ProjectUnitsModal({ isOpen, onClose, project, onUpdated 
                     : 'text-slate-600 bg-slate-100 hover:bg-slate-200'
                 }`}
               >
-                {st === 'all' ? `All (${units.length})` : st}
+                {st === 'all'
+                  ? `All (${units.length})`
+                  : `${st} (${units.filter((u) => u.status === st).length})`}
               </button>
             ))}
           </div>

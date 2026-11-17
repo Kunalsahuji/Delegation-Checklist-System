@@ -40,6 +40,7 @@ export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [kpiFilter, setKpiFilter] = useState('all'); // 'all', 'has_units', 'available', 'booked'
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
 
   // Modals state
@@ -57,7 +58,9 @@ export default function ProjectsPage() {
         status: statusFilter,
         propertyType: typeFilter,
       });
-      setProjects(res.projects || []);
+      const projectList =
+        res?.projects || res?.data?.projects || res?.data || (Array.isArray(res) ? res : []);
+      setProjects(projectList);
       if (res.kpis) {
         setKpis(res.kpis);
       }
@@ -101,7 +104,27 @@ export default function ProjectsPage() {
     }
   };
 
-  // KPI Strip Configuration
+  // Filter projects by selected KPI card
+  const displayedProjects = projects.filter((p) => {
+    const stats = p.stats || {
+      totalUnits: p.units?.length || 0,
+      availableUnits: (p.units || []).filter((u) => u.status === 'available').length,
+      bookedUnits: (p.units || []).filter((u) => u.status === 'booked').length,
+    };
+
+    if (kpiFilter === 'available') {
+      return (stats.availableUnits || 0) > 0;
+    }
+    if (kpiFilter === 'booked') {
+      return (stats.bookedUnits || 0) > 0;
+    }
+    if (kpiFilter === 'has_units') {
+      return (stats.totalUnits || 0) > 0;
+    }
+    return true;
+  });
+
+  // KPI Strip Configuration with interactive filtering
   const kpiItems = [
     {
       key: 'total-projects',
@@ -110,12 +133,14 @@ export default function ProjectsPage() {
       value: kpis.totalProjects,
       hint: `${kpis.openProjects} open for booking`,
       tone: 'default',
+      active: kpiFilter === 'all' && statusFilter === 'all' && typeFilter === 'all',
       info: {
         title: 'Total Projects',
         summary: 'All registered real estate developments, plotting schemes, and commercial developments.',
         calculation: 'Count of all non-deleted projects in the master registry.',
       },
       onClick: () => {
+        setKpiFilter('all');
         setStatusFilter('all');
         setTypeFilter('all');
       },
@@ -127,14 +152,14 @@ export default function ProjectsPage() {
       value: kpis.totalUnits,
       hint: 'Plots, villas & shops',
       tone: 'sky',
+      active: kpiFilter === 'has_units',
       info: {
         title: 'Inventory Units',
         summary: 'Total sellable inventory units configured across all projects.',
         calculation: 'Sum of units across all project inventory sheets.',
       },
       onClick: () => {
-        setStatusFilter('active');
-        setTypeFilter('all');
+        setKpiFilter('has_units');
       },
     },
     {
@@ -144,13 +169,14 @@ export default function ProjectsPage() {
       value: kpis.availableUnits,
       hint: `${kpis.totalUnits ? Math.round((kpis.availableUnits / kpis.totalUnits) * 100) : 0}% available`,
       tone: 'success',
+      active: kpiFilter === 'available',
       info: {
         title: 'Available Units',
         summary: 'Sellable units currently available for customer allocation, site visit selection, and booking.',
         calculation: 'Units with status = "available".',
       },
       onClick: () => {
-        setStatusFilter('active');
+        setKpiFilter('available');
       },
     },
     {
@@ -160,13 +186,14 @@ export default function ProjectsPage() {
       value: kpis.bookedUnits,
       hint: `${kpis.totalUnits ? Math.round((kpis.bookedUnits / kpis.totalUnits) * 100) : 0}% booked`,
       tone: 'danger',
+      active: kpiFilter === 'booked',
       info: {
         title: 'Booked / Sold Units',
         summary: 'Units with confirmed customer bookings, advance token deposits, or sale registrations.',
         calculation: 'Units with status in ["booked", "sold"].',
       },
       onClick: () => {
-        setStatusFilter('all');
+        setKpiFilter('booked');
       },
     },
   ];
@@ -281,28 +308,41 @@ export default function ProjectsPage() {
           <div className="inline-block w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin mb-2" />
           <p className="text-xs text-slate-500">Loading project inventory...</p>
         </div>
-      ) : projects.length === 0 ? (
+      ) : displayedProjects.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-xl border border-slate-200 shadow-2xs">
           <Building2 className="w-10 h-10 text-slate-300 mx-auto mb-2" />
           <h3 className="text-sm font-semibold text-slate-700">No Projects Found</h3>
           <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-            {search || statusFilter !== 'all' || typeFilter !== 'all'
+            {kpiFilter !== 'all'
+              ? `No projects currently match the ${kpiFilter} units filter. Click 'TOTAL PROJECTS' above to reset.`
+              : search || statusFilter !== 'all' || typeFilter !== 'all'
               ? 'No projects match your active search filters.'
               : 'Start by creating your first real estate project with GPS coordinates and units.'}
           </p>
-          <button
-            type="button"
-            onClick={handleOpenCreateModal}
-            className="inline-flex items-center gap-1.5 mt-4 px-3.5 py-1.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Project</span>
-          </button>
+          <div className="flex items-center justify-center gap-2 mt-4">
+            {kpiFilter !== 'all' && (
+              <button
+                type="button"
+                onClick={() => setKpiFilter('all')}
+                className="px-3.5 py-1.5 text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-lg shadow-2xs"
+              >
+                Reset KPI Filter
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleOpenCreateModal}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Project</span>
+            </button>
+          </div>
         </div>
       ) : viewMode === 'grid' ? (
         /* Grid Cards View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map((p) => {
+          {displayedProjects.map((p) => {
             const stats = p.stats || {
               totalUnits: 0,
               availableUnits: 0,
@@ -460,7 +500,7 @@ export default function ProjectsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {projects.map((p) => {
+                {displayedProjects.map((p) => {
                   const stats = p.stats || { totalUnits: 0, availableUnits: 0, bookedUnits: 0 };
                   return (
                     <tr key={p._id} className="hover:bg-slate-50/70 transition-colors">

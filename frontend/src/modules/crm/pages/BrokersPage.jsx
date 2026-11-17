@@ -73,7 +73,7 @@ export default function BrokersPage() {
     try {
       const res = await crmLeadAssignmentApi.getWorkload();
       if (res.success && Array.isArray(res.data)) {
-        setSalesPersons(res.data.map((w) => w.user));
+        setSalesPersons(res.data.map((w) => w.user || w).filter(Boolean));
       }
     } catch (err) {
       console.error('Failed to load sales team:', err);

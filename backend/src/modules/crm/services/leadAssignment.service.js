@@ -74,10 +74,19 @@ const getWorkload = async () => {
     const total = countMap[String(user._id)] || 0;
     const percentage = totalAssigned > 0 ? Math.round((total / totalAssigned) * 100) : 0;
     return {
+      _id: user._id,
       userId: user._id,
+      id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      user: {
+        _id: user._id,
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
       total,
       percentage,
     };

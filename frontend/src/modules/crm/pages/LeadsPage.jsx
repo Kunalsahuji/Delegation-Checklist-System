@@ -59,8 +59,10 @@ export default function LeadsPage() {
         crmLeadApi.getStages(),
         crmProjectApi.getProjects(),
       ]);
-      setStages(stagesRes.data || []);
-      setProjects(projectsRes.data || []);
+      const stageList = stagesRes?.data || (Array.isArray(stagesRes) ? stagesRes : []);
+      const projectList = projectsRes?.data || (Array.isArray(projectsRes) ? projectsRes : []);
+      setStages(stageList);
+      setProjects(projectList);
     } catch (err) {
       console.error('Failed to load master stages/projects', err);
     }
@@ -77,12 +79,22 @@ export default function LeadsPage() {
       if (stageFilter !== 'all') params.stageId = stageFilter;
 
       const res = await crmLeadApi.getLeads(params);
-      setLeads(res.leads || []);
-      if (res.kpis) {
+      const leadsList =
+        res?.leads ||
+        res?.data?.leads ||
+        (Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : []);
+      setLeads(leadsList || []);
+
+      if (res?.kpis) {
         setKpis(res.kpis);
+      } else if (res?.data?.kpis) {
+        setKpis(res.data.kpis);
       }
-      if (res.stages) {
+
+      if (res?.stages) {
         setStages(res.stages);
+      } else if (res?.data?.stages) {
+        setStages(res.data.stages);
       }
     } catch (err) {
       showError(err.message || 'Failed to load leads pipeline');
@@ -103,7 +115,7 @@ export default function LeadsPage() {
   const handleOpenDetails = async (lead) => {
     try {
       const full = await crmLeadApi.getLeadById(lead._id);
-      setSelectedLead(full.data || lead);
+      setSelectedLead(full?.data || full || lead);
       setDetailsModalOpen(true);
     } catch (err) {
       setSelectedLead(lead);

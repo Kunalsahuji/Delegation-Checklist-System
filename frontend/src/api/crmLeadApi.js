@@ -3,53 +3,23 @@ import { axiosClient } from './axiosClient';
 const BASE_URL = '/crm/leads';
 
 export const crmLeadApi = {
-  getStages: async () => {
-    const res = await axiosClient.get(`${BASE_URL}/stages`);
-    return res.data;
-  },
+  getStages: (params = {}) => axiosClient.get(`${BASE_URL}/stages`, { params }),
 
-  getLeads: async (params = {}) => {
-    const res = await axiosClient.get(BASE_URL, { params });
-    return res.data;
-  },
+  getLeads: (params = {}) => axiosClient.get(BASE_URL, { params }),
 
-  getLeadById: async (id) => {
-    const res = await axiosClient.get(`${BASE_URL}/${id}`);
-    return res.data;
-  },
+  getLeadById: (id) => axiosClient.get(`${BASE_URL}/${id}`),
 
-  createLead: async (data) => {
-    const res = await axiosClient.post(BASE_URL, data);
-    return res.data;
-  },
+  createLead: (data) => axiosClient.post(BASE_URL, data),
 
-  convertEnquiry: async (enquiryId) => {
-    const res = await axiosClient.post(`${BASE_URL}/convert-enquiry/${enquiryId}`);
-    return res.data;
-  },
+  convertEnquiry: (enquiryId) => axiosClient.post(`${BASE_URL}/convert-enquiry/${enquiryId}`),
 
-  moveStage: async (id, data) => {
-    const res = await axiosClient.post(`${BASE_URL}/${id}/move-stage`, data);
-    return res.data;
-  },
+  moveStage: (id, data) => axiosClient.post(`${BASE_URL}/${id}/move-stage`, data),
 
-  undoStage: async (id) => {
-    const res = await axiosClient.post(`${BASE_URL}/${id}/undo-stage`);
-    return res.data;
-  },
+  undoStage: (id) => axiosClient.post(`${BASE_URL}/${id}/undo-stage`),
 
-  markWon: async (id, data) => {
-    const res = await axiosClient.post(`${BASE_URL}/${id}/mark-won`, data);
-    return res.data;
-  },
+  markWon: (id, data) => axiosClient.post(`${BASE_URL}/${id}/mark-won`, data),
 
-  markLost: async (id, data) => {
-    const res = await axiosClient.post(`${BASE_URL}/${id}/mark-lost`, data);
-    return res.data;
-  },
+  markLost: (id, data) => axiosClient.post(`${BASE_URL}/${id}/mark-lost`, data),
 
-  markDropped: async (id, data) => {
-    const res = await axiosClient.post(`${BASE_URL}/${id}/mark-dropped`, data);
-    return res.data;
-  },
+  markDropped: (id, data) => axiosClient.post(`${BASE_URL}/${id}/mark-dropped`, data),
 };

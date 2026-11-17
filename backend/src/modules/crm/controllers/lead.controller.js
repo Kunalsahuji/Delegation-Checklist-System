@@ -12,7 +12,7 @@ async function listStages(req, res) {
 async function listLeads(req, res) {
   try {
     const result = await leadService.listLeads(req.query);
-    res.status(200).json({ success: true, ...result });
+    res.status(200).json({ success: true, ...result, data: result.leads });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

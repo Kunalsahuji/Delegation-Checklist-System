@@ -7,6 +7,7 @@ const visitRoutes = require('./visit.route');
 const reminderRoutes = require('./reminder.route');
 const calendarRoutes = require('./calendar.route');
 const brokerRoutes = require('./broker.route');
+const metaLeadRoutes = require('./metaLead.route');
 
 const router = express.Router();
 
@@ -33,5 +34,8 @@ router.use('/calendar', calendarRoutes);
 
 // Mount Channel Partners & Broker Network Routes
 router.use('/brokers', brokerRoutes);
+
+// Mount Meta Ad Campaigns & Leads Routes
+router.use('/meta-leads', metaLeadRoutes);
 
 module.exports = router;

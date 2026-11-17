@@ -43,9 +43,9 @@ class CrmDashboardService {
       Enquiry.countDocuments({ deletedAt: null, status: 'qualified' }),
       Enquiry.countDocuments({ deletedAt: null, status: 'new' }),
       Lead.countDocuments({ deletedAt: null }),
-      Lead.countDocuments({ deletedAt: null, status: 'Active' }),
-      Lead.countDocuments({ deletedAt: null, status: 'Won' }),
-      Lead.countDocuments({ deletedAt: null, status: 'Lost' }),
+      Lead.countDocuments({ deletedAt: null, status: { $in: ['active', 'Active'] } }),
+      Lead.countDocuments({ deletedAt: null, status: { $in: ['won', 'Won'] } }),
+      Lead.countDocuments({ deletedAt: null, status: { $in: ['lost', 'Lost'] } }),
       VisitReport.countDocuments({ deletedAt: null }),
       VisitReport.countDocuments({ deletedAt: null, geoVerified: true }),
       VisitReport.countDocuments({
@@ -112,17 +112,23 @@ class CrmDashboardService {
       Reminder.countDocuments({
         deletedAt: null,
         status: 'pending',
-        scheduledAt: { $lt: todayStart },
+        $or: [
+          { reminderDate: { $lt: todayStart } },
+          { reminderAt: { $lt: todayStart } },
+        ],
       }),
       Reminder.countDocuments({
         deletedAt: null,
         status: 'pending',
-        scheduledAt: { $gte: todayStart, $lte: todayEnd },
+        $or: [
+          { reminderDate: { $gte: todayStart, $lte: todayEnd } },
+          { reminderAt: { $gte: todayStart, $lte: todayEnd } },
+        ],
       }),
       Lead.countDocuments({
         deletedAt: null,
         specialFollowUp: true,
-        status: 'Active',
+        status: { $in: ['active', 'Active'] },
       }),
     ]);
 
@@ -133,7 +139,7 @@ class CrmDashboardService {
         $group: {
           _id: '$assignedTo',
           totalAssigned: { $sum: 1 },
-          wonDeals: { $sum: { $cond: [{ $eq: ['$status', 'Won'] }, 1, 0] } },
+          wonDeals: { $sum: { $cond: [{ $in: ['$status', ['won', 'Won']] }, 1, 0] } },
         },
       },
       { $sort: { totalAssigned: -1 } },

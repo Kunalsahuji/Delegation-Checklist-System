@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const StatCard = ({
   title,
   value,
@@ -6,6 +8,7 @@ export const StatCard = ({
   variant = 'default',
   onClick,
   active = false,
+  loading = false,
 }) => {
   const variantStyles = {
     default: 'text-slate-900 border-slate-200 bg-white hover:border-slate-300',
@@ -16,6 +19,8 @@ export const StatCard = ({
   };
 
   const activeStyles = active ? 'ring-2 ring-brand-500 border-brand-500' : '';
+
+  const isLoading = loading || value === null || value === undefined;
 
   return (
     <div
@@ -30,10 +35,14 @@ export const StatCard = ({
         </span>
         {Icon && <Icon className="w-4 h-4 text-slate-400" />}
       </div>
-      <div className="mt-2 flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-slate-900">
-          {value !== undefined && value !== null ? value : '—'}
-        </span>
+      <div className="mt-2 flex items-baseline gap-2 min-h-[32px]">
+        {isLoading ? (
+          <div className="h-7 w-20 bg-slate-200/80 animate-pulse rounded-md" />
+        ) : (
+          <span className="text-2xl font-bold tracking-tight text-slate-900">
+            {typeof value === 'number' ? value.toLocaleString('en-IN') : value}
+          </span>
+        )}
       </div>
       {subtext && <p className="mt-1 text-xs text-slate-500 line-clamp-1">{subtext}</p>}
     </div>

@@ -22,29 +22,38 @@ export const DashboardPage = () => {
   const { user } = useAuth();
   const [checklistStats, setChecklistStats] = useState(null);
   const [delegationStats, setDelegationStats] = useState(null);
-  const [userCount, setUserCount] = useState(24);
-  const [deptCount, setDeptCount] = useState(7);
+  const [userCount, setUserCount] = useState(null);
+  const [deptCount, setDeptCount] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchCounts = async () => {
       try {
+        setLoading(true);
         const [statsRes, dlgStatsRes, userRes, deptRes] = await Promise.all([
           checklistApi.getStats(),
           delegationApi.getStats(),
           axiosClient.get('/master/users'),
           axiosClient.get('/master/departments'),
         ]);
+        if (!isMounted) return;
         if (statsRes) setChecklistStats(statsRes.data || statsRes);
         if (dlgStatsRes) setDelegationStats(dlgStatsRes.data || dlgStatsRes);
         const uList = userRes?.data || userRes || [];
         const dList = deptRes?.data || deptRes || [];
-        if (Array.isArray(uList) && uList.length > 0) setUserCount(uList.length);
-        if (Array.isArray(dList) && dList.length > 0) setDeptCount(dList.length);
+        if (Array.isArray(uList)) setUserCount(uList.length);
+        if (Array.isArray(dList)) setDeptCount(dList.length);
       } catch (e) {
         // silent fallback
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
     fetchCounts();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -85,7 +94,8 @@ export const DashboardPage = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           title="Checklist Items"
-          value={checklistStats?.pending ?? 51}
+          value={checklistStats?.pending ?? checklistStats?.totalWork}
+          loading={loading}
           subtext="Active recurring tasks"
           icon={CheckSquare}
           variant="primary"
@@ -93,7 +103,8 @@ export const DashboardPage = () => {
         />
         <StatCard
           title="Delegation Tasks"
-          value={delegationStats?.totalWork ?? 2405}
+          value={delegationStats?.totalWork}
+          loading={loading}
           subtext="Assigned work & due dates"
           icon={ListTodo}
           variant="default"
@@ -102,6 +113,7 @@ export const DashboardPage = () => {
         <StatCard
           title="Departments"
           value={deptCount}
+          loading={loading}
           subtext="Active divisions"
           icon={FolderGit2}
           variant="default"
@@ -110,6 +122,7 @@ export const DashboardPage = () => {
         <StatCard
           title="Active Employees"
           value={userCount}
+          loading={loading}
           subtext="Assigned doers & staff"
           icon={Users2}
           variant="success"

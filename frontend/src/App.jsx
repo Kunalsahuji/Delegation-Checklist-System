@@ -17,6 +17,7 @@ import DelegationWeeklyReportPage from './modules/delegation/pages/DelegationWee
 import ProjectsPage from './modules/crm/pages/ProjectsPage';
 import EnquiriesPage from './modules/crm/pages/EnquiriesPage';
 import LeadsPage from './modules/crm/pages/LeadsPage';
+import LeadAssignmentPage from './modules/crm/pages/LeadAssignmentPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -68,6 +69,8 @@ export default function App() {
               {/* CRM routes */}
               <Route path="crm/projects" element={<ProjectsPage />} />
               <Route path="crm/enquiries" element={<EnquiriesPage />} />
+              <Route path="crm/lead-assignments" element={<LeadAssignmentPage />} />
+              <Route path="crm/lead-assignment" element={<Navigate to="/crm/lead-assignments" replace />} />
               <Route path="crm/leads" element={<LeadsPage />} />
 
               {/* Master administration routes */}

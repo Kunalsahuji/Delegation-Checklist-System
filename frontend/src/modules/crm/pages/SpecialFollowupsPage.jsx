@@ -22,6 +22,7 @@ export default function SpecialFollowupsPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [kpiFilter, setKpiFilter] = useState('all'); // 'all', 'hot', 'high-value', 'due-today'
   const [pagination, setPagination] = useState({ page: 1, limit: 15, total: 0, totalPages: 1 });
 
   // Modal
@@ -82,50 +83,68 @@ export default function SpecialFollowupsPage() {
     return new Date(i.nextFollowupAt).toDateString() === new Date().toDateString();
   }).length;
 
+  const filteredItems = items.filter((i) => {
+    if (kpiFilter === 'hot') return i.temperature === 'hot';
+    if (kpiFilter === 'high-value') return (i.budget || 0) >= 5000000;
+    if (kpiFilter === 'due-today') {
+      if (!i.nextFollowupAt) return false;
+      return new Date(i.nextFollowupAt).toDateString() === new Date().toDateString();
+    }
+    return true;
+  });
+
   const kpiItems = [
     {
       key: 'special-total',
       label: 'SPECIAL FOLLOW-UPS',
       value: pagination.total,
       status: 'warning',
+      active: kpiFilter === 'all',
       info: {
         title: 'Special High-Priority Leads',
         summary: 'VIP prospective buyers and urgent deals requiring dedicated executive follow-up attention.',
         calculation: 'Count of active enquiries and leads marked with special follow-up flag',
       },
+      onClick: () => setKpiFilter('all'),
     },
     {
       key: 'hot-leads',
       label: 'HOT TEMPERATURE',
       value: hotCount,
       status: 'negative',
+      active: kpiFilter === 'hot',
       info: {
         title: 'Hot Temperature Buyers',
         summary: 'Clients actively ready to make purchase decisions on current properties.',
         calculation: 'Count of special follow-up records with temperature = "hot"',
       },
+      onClick: () => setKpiFilter('hot'),
     },
     {
       key: 'high-value',
       label: 'HIGH BUDGET (₹50L+)',
       value: highBudgetCount,
       status: 'positive',
+      active: kpiFilter === 'high-value',
       info: {
         title: 'High-Value Deals',
         summary: 'Prospective buyers with investment or luxury villa budgets exceeding ₹50 Lakhs.',
         calculation: 'Count of special follow-up records with budget >= 5,000,000',
       },
+      onClick: () => setKpiFilter('high-value'),
     },
     {
       key: 'due-today',
       label: 'DUE TODAY',
       value: dueTodayCount,
       status: dueTodayCount > 0 ? 'warning' : 'neutral',
+      active: kpiFilter === 'due-today',
       info: {
         title: 'Special Follow-ups Due Today',
         summary: 'High-priority client calls scheduled for discussion today.',
         calculation: 'Count of special follow-up records with nextFollowupAt = today',
       },
+      onClick: () => setKpiFilter('due-today'),
     },
   ];
 
@@ -199,18 +218,18 @@ export default function SpecialFollowupsPage() {
                     </td>
                   </tr>
                 ))
-              ) : items.length === 0 ? (
+              ) : filteredItems.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-12 text-center text-slate-400">
                     <Star className="w-10 h-10 mx-auto text-amber-200 mb-2" />
-                    <p className="font-semibold text-slate-600 text-sm">No special follow-ups flagged</p>
+                    <p className="font-semibold text-slate-600 text-sm">No special follow-ups match this filter</p>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Mark prospective buyers or deals with the Star icon to prioritize them here.
+                      Mark prospective buyers or deals with the Star icon or reset the KPI filter.
                     </p>
                   </td>
                 </tr>
               ) : (
-                items.map((item) => (
+                filteredItems.map((item) => (
                   <tr key={item._id} className="hover:bg-slate-50/70 transition-colors">
                     <td className="py-3.5 px-4 text-center">
                       <button

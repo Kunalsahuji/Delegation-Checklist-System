@@ -179,10 +179,15 @@ export default function MetaLeadsPage() {
       label: 'TOTAL AD LEADS',
       value: kpis.total,
       status: 'neutral',
+      active: statusFilter === '',
       info: {
         title: 'Meta Ad Form Submissions',
         summary: 'All prospective customer inquiries captured across Facebook and Instagram lead forms.',
         calculation: 'Total count of records in Meta Leads holding area',
+      },
+      onClick: () => {
+        setStatusFilter('');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -190,10 +195,15 @@ export default function MetaLeadsPage() {
       label: 'PENDING ASSIGNMENT',
       value: kpis.pending,
       status: kpis.pending > 0 ? 'warning' : 'positive',
+      active: statusFilter === 'pending',
       info: {
         title: 'Unassigned Holding Queue',
         summary: 'Fresh leads waiting to be verified and distributed to sales representatives.',
         calculation: 'Count of Meta leads with status = pending',
+      },
+      onClick: () => {
+        setStatusFilter('pending');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -201,10 +211,15 @@ export default function MetaLeadsPage() {
       label: 'RELEASED TO CRM',
       value: kpis.assigned,
       status: 'positive',
+      active: statusFilter === 'assigned',
       info: {
         title: 'Assigned into CRM Pipeline',
         summary: 'Leads converted into active CRM enquiries and handed to sales team members.',
         calculation: 'Count of Meta leads with status = assigned',
+      },
+      onClick: () => {
+        setStatusFilter('assigned');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -212,10 +227,15 @@ export default function MetaLeadsPage() {
       label: 'SKIPPED / DUPLICATES',
       value: kpis.skipped,
       status: 'neutral',
+      active: statusFilter === 'skipped',
       info: {
         title: 'Skipped Submissions',
         summary: 'Submissions filtered out due to duplicate phone numbers or test form clicks.',
         calculation: 'Count of Meta leads with status = skipped',
+      },
+      onClick: () => {
+        setStatusFilter('skipped');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
   ];

@@ -105,10 +105,15 @@ export default function BulkMessagePage() {
       label: 'TOTAL CAMPAIGNS',
       value: kpis.totalCampaigns,
       status: 'neutral',
+      active: statusFilter === '',
       info: {
         title: 'Broadcast Campaigns',
         summary: 'Total broadcast messaging campaigns initiated across the CRM system.',
         calculation: 'Count of bulk campaign records where deletedAt is null',
+      },
+      onClick: () => {
+        setStatusFilter('');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -116,10 +121,15 @@ export default function BulkMessagePage() {
       label: 'MESSAGES DELIVERED',
       value: kpis.totalSent.toLocaleString(),
       status: 'positive',
+      active: statusFilter === 'completed',
       info: {
         title: 'Delivered Messages',
         summary: 'Total outbound marketing and notification messages delivered to clients.',
         calculation: 'Cumulative sum of sent/delivered recipients across all campaigns',
+      },
+      onClick: () => {
+        setStatusFilter('completed');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -132,6 +142,10 @@ export default function BulkMessagePage() {
         summary: 'Total unique client and broker phone contacts currently reachable in CRM.',
         calculation: 'Count of distinct phone records across Enquiries, Leads, and Brokers',
       },
+      onClick: () => {
+        setStatusFilter('');
+        setPagination((p) => ({ ...p, page: 1 }));
+      },
     },
     {
       key: 'success-rate',
@@ -142,6 +156,10 @@ export default function BulkMessagePage() {
         title: 'Broadcast Success Rate',
         summary: 'Proportion of dispatched messages successfully delivered to recipient handsets.',
         calculation: '(totalDelivered / totalSent) * 100',
+      },
+      onClick: () => {
+        setStatusFilter('completed');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
   ];

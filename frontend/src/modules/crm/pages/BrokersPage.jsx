@@ -137,10 +137,16 @@ export default function BrokersPage() {
       label: 'TOTAL ASSOCIATES',
       value: kpis.totalBrokers,
       status: 'neutral',
+      active: !levelFilter && !statusFilter,
       info: {
         title: 'Registered Channel Partners',
         summary: 'Active external brokers and channel associates generating sales in the partner network.',
         calculation: 'Count of active channel partners in Broker master (status not Inactive)',
+      },
+      onClick: () => {
+        setLevelFilter('');
+        setStatusFilter('');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -153,16 +159,26 @@ export default function BrokersPage() {
         summary: 'Aggregate plot and villa land area sold through channel partner network transactions.',
         calculation: 'Sum of totalYards across all active channel partners',
       },
+      onClick: () => {
+        setLevelFilter('');
+        setStatusFilter('');
+        setPagination((p) => ({ ...p, page: 1 }));
+      },
     },
     {
       key: 'referral-leads',
       label: 'ACTIVE BROKER LEADS',
       value: kpis.totalReferralLeads,
       status: 'positive',
+      active: statusFilter === 'Active',
       info: {
         title: 'Partner Referral Pipeline',
         summary: 'Active buyer leads currently introduced through channel partner referrals.',
         calculation: 'Count of leads with source Channel Partner / Broker and status not Lost',
+      },
+      onClick: () => {
+        setStatusFilter('Active');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -170,10 +186,15 @@ export default function BrokersPage() {
       label: 'SENIOR PARTNERS',
       value: kpis.seniorBrokers,
       status: 'neutral',
+      active: levelFilter === 'Sales Manager',
       info: {
         title: 'Senior Network Partners',
         summary: 'Partners who achieved Sales Manager level and above through cumulative sales volume.',
         calculation: 'Count of brokers with level in Sales Manager through Sales Director (500+ yards)',
+      },
+      onClick: () => {
+        setLevelFilter('Sales Manager');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
   ];

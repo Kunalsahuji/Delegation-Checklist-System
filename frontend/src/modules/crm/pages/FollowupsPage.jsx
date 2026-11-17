@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Bell,
   Calendar,
@@ -23,6 +24,7 @@ import CompleteFollowupModal from '../components/CompleteFollowupModal';
 import RescheduleFollowupModal from '../components/RescheduleFollowupModal';
 
 export default function FollowupsPage() {
+  const navigate = useNavigate();
   const { showSuccess, showError } = useToast();
 
   const [stats, setStats] = useState({
@@ -94,17 +96,22 @@ export default function FollowupsPage() {
     }
   };
 
-  // 5 KPI Tiles with MetricInfoBadge
+  // 5 KPI Tiles with interactive filtering and MetricInfoBadge
   const kpiItems = [
     {
       key: 'total-pending',
       label: 'TOTAL PENDING',
       value: stats.totalPending,
       status: 'neutral',
+      active: filterStatus === 'all',
       info: {
         title: 'Pending Follow-ups',
         summary: 'All client follow-up commitments and scheduled callbacks currently pending action.',
         calculation: 'Count of reminders where status = "pending"',
+      },
+      onClick: () => {
+        setFilterStatus('all');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
     {
@@ -112,10 +119,15 @@ export default function FollowupsPage() {
       label: 'DUE TODAY',
       value: stats.dueToday,
       status: stats.dueToday > 0 ? 'warning' : 'neutral',
+      active: filterStatus === 'dueToday',
       info: {
         title: 'Follow-ups Due Today',
         summary: 'Client calls and follow-ups requiring completion before end of today.',
         calculation: 'Count of pending reminders where reminderAt is within today',
+      },
+      onClick: () => {
+        setFilterStatus('dueToday');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
     {
@@ -123,10 +135,15 @@ export default function FollowupsPage() {
       label: 'OVERDUE',
       value: stats.overdue,
       status: stats.overdue > 0 ? 'negative' : 'neutral',
+      active: filterStatus === 'overdue',
       info: {
         title: 'Overdue Follow-ups',
         summary: 'Unresolved follow-up commitments past their scheduled due date.',
         calculation: 'Count of pending reminders where reminderAt < today 00:00:00',
+      },
+      onClick: () => {
+        setFilterStatus('overdue');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
     {
@@ -134,10 +151,15 @@ export default function FollowupsPage() {
       label: 'COMPLETED',
       value: stats.completed,
       status: 'positive',
+      active: filterStatus === 'completed',
       info: {
         title: 'Completed Follow-ups',
         summary: 'Client follow-ups successfully resolved with outcome notes recorded.',
         calculation: 'Count of reminders where status = "completed"',
+      },
+      onClick: () => {
+        setFilterStatus('completed');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
     {
@@ -149,6 +171,9 @@ export default function FollowupsPage() {
         title: 'Special High-Priority Leads',
         summary: 'Flagged prospective deals and VIP buyers marked with special star follow-up priority.',
         calculation: 'Count of active enquiries and leads where specialFollowUp = true',
+      },
+      onClick: () => {
+        navigate('/crm/special-followups');
       },
     },
   ];

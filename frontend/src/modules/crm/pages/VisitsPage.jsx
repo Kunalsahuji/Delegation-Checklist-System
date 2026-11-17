@@ -18,6 +18,7 @@ import {
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import { crmVisitApi } from '../../../api/crmVisitApi';
 import { crmProjectApi } from '../../../api/crmProjectApi';
+import { crmLeadAssignmentApi } from '../../../api/crmLeadAssignmentApi';
 import { useToast } from '../../../context/ToastContext';
 import VisitFormModal from '../components/VisitFormModal';
 import VisitDetailsModal from '../components/VisitDetailsModal';
@@ -34,6 +35,7 @@ export default function VisitsPage() {
 
   const [visits, setVisits] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [salesPersons, setSalesPersons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 15, total: 0, totalPages: 1 });
 
@@ -41,42 +43,71 @@ export default function VisitsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [geoFilter, setGeoFilter] = useState(''); // '', 'true', 'false'
+  const [kpiFilter, setKpiFilter] = useState('all'); // 'all', 'geo-verified', 'today', 'month'
 
   // Modals
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [detailsModal, setDetailsModal] = useState({ open: false, visit: null });
 
   useEffect(() => {
-    loadProjects();
+    loadMasterData();
   }, []);
 
   useEffect(() => {
     loadAllData();
-  }, [pagination.page, selectedProjectId, geoFilter]);
+  }, [pagination.page, selectedProjectId, geoFilter, kpiFilter]);
 
-  const loadProjects = async () => {
+  const loadMasterData = async () => {
     try {
-      const res = await crmProjectApi.getProjects({ limit: 100 });
-      if (res.success) {
-        setProjects(res.data || []);
+      const [projRes, workloadRes] = await Promise.all([
+        crmProjectApi.getProjects({ limit: 100 }),
+        crmLeadAssignmentApi.getWorkload(),
+      ]);
+      const projectList =
+        projRes?.projects || projRes?.data?.projects || projRes?.data || (Array.isArray(projRes) ? projRes : []);
+      setProjects(projectList);
+
+      if (workloadRes?.data && Array.isArray(workloadRes.data)) {
+        setSalesPersons(workloadRes.data.map((w) => w.user).filter(Boolean));
+      } else if (Array.isArray(workloadRes)) {
+        setSalesPersons(workloadRes.map((w) => w.user || w).filter(Boolean));
       }
     } catch (err) {
-      console.error('Failed to load projects:', err);
+      console.error('Failed to load master projects/sales team:', err);
     }
   };
 
   const loadAllData = async () => {
     try {
       setLoading(true);
+
+      const params = {
+        page: pagination.page,
+        limit: pagination.limit,
+        search: searchTerm,
+        projectId: selectedProjectId,
+      };
+
+      if (kpiFilter === 'geo-verified') {
+        params.geoVerified = 'true';
+      } else if (geoFilter) {
+        params.geoVerified = geoFilter;
+      }
+
+      if (kpiFilter === 'today') {
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        params.from = todayStart.toISOString();
+      } else if (kpiFilter === 'month') {
+        const monthStart = new Date();
+        monthStart.setDate(1);
+        monthStart.setHours(0, 0, 0, 0);
+        params.from = monthStart.toISOString();
+      }
+
       const [statsRes, visitsRes] = await Promise.all([
         crmVisitApi.getStats(),
-        crmVisitApi.listVisits({
-          page: pagination.page,
-          limit: pagination.limit,
-          search: searchTerm,
-          projectId: selectedProjectId,
-          geoVerified: geoFilter,
-        }),
+        crmVisitApi.listVisits(params),
       ]);
 
       if (statsRes.success) setStats(statsRes.data);
@@ -112,17 +143,24 @@ export default function VisitsPage() {
     }
   };
 
-  // KPI Items with MetricInfoBadge
+  // KPI Items with interactive filter triggers and MetricInfoBadge
   const kpiItems = [
     {
       key: 'total-visits',
       label: 'TOTAL SITE VISITS',
       value: stats.total,
       status: 'neutral',
+      active: kpiFilter === 'all' && !geoFilter,
       info: {
         title: 'Total Site Visits',
         summary: 'All physical site tours and walk-ins conducted across projects.',
         calculation: 'Count of visit reports where deletedAt is null',
+      },
+      onClick: () => {
+        setKpiFilter('all');
+        setGeoFilter('');
+        setSelectedProjectId('');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
     {
@@ -130,10 +168,16 @@ export default function VisitsPage() {
       label: 'GEO-VERIFIED VISITS',
       value: stats.geoVerified,
       status: 'positive',
+      active: kpiFilter === 'geo-verified' || geoFilter === 'true',
       info: {
         title: 'Geo-Fence Verified Visits',
         summary: 'Visits authenticated on-site using GPS matching the designated project coordinates.',
         calculation: 'Count of visit reports where geoVerified = true',
+      },
+      onClick: () => {
+        setKpiFilter('geo-verified');
+        setGeoFilter('true');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
     {
@@ -141,10 +185,16 @@ export default function VisitsPage() {
       label: "TODAY'S VISITS",
       value: stats.today,
       status: 'positive',
+      active: kpiFilter === 'today',
       info: {
         title: "Today's Field Visits",
         summary: 'Site tours completed by representatives today.',
         calculation: 'Count of visits with timestamp >= 00:00:00 today',
+      },
+      onClick: () => {
+        setKpiFilter('today');
+        setGeoFilter('');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
     {
@@ -152,10 +202,16 @@ export default function VisitsPage() {
       label: 'THIS MONTH',
       value: stats.month,
       status: 'neutral',
+      active: kpiFilter === 'month',
       info: {
         title: 'Visits This Month',
         summary: 'Total physical customer site visits recorded in the current calendar month.',
         calculation: 'Count of visits with timestamp >= start of this month',
+      },
+      onClick: () => {
+        setKpiFilter('month');
+        setGeoFilter('');
+        setPagination((prev) => ({ ...prev, page: 1 }));
       },
     },
   ];
@@ -425,6 +481,7 @@ export default function VisitsPage() {
         onClose={() => setIsFormOpen(false)}
         onSuccess={() => loadAllData()}
         projects={projects}
+        salesPersons={salesPersons}
       />
 
       <VisitDetailsModal

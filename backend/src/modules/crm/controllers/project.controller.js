@@ -10,7 +10,7 @@ const listProjects = async (req, res, next) => {
       page,
       limit,
     });
-    res.status(200).json({ success: true, ...result });
+    res.status(200).json({ success: true, ...result, data: result.projects });
   } catch (error) {
     next(error);
   }

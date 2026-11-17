@@ -138,10 +138,16 @@ export default function LeadAssignmentPage() {
       label: 'UNASSIGNED LEADS',
       value: kpis.unassignedLeads,
       status: kpis.unassignedLeads > 0 ? 'warning' : 'neutral',
+      active: statusFilter === 'unassigned',
       info: {
         title: 'Unassigned Leads',
         summary: 'Qualified inbound deals awaiting sales representative assignment.',
         calculation: 'Count of active leads where assignedTo is null',
+      },
+      onClick: () => {
+        setStatusFilter('unassigned');
+        setSelectedRepFilter('');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -149,10 +155,15 @@ export default function LeadAssignmentPage() {
       label: 'ACTIVE SALES REPS',
       value: kpis.totalSalesPersons,
       status: 'neutral',
+      active: statusFilter === 'assigned',
       info: {
         title: 'Active Sales Representatives',
         summary: 'Total team members available to take ownership of prospective buyer deals.',
         calculation: 'Count of active users in the system',
+      },
+      onClick: () => {
+        setStatusFilter('assigned');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -160,10 +171,16 @@ export default function LeadAssignmentPage() {
       label: 'TOTAL ACTIVE LEADS',
       value: kpis.totalActiveLeads,
       status: 'positive',
+      active: statusFilter === 'all' && !selectedRepFilter,
       info: {
         title: 'Total Active Pipeline Leads',
         summary: 'Active customer leads currently engaged throughout the sales pipeline.',
         calculation: 'Count of leads with status = "active"',
+      },
+      onClick: () => {
+        setStatusFilter('all');
+        setSelectedRepFilter('');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -176,6 +193,10 @@ export default function LeadAssignmentPage() {
         summary: 'Deals assigned or distributed to representatives today.',
         calculation: 'Count of assignment audit logs with timestamp >= 00:00 today',
       },
+      onClick: () => {
+        setStatusFilter('assigned');
+        setPagination((p) => ({ ...p, page: 1 }));
+      },
     },
     {
       key: 'reassignments',
@@ -186,6 +207,10 @@ export default function LeadAssignmentPage() {
         title: 'Lead Reassignments',
         summary: 'Total instances where lead ownership was transferred between representatives.',
         calculation: 'Count of assignment logs where triggerType = "reassign" or previousAssignee is not null',
+      },
+      onClick: () => {
+        setStatusFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
   ];

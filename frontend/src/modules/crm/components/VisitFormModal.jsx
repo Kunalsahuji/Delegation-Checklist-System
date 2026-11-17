@@ -13,6 +13,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { crmVisitApi } from '../../../api/crmVisitApi';
+import { crmProjectApi } from '../../../api/crmProjectApi';
+import { crmLeadAssignmentApi } from '../../../api/crmLeadAssignmentApi';
 import { useToast } from '../../../context/ToastContext';
 
 export default function VisitFormModal({
@@ -27,6 +29,44 @@ export default function VisitFormModal({
   const [submitting, setSubmitting] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(false);
   const [gpsStatus, setGpsStatus] = useState(null); // { lat, lng, accuracy, error }
+
+  const [internalProjects, setInternalProjects] = useState([]);
+  const [internalSalesPersons, setInternalSalesPersons] = useState([]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (projects && projects.length > 0) {
+      setInternalProjects(projects);
+    } else {
+      crmProjectApi
+        .getProjects({ limit: 100 })
+        .then((res) => {
+          const list =
+            res?.projects || res?.data?.projects || res?.data || (Array.isArray(res) ? res : []);
+          setInternalProjects(list);
+        })
+        .catch(() => {});
+    }
+
+    if (salesPersons && salesPersons.length > 0) {
+      setInternalSalesPersons(salesPersons);
+    } else {
+      crmLeadAssignmentApi
+        .getWorkload()
+        .then((res) => {
+          if (res?.data && Array.isArray(res.data)) {
+            setInternalSalesPersons(res.data.map((w) => w.user).filter(Boolean));
+          } else if (Array.isArray(res)) {
+            setInternalSalesPersons(res.map((w) => w.user || w).filter(Boolean));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen, projects, salesPersons]);
+
+  const displayProjects = internalProjects.length > 0 ? internalProjects : projects;
+  const displaySalesPersons = internalSalesPersons.length > 0 ? internalSalesPersons : salesPersons;
 
   // Lock background scroll when modal is open
   useEffect(() => {
@@ -269,7 +309,7 @@ export default function VisitFormModal({
               <select
                 value={formData.projectId}
                 onChange={(e) => {
-                  const p = projects.find((x) => String(x._id) === e.target.value);
+                  const p = displayProjects.find((x) => String(x._id) === e.target.value);
                   setFormData({
                     ...formData,
                     projectId: e.target.value,
@@ -280,9 +320,9 @@ export default function VisitFormModal({
                 required
               >
                 <option value="">Select Project Site...</option>
-                {projects.map((proj) => (
+                {displayProjects.map((proj) => (
                   <option key={proj._id} value={proj._id}>
-                    {proj.name} ({proj.location || 'Site'})
+                    {proj.name} ({proj.location || proj.city || 'Site'})
                   </option>
                 ))}
               </select>
@@ -296,7 +336,7 @@ export default function VisitFormModal({
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-blue-500 bg-white"
               >
                 <option value="">Current User / Self</option>
-                {salesPersons.map((user) => (
+                {displaySalesPersons.map((user) => (
                   <option key={user._id || user.userId} value={user._id || user.userId}>
                     {user.name} ({user.role || 'Sales'})
                   </option>

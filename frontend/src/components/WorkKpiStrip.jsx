@@ -45,16 +45,24 @@ export default function WorkKpiStrip({
               }`}
             >
               <div
-                role="button"
-                tabIndex={0}
+                role={item.onClick ? "button" : "region"}
+                tabIndex={item.onClick ? 0 : undefined}
                 onClick={item.onClick}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (item.onClick && (e.key === 'Enter' || e.key === ' ')) {
                     e.preventDefault();
-                    item.onClick?.();
+                    item.onClick();
                   }
                 }}
-                className="flex h-full w-full flex-col items-start justify-start px-3.5 py-2.5 text-left outline-none transition-colors hover:bg-slate-50 focus-visible:bg-slate-50 cursor-pointer select-none"
+                className={`flex h-full w-full flex-col items-start justify-start px-3.5 py-2.5 text-left outline-none transition-all select-none ${
+                  item.onClick
+                    ? 'cursor-pointer hover:bg-slate-50 focus-visible:bg-slate-50'
+                    : 'cursor-default'
+                } ${
+                  item.active
+                    ? 'bg-blue-50/80 ring-2 ring-inset ring-blue-500/30'
+                    : ''
+                }`}
               >
                 <div className="flex items-center justify-between w-full gap-1 mb-0.5">
                   <span className="block truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">

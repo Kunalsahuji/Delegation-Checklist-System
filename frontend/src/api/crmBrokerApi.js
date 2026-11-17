@@ -3,38 +3,11 @@ import { axiosClient } from './axiosClient';
 const BASE_URL = '/crm/brokers';
 
 export const crmBrokerApi = {
-  getKPIs: async () => {
-    const res = await axiosClient.get(`${BASE_URL}/kpis`);
-    return res.data;
-  },
-
-  listBrokers: async (params = {}) => {
-    const res = await axiosClient.get(BASE_URL, { params });
-    return res.data;
-  },
-
-  getBrokerById: async (id) => {
-    const res = await axiosClient.get(`${BASE_URL}/${id}`);
-    return res.data;
-  },
-
-  createBroker: async (data) => {
-    const res = await axiosClient.post(BASE_URL, data);
-    return res.data;
-  },
-
-  updateBroker: async (id, data) => {
-    const res = await axiosClient.patch(`${BASE_URL}/${id}`, data);
-    return res.data;
-  },
-
-  deleteBroker: async (id) => {
-    const res = await axiosClient.delete(`${BASE_URL}/${id}`);
-    return res.data;
-  },
-
-  getNetwork: async () => {
-    const res = await axiosClient.get(`${BASE_URL}/network`);
-    return res.data;
-  },
+  getKPIs: () => axiosClient.get(`${BASE_URL}/kpis`),
+  listBrokers: (params = {}) => axiosClient.get(BASE_URL, { params }),
+  getBrokerById: (id) => axiosClient.get(`${BASE_URL}/${id}`),
+  createBroker: (data) => axiosClient.post(BASE_URL, data),
+  updateBroker: (id, data) => axiosClient.patch(`${BASE_URL}/${id}`, data),
+  deleteBroker: (id) => axiosClient.delete(`${BASE_URL}/${id}`),
+  getNetwork: () => axiosClient.get(`${BASE_URL}/network`),
 };

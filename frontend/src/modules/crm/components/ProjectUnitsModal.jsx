@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Plus, Trash2, CheckCircle2, Clock, AlertTriangle, ShieldAlert, Edit2, Check, RefreshCw } from 'lucide-react';
 import { crmProjectApi } from '../../../api/crmProjectApi';
 import { useToast } from '../../../context/ToastContext';
@@ -10,6 +11,16 @@ export default function ProjectUnitsModal({ isOpen, onClose, project, onUpdated 
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  // Lock background scroll when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
 
   // New Unit Form State
   const [newUnit, setNewUnit] = useState({
@@ -172,8 +183,8 @@ export default function ProjectUnitsModal({ isOpen, onClose, project, onUpdated 
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-y-auto animate-in fade-in">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in">
       <div className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-6 flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/70 shrink-0">
@@ -522,6 +533,7 @@ export default function ProjectUnitsModal({ isOpen, onClose, project, onUpdated 
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, MapPin, Navigation, Compass, Building2, Check, AlertCircle } from 'lucide-react';
 import { crmProjectApi } from '../../../api/crmProjectApi';
 import { useToast } from '../../../context/ToastContext';
@@ -6,6 +7,16 @@ import { useToast } from '../../../context/ToastContext';
 export default function ProjectFormModal({ isOpen, onClose, project = null, onSaved }) {
   const { showSuccess, showError } = useToast();
   const isEdit = Boolean(project?._id);
+
+  // Lock background scroll when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -132,8 +143,8 @@ export default function ProjectFormModal({ isOpen, onClose, project = null, onSa
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/50 backdrop-blur-xs overflow-y-auto animate-in fade-in">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in">
       <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-6">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/70">
@@ -351,6 +362,7 @@ export default function ProjectFormModal({ isOpen, onClose, project = null, onSa
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

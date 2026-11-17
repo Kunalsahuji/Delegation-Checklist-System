@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, UserPlus, Phone, MapPin, Building, DollarSign } from 'lucide-react';
 import { crmLeadApi } from '../../../api/crmLeadApi';
 import { useToast } from '../../../context/ToastContext';
@@ -6,6 +7,16 @@ import { useToast } from '../../../context/ToastContext';
 export default function LeadFormModal({ isOpen, onClose, onSuccess, projects = [] }) {
   const { showSuccess, showError } = useToast();
   const [submitting, setSubmitting] = useState(false);
+
+  // Lock background scroll when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
 
   const [formData, setFormData] = useState({
     clientName: '',
@@ -51,8 +62,8 @@ export default function LeadFormModal({ isOpen, onClose, onSuccess, projects = [
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto animate-in fade-in">
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden animate-in fade-in-50 zoom-in-95 duration-200">
         
         {/* Header */}
@@ -235,6 +246,7 @@ export default function LeadFormModal({ isOpen, onClose, onSuccess, projects = [
         </form>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

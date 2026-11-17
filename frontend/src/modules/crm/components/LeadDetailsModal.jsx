@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Phone,
@@ -54,6 +55,16 @@ export default function LeadDetailsModal({
   const [closeType, setCloseType] = useState('lost'); // 'lost' | 'dropped'
   const [closeReason, setCloseReason] = useState('');
   const [closeComment, setCloseComment] = useState('');
+
+  // Lock background scroll when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
 
   if (!isOpen || !lead) return null;
 
@@ -204,8 +215,8 @@ export default function LeadDetailsModal({
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in-50 zoom-in-95 duration-200">
         
         {/* Top Header */}
@@ -801,6 +812,7 @@ export default function LeadDetailsModal({
         </div>
       )}
 
-    </div>
+    </div>,
+    document.body
   );
 }

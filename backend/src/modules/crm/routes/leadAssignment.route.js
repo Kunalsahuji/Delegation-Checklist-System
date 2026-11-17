@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const leadAssignmentController = require('../controllers/leadAssignment.controller');
-const { auth } = require('../../../middlewares/auth.middleware');
+const auth = require('../../../middlewares/auth.middleware');
 
 // Public or authenticated endpoints
 router.use(auth);

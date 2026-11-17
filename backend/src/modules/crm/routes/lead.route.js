@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const leadController = require('../controllers/lead.controller');
-const { protect } = require('../../../middlewares/auth.middleware');
+const auth = require('../../../middlewares/auth.middleware');
 
 // Public or protected CRM routes
-router.use(protect);
+router.use(auth);
 
 router.get('/stages', leadController.listStages);
 router.get('/', leadController.listLeads);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   CheckSquare,
@@ -9,6 +9,7 @@ import {
   Users2,
   FolderGit2,
   CheckCircle2,
+  RefreshCw,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { StatCard } from '../components/StatCard';
@@ -17,44 +18,100 @@ import { checklistApi } from '../modules/checklist/api/checklistApi';
 import { delegationApi } from '../modules/delegation/api/delegationApi';
 import { axiosClient } from '../api/axiosClient';
 
+const CACHE_KEY = 'taskflow_unified_dashboard_cache';
+const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes fresh cache window
+
+// Read cache synchronously to prevent layout shifts & 0ms initial render
+function getDashboardCache() {
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    const isFresh = Date.now() - (parsed.timestamp || 0) < CACHE_TTL_MS;
+    return { data: parsed.data, isFresh, timestamp: parsed.timestamp };
+  } catch (e) {
+    return null;
+  }
+}
+
+function setDashboardCache(data) {
+  try {
+    sessionStorage.setItem(
+      CACHE_KEY,
+      JSON.stringify({ data, timestamp: Date.now() })
+    );
+  } catch (e) {
+    // ignore sessionStorage errors
+  }
+}
+
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [checklistStats, setChecklistStats] = useState(null);
-  const [delegationStats, setDelegationStats] = useState(null);
-  const [userCount, setUserCount] = useState(null);
-  const [deptCount, setDeptCount] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  const cached = useRef(getDashboardCache()).current;
+
+  // Initialize with cached data if available (0ms instant render!)
+  const [checklistStats, setChecklistStats] = useState(cached?.data?.checklistStats || null);
+  const [delegationStats, setDelegationStats] = useState(cached?.data?.delegationStats || null);
+  const [userCount, setUserCount] = useState(cached?.data?.userCount ?? null);
+  const [deptCount, setDeptCount] = useState(cached?.data?.deptCount ?? null);
+  const [loading, setLoading] = useState(!cached?.data);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchCounts = useCallback(async (force = false) => {
+    try {
+      if (force) {
+        setIsRefreshing(true);
+      } else if (!cached?.data) {
+        setLoading(true);
+      }
+
+      const [statsRes, dlgStatsRes, userRes, deptRes] = await Promise.all([
+        checklistApi.getStats(),
+        delegationApi.getStats(),
+        axiosClient.get('/master/users'),
+        axiosClient.get('/master/departments'),
+      ]);
+
+      const cStats = statsRes?.data || statsRes || null;
+      const dStats = dlgStatsRes?.data || dlgStatsRes || null;
+      const uList = userRes?.data || userRes || [];
+      const dList = deptRes?.data || deptRes || [];
+      const uCount = Array.isArray(uList) ? uList.length : null;
+      const dpCount = Array.isArray(dList) ? dList.length : null;
+
+      setChecklistStats(cStats);
+      setDelegationStats(dStats);
+      setUserCount(uCount);
+      setDeptCount(dpCount);
+
+      // Save to cache for subsequent 0ms instant loads
+      setDashboardCache({
+        checklistStats: cStats,
+        delegationStats: dStats,
+        userCount: uCount,
+        deptCount: dpCount,
+      });
+    } catch (e) {
+      // silent fallback
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [cached]);
 
   useEffect(() => {
-    let isMounted = true;
-    const fetchCounts = async () => {
-      try {
-        setLoading(true);
-        const [statsRes, dlgStatsRes, userRes, deptRes] = await Promise.all([
-          checklistApi.getStats(),
-          delegationApi.getStats(),
-          axiosClient.get('/master/users'),
-          axiosClient.get('/master/departments'),
-        ]);
-        if (!isMounted) return;
-        if (statsRes) setChecklistStats(statsRes.data || statsRes);
-        if (dlgStatsRes) setDelegationStats(dlgStatsRes.data || dlgStatsRes);
-        const uList = userRes?.data || userRes || [];
-        const dList = deptRes?.data || deptRes || [];
-        if (Array.isArray(uList)) setUserCount(uList.length);
-        if (Array.isArray(dList)) setDeptCount(dList.length);
-      } catch (e) {
-        // silent fallback
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-    fetchCounts();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    // If cache is present and fresh, silent background revalidation without loader
+    // If no cache or cache is stale, fetches and updates
+    if (cached?.isFresh) {
+      // Data is already rendered immediately in 0ms!
+      // Run quiet background revalidation
+      fetchCounts(false);
+    } else {
+      fetchCounts(false);
+    }
+  }, [fetchCounts, cached]);
 
   return (
     <div className="space-y-4 sm:space-y-5 w-full">
@@ -75,14 +132,23 @@ export const DashboardPage = () => {
 
         {/* Quick Action Buttons */}
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => fetchCounts(true)}
+            disabled={isRefreshing}
+            className="p-2 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+            title="Refresh metrics from server"
+          >
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-brand-600' : ''}`} />
+          </button>
           <Link to="/checklist/list" className="flex-1 sm:flex-initial">
-            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors">
+            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
               <CheckSquare className="w-4 h-4" />
               <span>Checklists</span>
             </button>
           </Link>
           <Link to="/delegation/list" className="flex-1 sm:flex-initial">
-            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors">
+            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
               <ListTodo className="w-4 h-4 text-emerald-400" />
               <span>Delegations</span>
             </button>

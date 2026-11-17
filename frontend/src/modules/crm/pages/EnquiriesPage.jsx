@@ -130,14 +130,17 @@ export default function EnquiriesPage() {
   // KPI Strip Data with MetricInfoBadges
   const kpiItems = [
     {
+      key: 'total-enquiries',
       id: 'total-enquiries',
       label: 'TOTAL ENQUIRIES',
       value: kpis.totalEnquiries,
       hint: 'Inbound prospective buyers',
-      tone: 'neutral',
-      infoTitle: 'Total Enquiries',
-      infoSummary: 'All incoming inquiries recorded across phone, ads, walk-ins, and brokers.',
-      infoCalculation: 'Count of all non-deleted enquiry records in the system.',
+      tone: 'default',
+      info: {
+        title: 'Total Enquiries',
+        summary: 'All incoming prospective buyer inquiries recorded across advertisements, walk-ins, phone calls, and referral partners.',
+        calculation: 'Count of all non-deleted enquiry records currently in the system.',
+      },
       onClick: () => {
         setStatusFilter('all');
         setFollowupFilter('all');
@@ -145,56 +148,68 @@ export default function EnquiriesPage() {
       },
     },
     {
+      key: 'qualified',
       id: 'qualified',
       label: 'QUALIFIED',
       value: kpis.qualifiedCount,
       hint: `${kpis.totalEnquiries ? Math.round((kpis.qualifiedCount / kpis.totalEnquiries) * 100) : 0}% qualification rate`,
-      tone: 'emerald',
-      infoTitle: 'Qualified Enquiries',
-      infoSummary: 'Prospective buyers verified through tele-sales screening.',
-      infoCalculation: 'Enquiries where status = "qualified" or "converted".',
+      tone: 'success',
+      info: {
+        title: 'Qualified Enquiries',
+        summary: 'Prospective buyers verified through tele-sales screening and ready for sales pipeline assignment or site visits.',
+        calculation: 'Enquiries where qualification status = "qualified" or converted into an active Lead.',
+      },
       onClick: () => {
         setStatusFilter('qualified');
         setFollowupFilter('all');
       },
     },
     {
+      key: 'pending',
       id: 'pending',
       label: 'PENDING',
       value: kpis.pendingCount,
       hint: 'Awaiting call / verification',
-      tone: 'amber',
-      infoTitle: 'Pending Screening',
-      infoSummary: 'New or in-progress inquiries undergoing initial follow-ups.',
-      infoCalculation: 'Enquiries with status in ["new", "contacted", "hold"].',
+      tone: 'warning',
+      info: {
+        title: 'Pending Screening',
+        summary: 'New or in-progress inbound inquiries undergoing initial outreach, qualification calls, or awaiting customer response.',
+        calculation: 'Enquiries with status in ["new", "contacted", "hold"].',
+      },
       onClick: () => {
         setStatusFilter('new');
         setFollowupFilter('all');
       },
     },
     {
+      key: 'overdue',
       id: 'overdue',
       label: 'OVERDUE',
       value: kpis.overdueCount,
       hint: 'Follow-up date passed',
-      tone: 'rose',
-      infoTitle: 'Overdue Follow-ups',
-      infoSummary: 'Inquiries whose planned follow-up date has passed without resolution.',
-      infoCalculation: 'Active enquiries with nextFollowupAt < today.',
+      tone: 'danger',
+      info: {
+        title: 'Overdue Follow-ups',
+        summary: 'Inquiries whose scheduled callback or follow-up deadline has passed without an updated activity log or status change.',
+        calculation: 'Active enquiries where nextFollowupAt < today (start of day 00:00).',
+      },
       onClick: () => {
         setFollowupFilter('overdue');
         setStatusFilter('all');
       },
     },
     {
+      key: 'due-today',
       id: 'due-today',
       label: 'DUE TODAY',
       value: kpis.dueTodayCount,
       hint: 'Scheduled for today',
       tone: 'sky',
-      infoTitle: 'Due Today',
-      infoSummary: 'Inquiries scheduled for customer callback or site visit today.',
-      infoCalculation: 'Enquiries with nextFollowupAt falling on the current calendar day.',
+      info: {
+        title: 'Due Today Follow-ups',
+        summary: 'Inquiries scheduled for customer callback, reminder follow-up, or site visit coordination on today\'s calendar date.',
+        calculation: 'Enquiries where nextFollowupAt falls between today 00:00 and 23:59.',
+      },
       onClick: () => {
         setFollowupFilter('today');
         setStatusFilter('all');

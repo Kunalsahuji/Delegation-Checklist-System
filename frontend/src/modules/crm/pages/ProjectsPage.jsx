@@ -104,44 +104,70 @@ export default function ProjectsPage() {
   // KPI Strip Configuration
   const kpiItems = [
     {
+      key: 'total-projects',
       id: 'total-projects',
       label: 'TOTAL PROJECTS',
       value: kpis.totalProjects,
       hint: `${kpis.openProjects} open for booking`,
-      tone: 'neutral',
-      infoTitle: 'Total Projects',
-      infoSummary: 'All registered real estate developments.',
-      infoCalculation: 'Count of all non-deleted projects in the master registry.',
+      tone: 'default',
+      info: {
+        title: 'Total Projects',
+        summary: 'All registered real estate developments, plotting schemes, and commercial developments.',
+        calculation: 'Count of all non-deleted projects in the master registry.',
+      },
+      onClick: () => {
+        setStatusFilter('all');
+        setTypeFilter('all');
+      },
     },
     {
+      key: 'total-units',
       id: 'total-units',
       label: 'INVENTORY UNITS',
       value: kpis.totalUnits,
       hint: 'Plots, villas & shops',
       tone: 'sky',
-      infoTitle: 'Inventory Units',
-      infoSummary: 'Total sellable units configured across all projects.',
-      infoCalculation: 'Sum of units across projects.',
+      info: {
+        title: 'Inventory Units',
+        summary: 'Total sellable inventory units configured across all projects.',
+        calculation: 'Sum of units across all project inventory sheets.',
+      },
+      onClick: () => {
+        setStatusFilter('active');
+        setTypeFilter('all');
+      },
     },
     {
+      key: 'available-units',
       id: 'available-units',
       label: 'AVAILABLE',
       value: kpis.availableUnits,
       hint: `${kpis.totalUnits ? Math.round((kpis.availableUnits / kpis.totalUnits) * 100) : 0}% available`,
-      tone: 'emerald',
-      infoTitle: 'Available Units',
-      infoSummary: 'Units currently free for customer booking.',
-      infoCalculation: 'Units with status = "available".',
+      tone: 'success',
+      info: {
+        title: 'Available Units',
+        summary: 'Sellable units currently available for customer allocation, site visit selection, and booking.',
+        calculation: 'Units with status = "available".',
+      },
+      onClick: () => {
+        setStatusFilter('active');
+      },
     },
     {
+      key: 'booked-units',
       id: 'booked-units',
       label: 'BOOKED / SOLD',
       value: kpis.bookedUnits,
       hint: `${kpis.totalUnits ? Math.round((kpis.bookedUnits / kpis.totalUnits) * 100) : 0}% booked`,
-      tone: 'rose',
-      infoTitle: 'Booked Units',
-      infoSummary: 'Units with confirmed booking deposits.',
-      infoCalculation: 'Units with status = "booked".',
+      tone: 'danger',
+      info: {
+        title: 'Booked / Sold Units',
+        summary: 'Units with confirmed customer bookings, advance token deposits, or sale registrations.',
+        calculation: 'Units with status in ["booked", "sold"].',
+      },
+      onClick: () => {
+        setStatusFilter('all');
+      },
     },
   ];
 

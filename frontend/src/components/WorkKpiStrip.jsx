@@ -31,9 +31,15 @@ export default function WorkKpiStrip({
       <div className={`-mb-px -mr-px grid ${columns}`}>
         {items.map((item, idx) => {
           const isOddLast = idx === items.length - 1 && items.length % 2 === 1;
+          const infoData = item.info || (item.infoSummary ? {
+            title: item.infoTitle || item.label,
+            summary: item.infoSummary,
+            calculation: item.infoCalculation,
+          } : null);
+
           return (
             <div
-              key={item.key}
+              key={item.key || item.id || idx}
               className={`border-b sm:border-b-0 border-r border-slate-100 ${
                 isOddLast ? 'col-span-2 sm:col-span-1' : ''
               }`}
@@ -54,11 +60,11 @@ export default function WorkKpiStrip({
                   <span className="block truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">
                     {item.label}
                   </span>
-                  {item.info && (
+                  {infoData && (
                     <MetricInfoBadge
-                      title={item.info.title || item.label}
-                      summary={item.info.summary}
-                      calculation={item.info.calculation}
+                      title={infoData.title || item.label}
+                      summary={infoData.summary}
+                      calculation={infoData.calculation}
                     />
                   )}
                 </div>

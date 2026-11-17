@@ -16,6 +16,7 @@ import DelegationDashboardPage from './modules/delegation/pages/DelegationDashbo
 import DelegationWeeklyReportPage from './modules/delegation/pages/DelegationWeeklyReportPage';
 import ProjectsPage from './modules/crm/pages/ProjectsPage';
 import EnquiriesPage from './modules/crm/pages/EnquiriesPage';
+import LeadsPage from './modules/crm/pages/LeadsPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -67,6 +68,7 @@ export default function App() {
               {/* CRM routes */}
               <Route path="crm/projects" element={<ProjectsPage />} />
               <Route path="crm/enquiries" element={<EnquiriesPage />} />
+              <Route path="crm/leads" element={<LeadsPage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

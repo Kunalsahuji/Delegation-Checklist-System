@@ -1,6 +1,7 @@
 const express = require('express');
 const projectRoutes = require('./project.route');
 const enquiryRoutes = require('./enquiry.route');
+const leadRoutes = require('./lead.route');
 
 const router = express.Router();
 
@@ -9,5 +10,8 @@ router.use('/projects', projectRoutes);
 
 // Mount Enquiry Intake & Qualification Routes
 router.use('/enquiries', enquiryRoutes);
+
+// Mount Leads Pipeline & Stage Progression Routes
+router.use('/leads', leadRoutes);
 
 module.exports = router;

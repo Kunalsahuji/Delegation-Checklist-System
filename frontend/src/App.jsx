@@ -22,6 +22,8 @@ import VisitsPage from './modules/crm/pages/VisitsPage';
 import FollowupsPage from './modules/crm/pages/FollowupsPage';
 import SpecialFollowupsPage from './modules/crm/pages/SpecialFollowupsPage';
 import CalendarPage from './modules/crm/pages/CalendarPage';
+import BrokersPage from './modules/crm/pages/BrokersPage';
+import BrokerNetworkPage from './modules/crm/pages/BrokerNetworkPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -83,6 +85,8 @@ export default function App() {
               <Route path="crm/special-followups" element={<SpecialFollowupsPage />} />
               <Route path="crm/special-follow-ups" element={<Navigate to="/crm/special-followups" replace />} />
               <Route path="crm/calendar" element={<CalendarPage />} />
+              <Route path="crm/brokers" element={<BrokersPage />} />
+              <Route path="crm/network" element={<BrokerNetworkPage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

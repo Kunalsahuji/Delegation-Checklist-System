@@ -23,6 +23,7 @@ import {
   Plus,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
+import MetricInfoBadge from '../../../components/MetricInfoBadge';
 import { crmDashboardApi } from '../../../api/crmDashboardApi';
 import { useToast } from '../../../context/ToastContext';
 
@@ -158,6 +159,11 @@ export default function CrmDashboardPage() {
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-blue-600" />
             <h2 className="text-sm font-bold text-slate-900">8-Stage Sales Pipeline Funnel</h2>
+            <MetricInfoBadge
+              title="8-Stage Sales Pipeline Funnel"
+              summary="Visual milestone progression tracking prospective property buyers across 8 structured sales stages from initial inquiry to final registry."
+              calculation="Count of active leads currently situated in each pipeline milestone (Contact Initiated → Final Registry)."
+            />
           </div>
           <Link
             to="/crm/leads"
@@ -200,10 +206,15 @@ export default function CrmDashboardPage() {
           {/* Lead Sources Card */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5">
                 <Share2 className="w-4 h-4 text-purple-600" />
-                <span>Acquisition Channels</span>
-              </h2>
+                <h2 className="text-sm font-bold text-slate-900">Acquisition Channels</h2>
+                <MetricInfoBadge
+                  title="Inbound Acquisition Channels"
+                  summary="Source distribution of customer inquiries showing which marketing channels yield buyer interest."
+                  calculation="Grouped count and percentage of non-deleted CRM inquiries per lead origin (Meta Ads, Phone, Walk-in, Website, Broker)."
+                />
+              </div>
               <span className="text-xs text-slate-400">Inbound Distribution</span>
             </div>
 
@@ -245,10 +256,15 @@ export default function CrmDashboardPage() {
 
           {/* Client Temperature Heatmap */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-3">
-            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5">
               <ThermometerSun className="w-4 h-4 text-amber-500" />
-              <span>Client Intent Heatmap</span>
-            </h2>
+              <h2 className="text-sm font-bold text-slate-900">Client Intent Heatmap</h2>
+              <MetricInfoBadge
+                title="Client Intent Heatmap"
+                summary="Rule-based and behavioral temperature triage categorizing active leads by purchasing urgency and budget readiness."
+                calculation="Hot = High urgency, verified budget, immediate visit; Warm = Actively evaluating property options; Cold = Long-term timeline or unverified budget."
+              />
+            </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-rose-50 border border-rose-200 rounded-xl p-3 text-center">
@@ -289,10 +305,15 @@ export default function CrmDashboardPage() {
           {/* Operational Follow-Up Radar */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-blue-600" />
-                <span>Follow-up & Operational Radar</span>
-              </h2>
+                <h2 className="text-sm font-bold text-slate-900">Follow-up & Operational Radar</h2>
+                <MetricInfoBadge
+                  title="Operational Follow-up Radar"
+                  summary="Daily operational task monitoring tracking scheduled customer call-backs, overdue touchpoints, and VIP escalations."
+                  calculation="Overdue Tasks = Pending reminders with reminderDate < today; Due Today = Scheduled for today; Starred VIP = High-touch special follow-up leads."
+                />
+              </div>
               <Link
                 to="/crm/followups"
                 className="text-xs text-blue-600 hover:underline font-semibold"
@@ -343,10 +364,15 @@ export default function CrmDashboardPage() {
           {/* Team Workload & Performers */}
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5">
                 <Users className="w-4 h-4 text-emerald-600" />
-                <span>Sales Team Workload & Lead Distribution</span>
-              </h2>
+                <h2 className="text-sm font-bold text-slate-900">Sales Team Workload & Lead Distribution</h2>
+                <MetricInfoBadge
+                  title="Sales Team Workload & Distribution"
+                  summary="Workload distribution and deal closing velocity across sales representatives, ensuring balanced pipeline management."
+                  calculation="Total assigned leads and closed won deals per sales executive in the CRM system."
+                />
+              </div>
               <Link
                 to="/crm/lead-assignments"
                 className="text-xs text-blue-600 hover:underline font-semibold"
@@ -393,10 +419,15 @@ export default function CrmDashboardPage() {
       {/* Recent Enquiries Activity Table */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden w-full space-y-0">
         <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5">
             <PhoneCall className="w-4 h-4 text-blue-600" />
-            <span>Recent Inbound Enquiries</span>
-          </h2>
+            <h2 className="text-sm font-bold text-slate-900">Recent Inbound Enquiries</h2>
+            <MetricInfoBadge
+              title="Recent Inbound Enquiries"
+              summary="Chronological real-time audit stream of the latest buyer inquiries captured across all digital and direct marketing channels."
+              calculation="Latest 5 enquiry records showing client contact, channel source, intent temperature, and qualification status."
+            />
+          </div>
           <Link
             to="/crm/enquiries"
             className="text-xs text-blue-600 hover:underline font-semibold flex items-center gap-1"

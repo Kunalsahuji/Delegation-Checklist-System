@@ -3,6 +3,7 @@ const projectRoutes = require('./project.route');
 const enquiryRoutes = require('./enquiry.route');
 const leadRoutes = require('./lead.route');
 const leadAssignmentRoutes = require('./leadAssignment.route');
+const visitRoutes = require('./visit.route');
 
 const router = express.Router();
 
@@ -17,5 +18,8 @@ router.use('/leads', leadRoutes);
 
 // Mount Lead Assignment & Distribution Routes
 router.use('/lead-assignments', leadAssignmentRoutes);
+
+// Mount Site Visits & Geo-Fencing Routes
+router.use('/visits', visitRoutes);
 
 module.exports = router;

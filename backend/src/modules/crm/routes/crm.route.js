@@ -5,6 +5,7 @@ const leadRoutes = require('./lead.route');
 const leadAssignmentRoutes = require('./leadAssignment.route');
 const visitRoutes = require('./visit.route');
 const reminderRoutes = require('./reminder.route');
+const calendarRoutes = require('./calendar.route');
 
 const router = express.Router();
 
@@ -25,5 +26,8 @@ router.use('/visits', visitRoutes);
 
 // Mount Reminders & Follow-up Routes
 router.use('/reminders', reminderRoutes);
+
+// Mount Unified CRM Calendar Routes
+router.use('/calendar', calendarRoutes);
 
 module.exports = router;

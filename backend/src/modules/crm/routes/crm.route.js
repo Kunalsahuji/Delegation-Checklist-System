@@ -8,6 +8,7 @@ const reminderRoutes = require('./reminder.route');
 const calendarRoutes = require('./calendar.route');
 const brokerRoutes = require('./broker.route');
 const metaLeadRoutes = require('./metaLead.route');
+const bulkMessageRoutes = require('./bulkMessage.route');
 
 const router = express.Router();
 
@@ -37,5 +38,8 @@ router.use('/brokers', brokerRoutes);
 
 // Mount Meta Ad Campaigns & Leads Routes
 router.use('/meta-leads', metaLeadRoutes);
+
+// Mount Bulk Message & Campaign Broadcast Routes
+router.use('/bulk-messages', bulkMessageRoutes);
 
 module.exports = router;

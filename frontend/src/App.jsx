@@ -25,6 +25,7 @@ import CalendarPage from './modules/crm/pages/CalendarPage';
 import BrokersPage from './modules/crm/pages/BrokersPage';
 import BrokerNetworkPage from './modules/crm/pages/BrokerNetworkPage';
 import MetaLeadsPage from './modules/crm/pages/MetaLeadsPage';
+import BulkMessagePage from './modules/crm/pages/BulkMessagePage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -89,6 +90,7 @@ export default function App() {
               <Route path="crm/brokers" element={<BrokersPage />} />
               <Route path="crm/network" element={<BrokerNetworkPage />} />
               <Route path="crm/meta-leads" element={<MetaLeadsPage />} />
+              <Route path="crm/bulk-message" element={<BulkMessagePage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

@@ -57,6 +57,10 @@ ehthumbs.db
 uploads/
 backend/uploads/
 
+# Local Test & Seed Scripts
+backend/src/scripts/seed*
+backend/src/scripts/test*
+
 # Documentation & Internal Specs
 docs/
 docs

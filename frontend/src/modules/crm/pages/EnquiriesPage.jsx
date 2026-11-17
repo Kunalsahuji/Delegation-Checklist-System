@@ -258,11 +258,11 @@ export default function EnquiriesPage() {
 
   return (
     <div className="space-y-4 w-full">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* Top Header Card */}
+      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">Enquiries & Intake</h1>
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Enquiries & Intake</h1>
             <span className="px-2 py-0.5 text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200/60 rounded-full">
               CRM Intake
             </span>
@@ -272,7 +272,7 @@ export default function EnquiriesPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={loadEnquiries}

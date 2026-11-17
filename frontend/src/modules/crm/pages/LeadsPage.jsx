@@ -247,11 +247,11 @@ export default function LeadsPage() {
 
   return (
     <div className="space-y-4 w-full">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* Top Header Card */}
+      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">Leads & Sales Pipeline</h1>
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Leads & Sales Pipeline</h1>
             <span className="px-2 py-0.5 text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/60 rounded-full">
               CRM Pipeline
             </span>
@@ -261,7 +261,7 @@ export default function LeadsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* View Mode Toggle */}
           <div className="flex items-center p-1 bg-slate-100 rounded-lg border border-slate-200">
             <button
@@ -369,27 +369,12 @@ export default function LeadsPage() {
 
       {/* Main Content Area */}
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400 bg-white rounded-xl border border-slate-200 animate-pulse">
+        <div className="p-12 text-center text-xs text-slate-400 bg-white rounded-xl border border-slate-200 animate-pulse w-full">
           Loading Leads Pipeline...
-        </div>
-      ) : leads.length === 0 ? (
-        <div className="p-12 text-center bg-white rounded-xl border border-slate-200 space-y-3">
-          <Layers className="w-10 h-10 text-slate-300 mx-auto" />
-          <h3 className="text-sm font-bold text-slate-700">No leads found</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto">
-            Qualify an enquiry from the Enquiries page or click "Register Lead" to create a new walk-in buyer opportunity.
-          </p>
-          <button
-            type="button"
-            onClick={() => setCreateModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-xs"
-          >
-            <Plus className="w-3.5 h-3.5" /> Register First Lead
-          </button>
         </div>
       ) : viewMode === 'kanban' ? (
         /* KANBAN / PIPELINE STAGE BOARD */
-        <div className="overflow-x-auto pb-4">
+        <div className="overflow-x-auto pb-4 w-full">
           <div className="flex gap-4 min-w-[1400px] items-start">
             {stages.map((st) => {
               const stageLeads = leads.filter(
@@ -420,7 +405,10 @@ export default function LeadsPage() {
                   {/* Stage Leads Cards */}
                   <div className="space-y-2.5 overflow-y-auto pr-1 flex-1">
                     {stageLeads.length === 0 ? (
-                      <div className="py-6 text-center text-[11px] text-slate-400">No leads in this stage</div>
+                      <div className="py-10 text-center flex flex-col items-center justify-center text-[11px] text-slate-400 gap-1.5">
+                        <Layers className="w-5 h-5 text-slate-300 stroke-1" />
+                        <span>No leads in this stage</span>
+                      </div>
                     ) : (
                       stageLeads.map((lead) => (
                         <div
@@ -494,7 +482,25 @@ export default function LeadsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
-                {leads.map((lead) => (
+                {leads.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="py-12 text-center text-slate-400">
+                      <Layers className="w-8 h-8 text-slate-300 mx-auto mb-2 stroke-1" />
+                      <span className="text-xs font-semibold text-slate-600 block mb-1">No leads found</span>
+                      <span className="text-[11px] text-slate-400 block mb-3">
+                        Qualify an enquiry from the Enquiries page or register a new walk-in lead.
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setCreateModalOpen(true)}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-xs"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Register Lead
+                      </button>
+                    </td>
+                  </tr>
+                ) : (
+                  leads.map((lead) => (
                   <tr
                     key={lead._id}
                     onClick={() => handleOpenDetails(lead)}
@@ -528,7 +534,7 @@ export default function LeadsPage() {
                       </button>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>

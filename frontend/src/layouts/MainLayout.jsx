@@ -21,7 +21,7 @@ export const MainLayout = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         <TopBar onToggleSidebar={() => setMobileSidebarOpen((v) => !v)} />
-        <main className="flex-1 p-3 sm:p-4 md:p-5 lg:p-6 overflow-y-auto w-full min-w-0">
+        <main className="flex-1 p-3 sm:p-4 lg:p-4 overflow-y-auto w-full min-w-0">
           <Outlet />
         </main>
       </div>

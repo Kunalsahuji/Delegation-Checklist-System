@@ -9,6 +9,7 @@ const calendarRoutes = require('./calendar.route');
 const brokerRoutes = require('./broker.route');
 const metaLeadRoutes = require('./metaLead.route');
 const bulkMessageRoutes = require('./bulkMessage.route');
+const dashboardRoutes = require('./dashboard.route');
 
 const router = express.Router();
 
@@ -41,5 +42,8 @@ router.use('/meta-leads', metaLeadRoutes);
 
 // Mount Bulk Message & Campaign Broadcast Routes
 router.use('/bulk-messages', bulkMessageRoutes);
+
+// Mount Executive CRM Dashboard Routes
+router.use('/dashboard', dashboardRoutes);
 
 module.exports = router;

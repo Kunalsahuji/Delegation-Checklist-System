@@ -26,6 +26,7 @@ import BrokersPage from './modules/crm/pages/BrokersPage';
 import BrokerNetworkPage from './modules/crm/pages/BrokerNetworkPage';
 import MetaLeadsPage from './modules/crm/pages/MetaLeadsPage';
 import BulkMessagePage from './modules/crm/pages/BulkMessagePage';
+import CrmDashboardPage from './modules/crm/pages/CrmDashboardPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -75,6 +76,7 @@ export default function App() {
               <Route path="delegation/report" element={<DelegationWeeklyReportPage />} />
 
               {/* CRM routes */}
+              <Route path="crm/dashboard" element={<CrmDashboardPage />} />
               <Route path="crm/projects" element={<ProjectsPage />} />
               <Route path="crm/enquiries" element={<EnquiriesPage />} />
               <Route path="crm/lead-assignments" element={<LeadAssignmentPage />} />

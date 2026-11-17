@@ -107,6 +107,9 @@ const leadSchema = new mongoose.Schema(
 
     plannedStageAt: { type: Date, default: null },
     actualStageAt: { type: Date, default: Date.now },
+    nextFollowupAt: { type: Date, default: null, index: true },
+    followupTime: { type: String, trim: true, default: '' },
+    specialFollowUp: { type: Boolean, default: false, index: true },
     lastActivityAt: { type: Date, default: Date.now, index: true },
 
     isWalkIn: { type: Boolean, default: false, index: true },

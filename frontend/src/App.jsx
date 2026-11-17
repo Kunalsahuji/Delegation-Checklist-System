@@ -19,6 +19,8 @@ import EnquiriesPage from './modules/crm/pages/EnquiriesPage';
 import LeadsPage from './modules/crm/pages/LeadsPage';
 import LeadAssignmentPage from './modules/crm/pages/LeadAssignmentPage';
 import VisitsPage from './modules/crm/pages/VisitsPage';
+import FollowupsPage from './modules/crm/pages/FollowupsPage';
+import SpecialFollowupsPage from './modules/crm/pages/SpecialFollowupsPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -75,6 +77,10 @@ export default function App() {
               <Route path="crm/leads" element={<LeadsPage />} />
               <Route path="crm/visits" element={<VisitsPage />} />
               <Route path="crm/visit" element={<Navigate to="/crm/visits" replace />} />
+              <Route path="crm/followups" element={<FollowupsPage />} />
+              <Route path="crm/follow-ups" element={<Navigate to="/crm/followups" replace />} />
+              <Route path="crm/special-followups" element={<SpecialFollowupsPage />} />
+              <Route path="crm/special-follow-ups" element={<Navigate to="/crm/special-followups" replace />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

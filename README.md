@@ -1,11 +1,14 @@
-# TaskFlow ERP — Delegation & Checklist Management System
+# TaskFlow ERP — Operations, Delegation & Real Estate CRM System
 
 [![Live Frontend](https://img.shields.io/badge/Frontend-Live%20on%20Vercel-success?style=for-the-badge&logo=vercel&logoColor=white)](https://delegation-checklist-system.vercel.app/)
 [![Live Backend API](https://img.shields.io/badge/Backend%20API-Live%20on%20Render-blue?style=for-the-badge&logo=render&logoColor=white)](https://delegation-checklist-system.onrender.com/health)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Kunalsahuji/Delegation-Checklist-System)
 [![Database](https://img.shields.io/badge/Database-MongoDB%20Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/cloud/atlas)
 
-A full-stack, enterprise-grade operational management ERP built specifically for **Delegation Task Tracking**, **Recurring Operational Checklists**, **Weekly Analytics & Target Planning**, and **Organizational Role Administration**.
+A full-stack, enterprise-grade business management ERP combining three core operational pillars:
+1. **Recurring Operational Checklists (SOPs):** Automated recurrence rules, holiday exclusions, occurrence lifecycle, and weekly performance compliance.
+2. **Delegation Task Tracking:** Task assignment with strict original due dates, date revision logs, and Red/Yellow/Green scoring.
+3. **Real Estate CRM & Sales Pipeline:** End-to-end buyer journey across an 8-Stage conversion funnel, GPS-verified site tours, automated follow-up radar, Meta lead sync, and an 8-tier channel partner broker hierarchy.
 
 ---
 
@@ -33,8 +36,9 @@ Delegation-Checklist-System/
 │   │   │   ├── auth/         # JWT Authentication, Password Hashing, RBAC
 │   │   │   ├── master/       # Departments, Projects, Users & Roles
 │   │   │   ├── checklist/    # Task definitions, recurrence engine, occurrence materialisation
-│   │   │   └── delegation/   # Delegation lifecycle, immutable original due dates, revisions
-│   │   ├── database/         # MongoDB connection & idempotent master seeds
+│   │   │   ├── delegation/   # Delegation lifecycle, immutable original due dates, revisions
+│   │   │   └── crm/          # Real Estate CRM: Enquiries, Leads, Funnel, Visits, Brokers, Meta
+│   │   ├── database/         # MongoDB Atlas connection & master seeds
 │   │   ├── scripts/          # Excel migration pipeline & automated verification test suites
 │   │   ├── cron/             # Scheduled rolling occurrence materialisation
 │   │   └── server.js         # HTTP server entrypoint
@@ -43,15 +47,18 @@ Delegation-Checklist-System/
 ├── frontend/                 # React 19 + Vite + Tailwind CSS SPA (Vercel)
 │   ├── public/               # Favicon & branding assets
 │   ├── src/
-│   │   ├── layouts/          # Responsive App Shell (Fixed Sidebar, TopBar, Drawer)
+│   │   ├── layouts/          # Responsive App Shell (Fixed Sidebar, TopBar, Mobile Drawer)
 │   │   ├── modules/
 │   │   │   ├── checklist/    # Workspace (Items to tick + Setup), Dashboard, Weekly Report
-│   │   │   └── delegation/   # Workspace (Delegation list), Dashboard, Weekly RYG Report
-│   │   ├── pages/            # Unified Dashboard, Departments, Employees & Roles, Login
+│   │   │   ├── delegation/   # Workspace (Delegation list), Dashboard, Weekly RYG Report
+│   │   │   └── crm/          # CRM Dashboard, Enquiries, 8-Stage Leads, Visits, Brokers, Hierarchy
+│   │   ├── pages/            # Unified Dashboard (Bar/Donut Charts), Departments, Employees, Login
 │   │   └── api/              # Axios HTTP client with JWT interceptors
 │   ├── vercel.json           # SPA rewrite routing rules
 │   └── package.json
 │
+├── docs/                     # Architecture blueprints & operational manuals
+│   └── submodules-flow-guide/# Complete 12 CRM submodules guide with Mermaid flowcharts
 └── render.yaml               # Infrastructure-as-code Blueprint for Render
 ```
 
@@ -62,9 +69,9 @@ Delegation-Checklist-System/
 
 ---
 
-## ✨ Key Operational Features
+## ✨ Key Enterprise Pillars & Features
 
-### 1. Recurring Checklist Management
+### 1. Recurring Checklist Management (Operational SOPs)
 - **Recurrence Engine:** Daily, Weekly, Monthly, and Last Weekday of Month intervals.
 - **Workday Exclusions:** Automated exclusion of Sundays and public holidays with rolling preview.
 - **Occurrence Lifecycle:**
@@ -73,26 +80,40 @@ Delegation-Checklist-System/
   - Overdue tracking with progress remarks and estimated completion dates.
   - Seamless re-assignment of occurrences to other team members.
 - **Dual Workspace View:** Segmented toggle between **Items to Tick** and **Checklist Setup Drawer**.
+- **Weekly Performance Matrix:** "% Work Not Done" metrics with interactive next-week planned targets.
 
-### 2. Delegation Task Tracking
+### 2. Delegation Task Tracking (Assigned Work & Deadlines)
 - **Deadline Integrity:** Immutable `originalDueDate` permanently logged at task creation.
 - **Date Revision Audit:** Full history of extensions (`newDueDate`, mandatory `reason`, `kind`, `revisedBy`).
 - **Real-Time Urgency Slices:** Filter by All, Today, Pending, Overdue, Week Shifted, Completed, Follow-up Due.
 - **Multi-Level Priority:** High, Medium, and Low task prioritization.
+- **Red / Yellow / Green Scoring:** 0 revisions (Green) / 1 revision (Yellow) / 2+ revisions (Red) weekly compliance distribution.
 
-### 3. Weekly Reports & Compliance Matrices
-- **Checklist Weekly Report:** "% Work Not Done" performance per team member with interactive next-week planned target persistence.
-- **Delegation Weekly Report:** Red / Yellow / Green (0 revisions / 1 revision / 2+ revisions) compliance distribution with print and CSV export capability.
+### 3. Real Estate CRM & Sales Automation
+- **8-Stage Sales Pipeline Funnel:**
+  - `S1`: Call For Visit Confirmation By Sales Co-ordinator
+  - `S2`: WhatsApp & Email Confirmation Message to Clients
+  - `S3`: Remind Call By Telesales
+  - `S4`: Visit Confirmed & Ready
+  - `S5`: Feedback Call by Sales Co-ordinator
+  - `S6`: Follow-Up Call By Sales Person
+  - `S7`: Call For Negotiation and Family Visit
+  - `S8`: Call For Final Deal & Closing
+- **Inbound Lead Intake & Qualification:** Multi-channel lead intake across Meta ads, phone calls, walk-ins, websites, and broker referrals with budget verification.
+- **Lead Assignment Desk:** Fair workload balancing, round-robin dispatch, reassignments, and transfer logs.
+- **Field Site Visits (GPS Verified):** On-site client tour management with latitude/longitude geo-fencing validation, entry gate logs, and buyer unit preferences.
+- **Follow-up & Reminder Radar:** Overdue tracking, Due Today alerts, Starred VIP triage, and automated notifications.
+- **8-Tier Channel Partner (Broker) Pyramid:** Cumulative square yardage milestone hierarchy (Bronze to Chairman/AD) and commission slab tracking.
+- **Meta Leads Holding Area:** Real-time Facebook and Instagram lead sync, staging review, and CRM release.
+- **CRM Calendar & Bulk Broadcast:** Month/week agenda for client appointments and targeted SMS/WhatsApp communications.
+- 📘 *Detailed documentation and Mermaid diagrams available in [`docs/submodules-flow-guide/`](./docs/submodules-flow-guide/README.md).*
 
-### 4. Executive Unified Dashboard
-- Real-time aggregation of operational KPIs across both Workspaces.
-- Quick navigation shortcuts into Checklist, Delegation, Departments, and Employee directories.
-
-### 5. Industry-Standard Ergonomics & UX
-- Fixed application shell (`h-screen overflow-hidden`) with independent scroll panes.
-- Viewport-anchored left sidebar with interactive floating bottom profile menu.
-- Full mobile/tablet responsiveness (drawer overlay, responsive KPI cards, touch-friendly inputs).
-- Dynamic, resilient CORS policy supporting production domains, preview branches, and local environments.
+### 4. Unified Command Dashboard
+- **Cross-Pillar KPI Strip:** Real-time visibility into Checklist items, Delegation tasks, Active CRM leads, Site visits, Broker yards sold, and active staff.
+- **Interactive Visual Analytics:**
+  - **8-Stage Pipeline Funnel (Bar Chart):** Real-time lead progression from S1 to S8 using Recharts.
+  - **Lead Acquisition Channels (Donut Chart):** Inbound marketing channel breakdown with volume and percentage distributions.
+- **3 Dedicated Workspace Launchers:** One-click shortcuts into Checklist Operations, Delegation Tasks, and Real Estate CRM.
 
 ---
 
@@ -158,47 +179,38 @@ Delegation-Checklist-System/
 
 ---
 
-## 📊 Automated Verification Test Suites
-
-```bash
-cd backend
-
-# Delegation Engine & Date Revision Verification
-node scripts/verify_delegation_backend.js
-
-# Weekly Reports & Executive Analytics Verification
-node scripts/verify_phase4_reports.js
-
-# Excel Migration Pipeline & Historical Data Verification
-node scripts/verify_phase5_migration.js
-
-# End-to-End Handover & SLA Performance Benchmark (25/25 Tests)
-node scripts/verify_phase6_handover.js
-```
-
----
-
 ## 📖 API Reference Summary
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/health` | Service uptime and health check |
-| `POST` | `/api/v1/auth/login` | Authenticate user & issue JWT |
-| `GET` | `/api/v1/checklist/tasks` | List checklist task definitions |
-| `POST` | `/api/v1/checklist/tasks` | Create recurring checklist task |
-| `POST` | `/api/v1/checklist/tasks/preview` | Preview upcoming recurrence schedule |
-| `GET` | `/api/v1/checklist/occurrences` | Filter checklist occurrences |
-| `GET` | `/api/v1/checklist/occurrences/stats`| Aggregate checklist KPI metrics |
-| `PATCH`| `/api/v1/checklist/occurrences/:id/status`| Update status (done / skipped) |
-| `GET` | `/api/v1/delegation` | Filter delegation tasks |
-| `POST` | `/api/v1/delegation` | Create new delegation task |
-| `GET` | `/api/v1/delegation/stats` | Aggregate delegation KPI metrics |
-| `POST` | `/api/v1/delegation/:id/revise` | Log date extension with mandatory reason |
-| `PATCH`| `/api/v1/delegation/:id/status` | Mark delegation completed or cancelled |
-| `GET` | `/api/v1/checklist/report/weekly` | Compute weekly % work not done report |
-| `GET` | `/api/v1/delegation/report/weekly`| Compute weekly Red/Yellow/Green report |
-| `GET` | `/api/v1/master/departments` | Fetch active operational departments |
-| `GET` | `/api/v1/master/users` | Fetch active employees and role permissions |
+| Method | Endpoint | Module | Description |
+|---|---|---|---|
+| `GET` | `/health` | Core | Service uptime and health check |
+| `POST` | `/api/v1/auth/login` | Auth | Authenticate user & issue JWT |
+| `GET` | `/api/v1/checklist/tasks` | Checklist | List checklist task definitions |
+| `POST` | `/api/v1/checklist/tasks` | Checklist | Create recurring checklist task |
+| `GET` | `/api/v1/checklist/occurrences` | Checklist | Filter checklist occurrences |
+| `PATCH`| `/api/v1/checklist/occurrences/:id/status`| Checklist | Update status (done / skipped) |
+| `GET` | `/api/v1/checklist/report/weekly` | Checklist | Compute weekly % work not done report |
+| `GET` | `/api/v1/delegation` | Delegation | Filter delegation tasks |
+| `POST` | `/api/v1/delegation` | Delegation | Create new delegation task |
+| `POST` | `/api/v1/delegation/:id/revise` | Delegation | Log date extension with mandatory reason |
+| `PATCH`| `/api/v1/delegation/:id/status` | Delegation | Mark delegation completed or cancelled |
+| `GET` | `/api/v1/delegation/report/weekly`| Delegation | Compute weekly Red/Yellow/Green report |
+| `GET` | `/api/v1/crm/dashboard` | CRM | Executive CRM analytics & funnel metrics |
+| `GET` | `/api/v1/crm/enquiries` | CRM | Inbound enquiries with stage filters |
+| `POST` | `/api/v1/crm/enquiries` | CRM | Register inbound property enquiry |
+| `GET` | `/api/v1/crm/leads` | CRM | 8-Stage lead pipeline tracking |
+| `PATCH`| `/api/v1/crm/leads/:id/stage` | CRM | Advance lead through conversion stages |
+| `GET` | `/api/v1/crm/lead-assignments` | CRM | Workload balancing & lead distribution |
+| `POST` | `/api/v1/crm/lead-assignments/assign` | CRM | Assign or reallocate leads to sales reps |
+| `GET` | `/api/v1/crm/visits` | CRM | Field site visits with GPS status |
+| `POST` | `/api/v1/crm/visits` | CRM | Schedule and log GPS verified site tour |
+| `GET` | `/api/v1/crm/reminders` | CRM | Operational follow-ups & callbacks |
+| `GET` | `/api/v1/crm/special-followups` | CRM | Starred VIP and high-budget follow-ups |
+| `GET` | `/api/v1/crm/brokers` | CRM | Channel partner network & yardage |
+| `GET` | `/api/v1/crm/brokers/network` | CRM | 8-Tier channel partner sales hierarchy |
+| `GET` | `/api/v1/crm/meta-leads` | CRM | Meta Facebook/Instagram lead holding desk |
+| `GET` | `/api/v1/master/departments` | Master | Active operational departments |
+| `GET` | `/api/v1/master/users` | Master | Active employees and role permissions |
 
 ---
 

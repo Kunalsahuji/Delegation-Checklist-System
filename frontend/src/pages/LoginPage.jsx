@@ -49,13 +49,13 @@ export const LoginPage = () => {
             <h1 className="text-lg font-bold text-slate-900 tracking-tight leading-snug">
               TaskFlow ERP
             </h1>
-            <p className="text-xs text-slate-500 font-medium">Delegation & Checklist Portal</p>
+            <p className="text-xs text-slate-500 font-medium">Operations, Delegation & CRM Portal</p>
           </div>
         </div>
 
         <h2 className="text-base font-semibold text-slate-900 mb-1">Sign in to your account</h2>
         <p className="text-xs text-slate-500 mb-6">
-          Enter your organization credentials to manage checklists and delegated tasks.
+          Enter your organization credentials to manage checklists, delegated tasks, and real estate CRM pipeline.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -2,7 +2,7 @@
   "name": "taskflow-erp",
   "private": true,
   "version": "1.0.0",
-  "description": "TaskFlow ERP - Delegation & Checklist Management System",
+  "description": "TaskFlow ERP - Operations, Delegation & Real Estate CRM System",
   "scripts": {
     "install:backend": "npm --prefix backend install",
     "install:frontend": "npm --prefix frontend install",

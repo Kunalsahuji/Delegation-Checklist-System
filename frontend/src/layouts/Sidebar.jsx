@@ -58,7 +58,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
           </div>
           <div>
             <h1 className="text-sm font-bold text-slate-900 tracking-tight leading-none">TaskFlow ERP</h1>
-            <span className="text-[10px] text-brand-600 font-medium">Delegation & Checklist</span>
+            <span className="text-[10px] text-brand-600 font-medium">Operations, Delegation & CRM</span>
           </div>
         </div>
         {/* Mobile close button */}

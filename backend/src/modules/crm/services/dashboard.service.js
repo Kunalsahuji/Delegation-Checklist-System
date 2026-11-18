@@ -1,5 +1,6 @@
 const Enquiry = require('../models/enquiry.model');
 const Lead = require('../models/lead.model');
+const LeadStage = require('../models/leadStage.model');
 const VisitReport = require('../models/visitReport.model');
 const Reminder = require('../models/reminder.model');
 const Broker = require('../models/broker.model');
@@ -65,23 +66,48 @@ class CrmDashboardService {
     const winRate = totalLeads > 0 ? Math.round((wonLeads / totalLeads) * 100) : 0;
 
     // 2. 8-Stage Pipeline Breakdown
-    const stages = [
-      'Contact Initiated',
-      'Requirement Captured',
-      'Project Shortlisted',
-      'Site Visit Scheduled',
-      'Visit Completed',
-      'Negotiation & Booking',
-      'Agreement & Documentation',
-      'Deal Won / Registry',
-    ];
+    const dbStages = await LeadStage.find({}).sort({ order: 1 });
+    let stageCounts = [];
 
-    const stageCounts = await Promise.all(
-      stages.map(async (st) => {
-        const count = await Lead.countDocuments({ deletedAt: null, currentStage: st });
-        return { stage: st, count };
-      })
-    );
+    if (dbStages && dbStages.length > 0) {
+      stageCounts = await Promise.all(
+        dbStages.map(async (st) => {
+          const count = await Lead.countDocuments({
+            deletedAt: null,
+            $or: [
+              { currentStageId: st._id },
+              { currentStageOrder: st.order },
+              { currentStageName: st.name },
+            ],
+          });
+          return {
+            order: st.order,
+            stage: st.name,
+            count,
+          };
+        })
+      );
+    } else {
+      const defaultStages = [
+        'Call For Visit Confirmation By S/C',
+        'Whatsapp & Email Confirmation Message to Clients By S/C',
+        'Remind Call By Telesales',
+        'Visit Confirmed',
+        'Feedback Call by Sales Co-ordinator',
+        'Follow-Up Call By Sales Person',
+        'Call For Negotiation and Family Visit',
+        'Call For Final Deal',
+      ];
+      stageCounts = await Promise.all(
+        defaultStages.map(async (st, idx) => {
+          const count = await Lead.countDocuments({
+            deletedAt: null,
+            $or: [{ currentStageName: st }, { currentStageOrder: idx + 1 }],
+          });
+          return { order: idx + 1, stage: st, count };
+        })
+      );
+    }
 
     // 3. Lead Source Distribution
     const sourceAgg = await Enquiry.aggregate([

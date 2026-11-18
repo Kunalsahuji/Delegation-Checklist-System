@@ -27,6 +27,71 @@ import MetricInfoBadge from '../../../components/MetricInfoBadge';
 import { crmDashboardApi } from '../../../api/crmDashboardApi';
 import { useToast } from '../../../context/ToastContext';
 
+const STAGE_DETAILS = {
+  1: {
+    title: 'Stage 1: Call For Visit Confirmation By S/C',
+    summary:
+      'Initial telephonic outreach by the Sales Coordinator to verify client requirements, confirm buyer intent, and propose an on-site property tour.',
+    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 1.',
+  },
+  2: {
+    title: 'Stage 2: WhatsApp & Email Confirmation by S/C',
+    summary:
+      'Formal dispatch of project layout brochures, GPS navigation links, and scheduled date/time slot confirmations via WhatsApp and Email.',
+    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 2.',
+  },
+  3: {
+    title: 'Stage 3: Remind Call By Telesales',
+    summary:
+      'Courtesy reminder call by the telesales desk 24 hours prior to the scheduled site visit to reconfirm arrival timings and guest transport arrangements.',
+    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 3.',
+  },
+  4: {
+    title: 'Stage 4: Visit Confirmed & Ready',
+    summary:
+      'Appointment formally locked in the CRM calendar. Project sales rep, inspection vehicle, and entry gate pass assigned for client arrival.',
+    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 4.',
+  },
+  5: {
+    title: 'Stage 5: Feedback Call by Sales Coordinator',
+    summary:
+      'Post-visit debrief conducted within 2–4 hours of site tour completion to document client reactions, preferred plot/villa numbers, and address initial concerns.',
+    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 5.',
+  },
+  6: {
+    title: 'Stage 6: Follow-Up Call By Sales Person',
+    summary:
+      'Senior sales executive follow-up presenting tailored payment schedules, unit reservations, bank loan eligibility, and custom price proposals.',
+    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 6.',
+  },
+  7: {
+    title: 'Stage 7: Call For Negotiation & Family Visit',
+    summary:
+      'Commercial negotiation milestone resolving square yard rate discounts, payment milestones, and facilitating secondary decision-maker/family visits.',
+    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 7.',
+  },
+  8: {
+    title: 'Stage 8: Call For Final Deal & Closing',
+    summary:
+      'Closing conversation to finalize token advance booking deposit, execute Agreement to Sell (ATS), and initiate final registry and deed execution.',
+    calculation: 'Count of buyer leads currently situated at Stage 8 or marked Won.',
+  },
+};
+
+const getStageInfo = (stageName = '', order = 1) => {
+  if (STAGE_DETAILS[order]) {
+    return {
+      ...STAGE_DETAILS[order],
+      title: STAGE_DETAILS[order].title,
+    };
+  }
+  return {
+    title: `Stage ${order}: ${stageName}`,
+    summary: `Prospective buyer opportunity currently advancing through ${stageName}.`,
+    calculation: `Count of active pipeline leads situated in ${stageName}.`,
+  };
+};
+
 export default function CrmDashboardPage() {
   const { showError } = useToast();
 
@@ -176,16 +241,30 @@ export default function CrmDashboardPage() {
 
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
           {funnel.map((item, idx) => {
+            const stageOrder = item.order || idx + 1;
+            const stageInfo = getStageInfo(item.stage, stageOrder);
+
             return (
               <div
-                key={item.stage}
-                className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center flex flex-col justify-between hover:bg-blue-50/50 hover:border-blue-200 transition-colors"
+                key={item.stage || idx}
+                className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center flex flex-col justify-between hover:bg-blue-50/50 hover:border-blue-200 transition-colors relative"
               >
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 font-mono">
-                    STAGE {idx + 1}
-                  </span>
-                  <div className="text-[11px] font-semibold text-slate-800 line-clamp-2 mt-0.5 min-h-[32px]">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-[10px] font-bold text-slate-400 font-mono">
+                      STAGE {stageOrder}
+                    </span>
+                    <MetricInfoBadge
+                      title={stageInfo.title}
+                      summary={stageInfo.summary}
+                      calculation={stageInfo.calculation}
+                      className="shrink-0"
+                    />
+                  </div>
+                  <div
+                    className="text-[11px] font-semibold text-slate-800 line-clamp-2 mt-0.5 min-h-[32px] text-center"
+                    title={item.stage}
+                  >
                     {item.stage}
                   </div>
                 </div>

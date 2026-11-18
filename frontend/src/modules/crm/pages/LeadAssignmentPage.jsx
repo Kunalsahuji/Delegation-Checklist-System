@@ -18,6 +18,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
+import StageBadge from '../components/StageBadge';
 import { crmLeadAssignmentApi } from '../../../api/crmLeadAssignmentApi';
 import { useToast } from '../../../context/ToastContext';
 import AssignmentModal from '../components/AssignmentModal';
@@ -561,14 +562,14 @@ export default function LeadAssignmentPage() {
 
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-1.5 flex-wrap">
+                          <StageBadge
+                            stage={lead.currentStageName || lead.currentStageId}
+                            order={lead.currentStageOrder || lead.currentStageId?.order}
+                            color={lead.currentStageId?.color || lead.currentStageId?.colorHex}
+                            showOrder={true}
+                          />
                           <span
-                            className="px-2 py-0.5 rounded-full text-[10px] font-semibold text-white"
-                            style={{ backgroundColor: lead.currentStageId?.colorHex || '#3B82F6' }}
-                          >
-                            {lead.currentStageName || lead.currentStageId?.name || 'Intake'}
-                          </span>
-                          <span
-                            className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                            className={`px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0 ${
                               lead.temperature === 'hot'
                                 ? 'bg-rose-100 text-rose-700'
                                 : lead.temperature === 'warm'

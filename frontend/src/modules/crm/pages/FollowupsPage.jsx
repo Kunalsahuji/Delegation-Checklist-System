@@ -17,6 +17,7 @@ import {
   CheckSquare,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
+import StageBadge from '../components/StageBadge';
 import { crmFollowupApi } from '../../../api/crmFollowupApi';
 import { useToast } from '../../../context/ToastContext';
 import FollowupFormModal from '../components/FollowupFormModal';
@@ -426,12 +427,11 @@ export default function FollowupsPage() {
                               : 'Personal Reminder'}
                           </span>
                           {rem.stageName && (
-                            <span
-                              className="px-1.5 py-0.5 rounded text-[10px] font-medium text-white"
-                              style={{ backgroundColor: rem.stageColor || '#3B82F6' }}
-                            >
-                              {rem.stageName}
-                            </span>
+                            <StageBadge
+                              stage={rem.stageName}
+                              color={rem.stageColor}
+                              showOrder={true}
+                            />
                           )}
                         </div>
                       </td>

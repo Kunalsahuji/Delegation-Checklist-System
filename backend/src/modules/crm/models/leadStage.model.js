@@ -18,6 +18,13 @@ const leadStageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+leadStageSchema.virtual('colorHex').get(function () {
+  return this.color;
+});
+
+leadStageSchema.set('toObject', { virtuals: true });
+leadStageSchema.set('toJSON', { virtuals: true });
+
 leadStageSchema.index({ isActive: 1, order: 1 });
 
 module.exports = mongoose.model('LeadStage', leadStageSchema);

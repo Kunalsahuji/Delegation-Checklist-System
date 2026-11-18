@@ -159,7 +159,7 @@ const listQualifiedLeads = async (query = {}) => {
   const [leads, total] = await Promise.all([
     Lead.find(filter)
       .populate('assignedTo', 'name email role')
-      .populate('currentStageId', 'name colorHex order')
+      .populate('currentStageId', 'name color colorHex order')
       .populate('projectId', 'name')
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -266,7 +266,7 @@ const assignLead = async (leadId, { assignedTo, reason, triggerType = 'manual' }
 
   const updatedLead = await Lead.findById(leadId)
     .populate('assignedTo', 'name email role')
-    .populate('currentStageId', 'name colorHex order');
+    .populate('currentStageId', 'name color colorHex order');
 
   return { lead: updatedLead, assignment: assignmentRecord };
 };

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { crmLeadApi } from '../../../api/crmLeadApi';
 import { useToast } from '../../../context/ToastContext';
+import StageBadge from './StageBadge';
 
 export default function LeadDetailsModal({
   lead,
@@ -491,8 +492,13 @@ export default function LeadDetailsModal({
                 ) : (
                   <div className="space-y-2 text-xs">
                     <div>
-                      <span className="text-slate-400 block text-[11px]">Current Stage</span>
-                      <span className="font-bold text-blue-700 text-sm">{lead.currentStageName}</span>
+                      <span className="text-slate-400 block text-[11px] mb-1">Current Stage</span>
+                      <StageBadge
+                        stage={lead.currentStageName || lead.currentStageId}
+                        order={lead.currentStageOrder || lead.currentStageId?.order}
+                        color={lead.currentStageId?.color || lead.currentStageId?.colorHex}
+                        showOrder={true}
+                      />
                     </div>
                     <div>
                       <span className="text-slate-400 block text-[11px]">Last Activity Recorded</span>

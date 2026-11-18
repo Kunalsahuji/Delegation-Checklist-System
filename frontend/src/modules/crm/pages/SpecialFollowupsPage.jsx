@@ -12,6 +12,7 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
+import StageBadge from '../components/StageBadge';
 import { crmFollowupApi } from '../../../api/crmFollowupApi';
 import { useToast } from '../../../context/ToastContext';
 import FollowupFormModal from '../components/FollowupFormModal';
@@ -267,14 +268,13 @@ export default function SpecialFollowupsPage() {
 
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-1.5 flex-wrap">
+                        <StageBadge
+                          stage={item.stageName}
+                          color={item.stageColor}
+                          showOrder={true}
+                        />
                         <span
-                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold text-white"
-                          style={{ backgroundColor: item.stageColor || '#3B82F6' }}
-                        >
-                          {item.stageName}
-                        </span>
-                        <span
-                          className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                          className={`px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0 ${
                             item.temperature === 'hot'
                               ? 'bg-rose-100 text-rose-700'
                               : 'bg-amber-100 text-amber-700'

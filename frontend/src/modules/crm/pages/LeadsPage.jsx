@@ -21,6 +21,7 @@ import { crmLeadApi } from '../../../api/crmLeadApi';
 import { crmProjectApi } from '../../../api/crmProjectApi';
 import { useToast } from '../../../context/ToastContext';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
+import StageBadge from '../components/StageBadge';
 import LeadDetailsModal from '../components/LeadDetailsModal';
 import LeadFormModal from '../components/LeadFormModal';
 
@@ -524,10 +525,12 @@ export default function LeadsPage() {
                       <div className="text-[11px] text-slate-400">{lead.clientPhone}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                        {lead.currentStageName || 'Stage 1'}
-                      </span>
+                      <StageBadge
+                        stage={lead.currentStageName || lead.currentStageId}
+                        order={lead.currentStageOrder || lead.currentStageId?.order}
+                        color={lead.currentStageId?.color || lead.currentStageId?.colorHex}
+                        showOrder={true}
+                      />
                     </td>
                     <td className="py-3 px-4">{getTempPill(lead.temperature)}</td>
                     <td className="py-3 px-4 font-medium">{lead.project || '-'}</td>

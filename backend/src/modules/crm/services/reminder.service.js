@@ -42,7 +42,7 @@ const enrichReminders = async (reminders = []) => {
   const [leads, enquiries] = await Promise.all([
     leadIds.length
       ? Lead.find({ _id: { $in: leadIds } })
-          .populate('currentStageId', 'name colorHex order')
+          .populate('currentStageId', 'name color colorHex order')
           .populate('assignedTo', 'name email role')
           .populate('projectId', 'name')
           .lean()
@@ -77,7 +77,7 @@ const enrichReminders = async (reminders = []) => {
         project = l.project || l.projectId?.name || '';
         budget = l.budget || 0;
         stageName = l.currentStageName || l.currentStageId?.name || '';
-        stageColor = l.currentStageId?.colorHex || '#3B82F6';
+        stageColor = l.currentStageId?.color || l.currentStageId?.colorHex || '#3B82F6';
         referenceCode = l.leadNumber || '';
         specialFollowUp = Boolean(l.specialFollowUp);
       }
@@ -472,7 +472,7 @@ const listSpecialFollowups = async (query = {}) => {
       .lean(),
     Lead.find(leadFilter)
       .populate('assignedTo', 'name email role')
-      .populate('currentStageId', 'name colorHex order')
+      .populate('currentStageId', 'name color colorHex order')
       .populate('projectId', 'name')
       .lean(),
   ]);
@@ -503,7 +503,7 @@ const listSpecialFollowups = async (query = {}) => {
       project: l.project || l.projectId?.name || '',
       budget: l.budget || 0,
       stageName: l.currentStageName || l.currentStageId?.name || '',
-      stageColor: l.currentStageId?.colorHex || '#10B981',
+      stageColor: l.currentStageId?.color || l.currentStageId?.colorHex || '#10B981',
       temperature: l.temperature || 'hot',
       assignedTo: l.assignedTo,
       nextFollowupAt: l.nextFollowupAt,

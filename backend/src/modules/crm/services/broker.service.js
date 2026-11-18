@@ -321,7 +321,9 @@ const getNetworkHierarchy = async () => {
         managedBy: m.managedBy || { name: m.managedByName || 'General' },
         progress: {
           nextLevelName: nextTier ? nextTier.name : 'Top Level',
+          nextTier: nextTier ? nextTier.name : null,
           yardsToNext,
+          remainingYards: yardsToNext,
           percentage: progressPercentage,
         },
       };
@@ -330,8 +332,8 @@ const getNetworkHierarchy = async () => {
     return {
       tier: tier.name,
       levelName: tier.name,
-      minYards: tier.min,
-      maxYards: tier.max,
+      minYards: tier.min || 0,
+      maxYards: Number.isFinite(tier.max) ? tier.max : null,
       count: members.length,
       memberCount: members.length,
       totalYards: tierYards,

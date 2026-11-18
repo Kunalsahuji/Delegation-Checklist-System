@@ -299,14 +299,17 @@ export default function BrokerNetworkPage() {
                           {tierGroup.commission} Comm. Slab
                         </span>
                         <span className="text-[10px] text-slate-400 font-mono">
-                          {tierGroup.minYards.toLocaleString()} -{' '}
-                          {tierGroup.maxYards === Infinity ? '10,000+' : tierGroup.maxYards.toLocaleString()} Yd
+                          {(tierGroup.minYards || 0).toLocaleString()} -{' '}
+                          {tierGroup.maxYards == null || tierGroup.maxYards === Infinity || tierGroup.maxYards >= 10000
+                            ? '10,000+'
+                            : (tierGroup.maxYards || 0).toLocaleString()}{' '}
+                          Yd
                         </span>
                       </div>
                       <p className="text-xs text-slate-500 mt-0.5">
-                        {tierGroup.count} Registered {tierGroup.count === 1 ? 'Partner' : 'Partners'} •{' '}
+                        {tierGroup.count || 0} Registered {(tierGroup.count || 0) === 1 ? 'Partner' : 'Partners'} •{' '}
                         <span className="font-semibold text-slate-700">
-                          {tierGroup.totalYards.toLocaleString()} Sq.Yds
+                          {(tierGroup.totalYards || 0).toLocaleString()} Sq.Yds
                         </span>{' '}
                         aggregate volume
                       </p>
@@ -316,7 +319,7 @@ export default function BrokerNetworkPage() {
                   <div className="flex items-center gap-3 justify-between md:justify-end">
                     <div className="text-right">
                       <div className="text-xs font-bold text-slate-900">
-                        {tierGroup.totalYards.toLocaleString()} Sq.Yd
+                        {(tierGroup.totalYards || 0).toLocaleString()} Sq.Yd
                       </div>
                       <div className="text-[10px] text-slate-400">Total Group Volume</div>
                     </div>
@@ -405,9 +408,15 @@ export default function BrokerNetworkPage() {
                                   style={{ width: `${Math.min(progress.percentage || 0, 100)}%` }}
                                 />
                               </div>
-                              {progress.nextTier && (
+                              {(progress.nextLevelName || progress.nextTier) &&
+                              (progress.nextLevelName || progress.nextTier) !== 'Top Level' ? (
                                 <div className="text-[9px] text-slate-400 mt-1 truncate">
-                                  {progress.remainingYards?.toLocaleString()} Yd to {progress.nextTier}
+                                  {(progress.yardsToNext ?? progress.remainingYards ?? 0).toLocaleString()} Yd to{' '}
+                                  {progress.nextLevelName || progress.nextTier}
+                                </div>
+                              ) : (
+                                <div className="text-[9px] text-emerald-600 font-semibold mt-1 truncate">
+                                  ★ Top Hierarchy Level Achieved
                                 </div>
                               )}
                             </div>

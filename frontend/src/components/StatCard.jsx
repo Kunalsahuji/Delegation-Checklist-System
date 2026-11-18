@@ -27,13 +27,16 @@ export const StatCard = ({
   return (
     <div
       onClick={onClick}
-      className={`relative p-4 rounded-xl border bg-white shadow-subtle transition-all ${
+      className={`relative p-3 sm:p-4 rounded-xl border bg-white shadow-subtle transition-all min-w-0 ${
         onClick ? 'cursor-pointer hover:shadow-card' : ''
       } ${variantStyles[variant]} ${activeStyles}`}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 truncate">
+      <div className="flex items-center justify-between gap-1">
+        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+          <span
+            className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 truncate"
+            title={title}
+          >
             {title}
           </span>
           {info && (
@@ -44,18 +47,22 @@ export const StatCard = ({
             />
           )}
         </div>
-        {Icon && <Icon className="w-4 h-4 text-slate-400 shrink-0 ml-1" />}
+        {Icon && <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0 ml-0.5" />}
       </div>
-      <div className="mt-2 flex items-baseline gap-2 min-h-[32px]">
+      <div className="mt-1.5 sm:mt-2 flex items-baseline gap-2 min-h-[28px] sm:min-h-[32px]">
         {isLoading ? (
-          <div className="h-7 w-20 bg-slate-200/80 animate-pulse rounded-md" />
+          <div className="h-6 sm:h-7 w-16 sm:w-20 bg-slate-200/80 animate-pulse rounded-md" />
         ) : (
-          <span className="text-2xl font-bold tracking-tight text-slate-900">
+          <span className="text-lg sm:text-2xl font-bold tracking-tight text-slate-900 truncate">
             {typeof value === 'number' ? value.toLocaleString('en-IN') : value}
           </span>
         )}
       </div>
-      {subtext && <p className="mt-1 text-xs text-slate-500 line-clamp-1">{subtext}</p>}
+      {subtext && (
+        <p className="mt-0.5 sm:mt-1 text-[10px] sm:text-xs text-slate-500 line-clamp-1 truncate" title={subtext}>
+          {subtext}
+        </p>
+      )}
     </div>
   );
 };

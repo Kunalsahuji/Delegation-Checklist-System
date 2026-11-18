@@ -57,31 +57,48 @@ const STAGE_COLORS = [
   '#D97706', // S8: Amber
 ];
 
-const SOURCE_COLORS = {
-  meta: '#8B5CF6',
-  meta_ads: '#8B5CF6',
-  direct_call: '#3B82F6',
-  call: '#3B82F6',
-  reference: '#10B981',
-  broker: '#10B981',
-  website: '#F59E0B',
-  walk_in: '#EC4899',
-  walkin: '#EC4899',
-  other: '#64748B',
-};
+// Helper to normalize inbound lead source names from DB
+function formatSourceLabel(raw) {
+  if (!raw) return 'Other Inbound';
+  const clean = String(raw).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (
+    clean.includes('meta') ||
+    clean.includes('fb') ||
+    clean.includes('face') ||
+    clean.includes('insta')
+  ) {
+    return 'Meta Ad Campaigns';
+  }
+  if (clean.includes('phone') || clean.includes('call')) {
+    return 'Direct Phone Call';
+  }
+  if (clean.includes('broker') || clean.includes('ref')) {
+    return 'Broker / Reference';
+  }
+  if (clean.includes('web') || clean.includes('site')) {
+    return 'Direct Website';
+  }
+  if (clean.includes('walk')) {
+    return 'Direct Walk-In';
+  }
+  // Title-case fallback
+  return String(raw)
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .trim();
+}
 
-const SOURCE_LABELS = {
-  meta: 'Meta Ad Campaigns',
-  meta_ads: 'Meta Ad Campaigns',
-  direct_call: 'Direct Phone Call',
-  call: 'Direct Phone Call',
-  reference: 'Broker / Reference',
-  broker: 'Broker / Reference',
-  website: 'Direct Website',
-  walk_in: 'Direct Walk-In',
-  walkin: 'Direct Walk-In',
-  other: 'Other Channels',
-};
+function getSourceColor(raw, idx) {
+  if (!raw) return '#64748B';
+  const clean = String(raw).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (clean.includes('meta') || clean.includes('fb')) return '#8B5CF6';
+  if (clean.includes('phone') || clean.includes('call')) return '#3B82F6';
+  if (clean.includes('broker') || clean.includes('ref')) return '#10B981';
+  if (clean.includes('web') || clean.includes('site')) return '#F59E0B';
+  if (clean.includes('walk')) return '#EC4899';
+  return STAGE_COLORS[idx % STAGE_COLORS.length];
+}
 
 // Read cache synchronously to prevent layout shifts & 0ms initial render
 function getDashboardCache() {
@@ -252,17 +269,17 @@ export const DashboardPage = () => {
     }));
   }, [crmData]);
 
-  // Transform Inbound Lead Sources for PieChart
+  // Transform Inbound Lead Sources for PieChart with complete label normalization
   const pieData = useMemo(() => {
     const sources = crmData?.leadSources || [];
     if (sources.length > 0) {
       const mapped = sources.map((s, idx) => {
-        const key = (s.source || 'other').toLowerCase();
-        const color = SOURCE_COLORS[key] || STAGE_COLORS[idx % STAGE_COLORS.length];
-        const label = SOURCE_LABELS[key] || (s.source ? s.source.replace(/_/g, ' ') : 'Other');
+        const raw = s.source || 'other';
+        const label = formatSourceLabel(raw);
+        const color = getSourceColor(raw, idx);
         return {
           name: label,
-          rawKey: key,
+          rawKey: raw,
           value: Number(s.count || 0),
           color,
         };
@@ -291,61 +308,61 @@ export const DashboardPage = () => {
   const yardsCount = crmData?.kpis?.totalYards ?? 0;
 
   return (
-    <div className="space-y-4 sm:space-y-5 w-full">
+    <div className="space-y-4 sm:space-y-5 w-full pb-6">
       {/* Top Header Card */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">
-            <Building2 className="w-3.5 h-3.5" />
-            <span>Unified Enterprise Operations & Sales Command</span>
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 md:p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">
+            <Building2 className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Enterprise Operations & Sales Command</span>
             <MetricInfoBadge
               title="Unified Command Center"
               summary="Central executive portal synthesizing recurring checklists, delegated deadlines, and real estate CRM pipeline in real-time."
               calculation="Aggregates live counts across Checklist, Delegation, CRM, and Master services."
             />
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
             Welcome back, {user?.name || 'Administrator'}
           </h1>
-          <p className="mt-1 text-slate-500 text-xs max-w-2xl">
+          <p className="mt-1 text-slate-500 text-xs max-w-2xl leading-relaxed">
             Real-time executive oversight across operational checklists, delegation assignments, and end-to-end real estate sales pipeline.
           </p>
         </div>
 
         {/* Quick Action Navigation */}
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-2.5 shrink-0">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-2.5 shrink-0 w-full md:w-auto">
           <button
             type="button"
             onClick={() => fetchCounts(true)}
             disabled={isRefreshing}
-            className="p-2 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+            className="p-2 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer shrink-0"
             title="Refresh metrics from server"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-brand-600' : ''}`} />
           </button>
           <Link to="/checklist/list" className="flex-1 sm:flex-initial">
-            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
-              <CheckSquare className="w-3.5 h-3.5" />
+            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
+              <CheckSquare className="w-3.5 h-3.5 shrink-0" />
               <span>Checklists</span>
             </button>
           </Link>
           <Link to="/delegation/list" className="flex-1 sm:flex-initial">
-            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
-              <ListTodo className="w-3.5 h-3.5 text-emerald-400" />
+            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
+              <ListTodo className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>Delegations</span>
             </button>
           </Link>
           <Link to="/crm/dashboard" className="flex-1 sm:flex-initial">
-            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
-              <TrendingUp className="w-3.5 h-3.5" />
+            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
+              <TrendingUp className="w-3.5 h-3.5 shrink-0" />
               <span>CRM Pipeline</span>
             </button>
           </Link>
         </div>
       </div>
 
-      {/* Top 6 Executive KPI Metric Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      {/* Top 6 Executive KPI Metric Cards - Responsive Breakpoints */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2.5 sm:gap-3.5">
         <StatCard
           title="Checklist Items"
           value={checklistStats?.pending ?? checklistStats?.totalWork}
@@ -432,20 +449,23 @@ export const DashboardPage = () => {
         />
       </div>
 
-      {/* Interactive Visual Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
+      {/* Interactive Visual Charts Section - Responsive Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 sm:gap-5">
         {/* Left: 8-Stage Real Estate Sales Pipeline Funnel (Bar Chart) */}
-        <div className="lg:col-span-7 bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
+        <div className="xl:col-span-7 bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+            {/* Responsive Card Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
+              <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold shrink-0 mt-0.5 sm:mt-0">
                   <BarChart3 className="w-4 h-4" />
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                    <span>8-Stage Sales Pipeline Funnel</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <h3 className="text-sm font-bold text-slate-900 tracking-tight">
+                      8-Stage Sales Pipeline Funnel
+                    </h3>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200 shrink-0">
                       Live Conversion
                     </span>
                     <MetricInfoBadge
@@ -453,15 +473,15 @@ export const DashboardPage = () => {
                       summary="Visual conversion pipeline tracking property buyers across 8 milestone stages from initial contact to Agreement to Sell (ATS)."
                       calculation="Live lead count grouped by stage order (S1 to S8) with status = active."
                     />
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-0.5 hidden xs:block sm:block truncate">
                     Lead distribution across confirmation, site visits, follow-up, and closing
                   </p>
                 </div>
               </div>
               <Link
                 to="/crm/leads"
-                className="text-xs text-brand-600 hover:text-brand-700 font-semibold inline-flex items-center gap-1 hover:underline"
+                className="text-xs text-brand-600 hover:text-brand-700 font-semibold inline-flex items-center gap-1 shrink-0 self-end sm:self-center hover:underline"
               >
                 <span>All Leads</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -469,7 +489,7 @@ export const DashboardPage = () => {
             </div>
 
             {/* Funnel Bar Chart */}
-            <div className="w-full h-56 mt-4">
+            <div className="w-full h-56 sm:h-64 mt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={pipelineData}
@@ -498,37 +518,42 @@ export const DashboardPage = () => {
             </div>
           </div>
 
-          {/* Bottom Stage Legend Chips */}
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 pt-3 mt-3 border-t border-slate-100 text-[10px] text-slate-600">
+          {/* Bottom Stage Legend Chips - Responsive Grid */}
+          <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-8 gap-1.5 pt-3 mt-3 border-t border-slate-100 text-[10px] text-slate-600">
             {pipelineData.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-1.5 p-1 rounded bg-slate-50 border border-slate-100/80 truncate"
+                className="flex items-center justify-between px-2 py-1 rounded bg-slate-50 border border-slate-100/80"
                 title={`${item.label}: ${item.name} (${item.count} leads)`}
               >
-                <span
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="font-bold text-slate-700">{item.label}</span>
-                <span className="text-slate-500 ml-auto font-mono text-[9px]">{item.count}</span>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="font-bold text-slate-700 text-[10px]">{item.label}</span>
+                </div>
+                <span className="text-slate-500 font-mono text-[9px]">{item.count}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Right: Inbound Lead Acquisition Channels (Pie / Donut Chart) */}
-        <div className="lg:col-span-5 bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
+        <div className="xl:col-span-5 bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center font-bold">
+            {/* Responsive Card Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
+              <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center font-bold shrink-0 mt-0.5 sm:mt-0">
                   <PieIcon className="w-4 h-4" />
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                    <span>Lead Acquisition Channels</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 font-semibold border border-violet-200">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <h3 className="text-sm font-bold text-slate-900 tracking-tight">
+                      Lead Acquisition Channels
+                    </h3>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 font-semibold border border-violet-200 shrink-0">
                       Inbound Mix
                     </span>
                     <MetricInfoBadge
@@ -536,15 +561,15 @@ export const DashboardPage = () => {
                       summary="Inbound lead distribution by marketing acquisition channel and campaign origin."
                       calculation="Percentage and count breakdown of enquiries by source (Meta Ads, Direct Call, Broker, Website, Walk-In)."
                     />
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-0.5 hidden xs:block sm:block truncate">
                     Source breakdown of buyer enquiries & marketing campaign ROI
                   </p>
                 </div>
               </div>
               <Link
                 to="/crm/enquiries"
-                className="text-xs text-brand-600 hover:text-brand-700 font-semibold inline-flex items-center gap-1 hover:underline"
+                className="text-xs text-brand-600 hover:text-brand-700 font-semibold inline-flex items-center gap-1 shrink-0 self-end sm:self-center hover:underline"
               >
                 <span>Enquiries</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -552,7 +577,7 @@ export const DashboardPage = () => {
             </div>
 
             {/* Donut Chart with Centered KPI */}
-            <div className="relative w-full h-52 flex items-center justify-center mt-1">
+            <div className="relative w-full h-48 sm:h-52 flex items-center justify-center mt-1">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <RechartsTooltip content={<SourceTooltip total={totalInbound} />} />
@@ -562,8 +587,8 @@ export const DashboardPage = () => {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    innerRadius={50}
-                    outerRadius={75}
+                    innerRadius={48}
+                    outerRadius={72}
                     paddingAngle={3}
                   >
                     {pieData.map((entry, index) => (
@@ -574,7 +599,7 @@ export const DashboardPage = () => {
               </ResponsiveContainer>
               {/* Inner Center Label */}
               <div className="absolute pointer-events-none text-center">
-                <div className="text-lg font-bold text-slate-900 leading-none">{totalInbound}</div>
+                <div className="text-lg sm:text-xl font-bold text-slate-900 leading-none">{totalInbound}</div>
                 <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mt-0.5">
                   Inbound
                 </div>
@@ -588,13 +613,13 @@ export const DashboardPage = () => {
               const pct = totalInbound > 0 ? Math.round((source.value / totalInbound) * 100) : 0;
               return (
                 <div key={idx} className="flex items-center justify-between text-[11px] text-slate-600">
-                  <div className="flex items-center gap-2 truncate">
+                  <div className="flex items-center gap-2 min-w-0 pr-2">
                     <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: source.color }} />
                     <span className="truncate text-slate-700 font-medium">{source.name}</span>
                   </div>
                   <div className="flex items-center gap-2 font-mono shrink-0">
                     <span className="text-slate-900 font-semibold">{source.value}</span>
-                    <span className="text-slate-400 text-[10px] w-8 text-right">({pct}%)</span>
+                    <span className="text-slate-400 text-[10px] w-9 text-right">({pct}%)</span>
                   </div>
                 </div>
               );
@@ -603,17 +628,17 @@ export const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Core Operational Workspaces: 3 Dedicated Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+      {/* Core Operational Workspaces: 3 Dedicated Cards - Responsive Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {/* Workspace 1: Checklist Operations */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center font-bold shadow-2xs">
                 <CheckSquare className="w-5 h-5" />
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="badge badge-info">Recurring Operations</span>
+                <span className="badge badge-info text-[10px] sm:text-xs">Recurring Operations</span>
                 <MetricInfoBadge
                   title="Checklist Workspace"
                   summary="Standard operational procedure engine with daily, weekly, and monthly recurrence, skip-holiday rules, remarks, and one-click completion."
@@ -640,14 +665,14 @@ export const DashboardPage = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2.5 pt-2 border-t border-slate-100">
-            <Link to="/checklist/dashboard" className="flex-1">
-              <Button variant="secondary" className="w-full text-xs">
+          <div className="flex flex-col sm:flex-row items-center gap-2 pt-3 border-t border-slate-100">
+            <Link to="/checklist/dashboard" className="w-full sm:flex-1">
+              <Button variant="secondary" className="w-full text-xs py-2">
                 Dashboard
               </Button>
             </Link>
-            <Link to="/checklist/list" className="flex-1">
-              <Button variant="primary" className="w-full text-xs">
+            <Link to="/checklist/list" className="w-full sm:flex-1">
+              <Button variant="primary" className="w-full text-xs py-2">
                 <span>Open Checklists</span>
                 <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
               </Button>
@@ -656,14 +681,14 @@ export const DashboardPage = () => {
         </div>
 
         {/* Workspace 2: Delegation Tasks */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shadow-2xs">
                 <ListTodo className="w-5 h-5" />
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="badge badge-success">Assigned Tasks</span>
+                <span className="badge badge-success text-[10px] sm:text-xs">Assigned Tasks</span>
                 <MetricInfoBadge
                   title="Delegation Workspace"
                   summary="One-off task delegation desk with audit-locked original deadlines, mandatory extension reason logging, and score compliance."
@@ -690,14 +715,14 @@ export const DashboardPage = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2.5 pt-2 border-t border-slate-100">
-            <Link to="/delegation/dashboard" className="flex-1">
-              <Button variant="secondary" className="w-full text-xs">
+          <div className="flex flex-col sm:flex-row items-center gap-2 pt-3 border-t border-slate-100">
+            <Link to="/delegation/dashboard" className="w-full sm:flex-1">
+              <Button variant="secondary" className="w-full text-xs py-2">
                 Dashboard
               </Button>
             </Link>
-            <Link to="/delegation/list" className="flex-1">
-              <Button variant="primary" className="w-full text-xs">
+            <Link to="/delegation/list" className="w-full sm:flex-1">
+              <Button variant="primary" className="w-full text-xs py-2">
                 <span>Open Delegations</span>
                 <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
               </Button>
@@ -706,14 +731,14 @@ export const DashboardPage = () => {
         </div>
 
         {/* Workspace 3: Real Estate CRM & Sales */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between md:col-span-2 lg:col-span-1">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center font-bold shadow-2xs">
                 <Building2 className="w-5 h-5" />
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="badge badge-primary">End-to-End Sales</span>
+                <span className="badge badge-primary text-[10px] sm:text-xs">End-to-End Sales</span>
                 <MetricInfoBadge
                   title="Real Estate CRM Workspace"
                   summary="Complete property sales platform with 8-stage conversion funnel, GPS-stamped site visit verification, follow-up radar, and broker pyramid."
@@ -740,14 +765,14 @@ export const DashboardPage = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2.5 pt-2 border-t border-slate-100">
-            <Link to="/crm/dashboard" className="flex-1">
-              <Button variant="secondary" className="w-full text-xs">
+          <div className="flex flex-col sm:flex-row items-center gap-2 pt-3 border-t border-slate-100">
+            <Link to="/crm/dashboard" className="w-full sm:flex-1">
+              <Button variant="secondary" className="w-full text-xs py-2">
                 Dashboard
               </Button>
             </Link>
-            <Link to="/crm/leads" className="flex-1">
-              <Button variant="primary" className="w-full text-xs bg-violet-600 hover:bg-violet-700">
+            <Link to="/crm/leads" className="w-full sm:flex-1">
+              <Button variant="primary" className="w-full text-xs py-2 bg-violet-600 hover:bg-violet-700">
                 <span>Open Leads</span>
                 <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
               </Button>

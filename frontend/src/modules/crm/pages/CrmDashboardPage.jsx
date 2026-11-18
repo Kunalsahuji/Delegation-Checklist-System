@@ -169,6 +169,17 @@ export default function CrmDashboardPage() {
         calculation: 'Sum of totalYards across all active registered brokers',
       },
     },
+    {
+      key: 'deals-won',
+      label: 'DEALS WON / CLOSURES',
+      value: kpis.wonLeads || 0,
+      status: 'positive',
+      info: {
+        title: 'Closed Deals & Registry',
+        summary: 'Total prospective buyer deals successfully closed with token booking, ATS agreement, or registry deed.',
+        calculation: `Count of leads marked won (${kpis.wonLeads || 0}) with overall win conversion rate (${kpis.winRate || 0}%)`,
+      },
+    },
   ];
 
   return (

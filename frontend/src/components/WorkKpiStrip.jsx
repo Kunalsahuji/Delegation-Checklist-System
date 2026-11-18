@@ -21,14 +21,27 @@ export default function WorkKpiStrip({
   label = 'KPI Summary',
   loading = false,
   showHints = true,
-  columns = 'grid-cols-2 sm:grid-cols-5',
+  columns,
 }) {
+  const getGridCols = () => {
+    if (columns) return columns;
+    const count = items.length;
+    if (count === 1) return 'grid-cols-1';
+    if (count === 2) return 'grid-cols-2';
+    if (count === 3) return 'grid-cols-1 sm:grid-cols-3';
+    if (count === 4) return 'grid-cols-2 sm:grid-cols-4';
+    if (count === 6) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6';
+    return 'grid-cols-2 sm:grid-cols-5';
+  };
+
+  const resolvedCols = getGridCols();
+
   return (
     <section
       aria-label={label}
       className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs"
     >
-      <div className={`-mb-px -mr-px grid ${columns}`}>
+      <div className={`-mb-px -mr-px grid ${resolvedCols}`}>
         {items.map((item, idx) => {
           const isOddLast = idx === items.length - 1 && items.length % 2 === 1;
           const infoData = item.info || (item.infoSummary ? {

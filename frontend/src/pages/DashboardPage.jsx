@@ -36,6 +36,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { StatCard } from '../components/StatCard';
 import { Button } from '../components/Button';
+import MetricInfoBadge from '../components/MetricInfoBadge';
 import { checklistApi } from '../modules/checklist/api/checklistApi';
 import { delegationApi } from '../modules/delegation/api/delegationApi';
 import { crmDashboardApi } from '../api/crmDashboardApi';
@@ -297,6 +298,11 @@ export const DashboardPage = () => {
           <div className="flex items-center gap-2 text-xs font-semibold text-brand-600 uppercase tracking-wider mb-1">
             <Building2 className="w-3.5 h-3.5" />
             <span>Unified Enterprise Operations & Sales Command</span>
+            <MetricInfoBadge
+              title="Unified Command Center"
+              summary="Central executive portal synthesizing recurring checklists, delegated deadlines, and real estate CRM pipeline in real-time."
+              calculation="Aggregates live counts across Checklist, Delegation, CRM, and Master services."
+            />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
             Welcome back, {user?.name || 'Administrator'}
@@ -348,6 +354,11 @@ export const DashboardPage = () => {
           icon={CheckSquare}
           variant="primary"
           onClick={() => navigate('/checklist/list')}
+          info={{
+            title: 'Checklist Items',
+            summary: 'Active recurring operational tasks scheduled across daily, weekly, and monthly frequencies.',
+            calculation: 'Count of pending checklist occurrences currently awaiting tick or verification.',
+          }}
         />
         <StatCard
           title="Delegation Tasks"
@@ -357,6 +368,11 @@ export const DashboardPage = () => {
           icon={ListTodo}
           variant="default"
           onClick={() => navigate('/delegation/list')}
+          info={{
+            title: 'Delegation Tasks',
+            summary: 'Assigned one-off tasks with immutable original deadlines and reason-logged revisions.',
+            calculation: 'Count of all active and pending delegation tasks across departments.',
+          }}
         />
         <StatCard
           title="Active CRM Leads"
@@ -366,6 +382,11 @@ export const DashboardPage = () => {
           icon={TrendingUp}
           variant="primary"
           onClick={() => navigate('/crm/leads')}
+          info={{
+            title: 'Active CRM Leads',
+            summary: 'Prospective property buyer leads undergoing active qualification and sales progression.',
+            calculation: 'Total count of buyer leads in active status across pipeline stages S1 through S8.',
+          }}
         />
         <StatCard
           title="Site Visits"
@@ -375,6 +396,11 @@ export const DashboardPage = () => {
           icon={MapPin}
           variant="success"
           onClick={() => navigate('/crm/visit')}
+          info={{
+            title: 'Site Visits Conducted',
+            summary: 'Field inspection tours conducted with clients at project sites, verified via GPS coordinates.',
+            calculation: 'Count of completed site visits logged with geo-stamped latitude and longitude bounds.',
+          }}
         />
         <StatCard
           title="Broker Yards"
@@ -384,6 +410,11 @@ export const DashboardPage = () => {
           icon={Award}
           variant="default"
           onClick={() => navigate('/crm/brokers')}
+          info={{
+            title: 'Broker Yards Sold',
+            summary: 'Cumulative square yardage of land and plots booked through registered channel partners.',
+            calculation: 'Total Gaj (Sq.Yd) credited towards channel partner performance milestones.',
+          }}
         />
         <StatCard
           title="Active Staff"
@@ -393,6 +424,11 @@ export const DashboardPage = () => {
           icon={Users2}
           variant="success"
           onClick={() => navigate('/master/users')}
+          info={{
+            title: 'Active Staff & Doers',
+            summary: 'Registered employees and operational division members with active ERP credentials.',
+            calculation: 'Total user records with status = active across all master departments.',
+          }}
         />
       </div>
 
@@ -412,6 +448,11 @@ export const DashboardPage = () => {
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
                       Live Conversion
                     </span>
+                    <MetricInfoBadge
+                      title="8-Stage Sales Pipeline Funnel"
+                      summary="Visual conversion pipeline tracking property buyers across 8 milestone stages from initial contact to Agreement to Sell (ATS)."
+                      calculation="Live lead count grouped by stage order (S1 to S8) with status = active."
+                    />
                   </h3>
                   <p className="text-[11px] text-slate-500">
                     Lead distribution across confirmation, site visits, follow-up, and closing
@@ -490,6 +531,11 @@ export const DashboardPage = () => {
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 font-semibold border border-violet-200">
                       Inbound Mix
                     </span>
+                    <MetricInfoBadge
+                      title="Lead Acquisition Channels"
+                      summary="Inbound lead distribution by marketing acquisition channel and campaign origin."
+                      calculation="Percentage and count breakdown of enquiries by source (Meta Ads, Direct Call, Broker, Website, Walk-In)."
+                    />
                   </h3>
                   <p className="text-[11px] text-slate-500">
                     Source breakdown of buyer enquiries & marketing campaign ROI
@@ -566,7 +612,14 @@ export const DashboardPage = () => {
               <div className="w-10 h-10 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center font-bold shadow-2xs">
                 <CheckSquare className="w-5 h-5" />
               </div>
-              <span className="badge badge-info">Recurring Operations</span>
+              <div className="flex items-center gap-1.5">
+                <span className="badge badge-info">Recurring Operations</span>
+                <MetricInfoBadge
+                  title="Checklist Workspace"
+                  summary="Standard operational procedure engine with daily, weekly, and monthly recurrence, skip-holiday rules, remarks, and one-click completion."
+                  calculation="Tracks active occurrences, pending ticks, and weekly % Work Not Done compliance."
+                />
+              </div>
             </div>
             <h2 className="text-base font-bold text-slate-900">Checklist Workspace</h2>
             <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
@@ -609,7 +662,14 @@ export const DashboardPage = () => {
               <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shadow-2xs">
                 <ListTodo className="w-5 h-5" />
               </div>
-              <span className="badge badge-success">Assigned Tasks</span>
+              <div className="flex items-center gap-1.5">
+                <span className="badge badge-success">Assigned Tasks</span>
+                <MetricInfoBadge
+                  title="Delegation Workspace"
+                  summary="One-off task delegation desk with audit-locked original deadlines, mandatory extension reason logging, and score compliance."
+                  calculation="Evaluates weekly Red/Yellow/Green compliance (0 vs 1 vs 2+ revisions)."
+                />
+              </div>
             </div>
             <h2 className="text-base font-bold text-slate-900">Delegation Workspace</h2>
             <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
@@ -652,7 +712,14 @@ export const DashboardPage = () => {
               <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center font-bold shadow-2xs">
                 <Building2 className="w-5 h-5" />
               </div>
-              <span className="badge badge-primary">End-to-End Sales</span>
+              <div className="flex items-center gap-1.5">
+                <span className="badge badge-primary">End-to-End Sales</span>
+                <MetricInfoBadge
+                  title="Real Estate CRM Workspace"
+                  summary="Complete property sales platform with 8-stage conversion funnel, GPS-stamped site visit verification, follow-up radar, and broker pyramid."
+                  calculation="Aggregates conversion velocity, field tour verification, and cumulative Gaj yardage."
+                />
+              </div>
             </div>
             <h2 className="text-base font-bold text-slate-900">Real Estate CRM</h2>
             <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">

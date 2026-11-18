@@ -1,4 +1,5 @@
 import React from 'react';
+import MetricInfoBadge from './MetricInfoBadge';
 
 export const StatCard = ({
   title,
@@ -9,6 +10,7 @@ export const StatCard = ({
   onClick,
   active = false,
   loading = false,
+  info,
 }) => {
   const variantStyles = {
     default: 'text-slate-900 border-slate-200 bg-white hover:border-slate-300',
@@ -30,10 +32,19 @@ export const StatCard = ({
       } ${variantStyles[variant]} ${activeStyles}`}
     >
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-          {title}
-        </span>
-        {Icon && <Icon className="w-4 h-4 text-slate-400" />}
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 truncate">
+            {title}
+          </span>
+          {info && (
+            <MetricInfoBadge
+              title={info.title || title}
+              summary={info.summary}
+              calculation={info.calculation}
+            />
+          )}
+        </div>
+        {Icon && <Icon className="w-4 h-4 text-slate-400 shrink-0 ml-1" />}
       </div>
       <div className="mt-2 flex items-baseline gap-2 min-h-[32px]">
         {isLoading ? (

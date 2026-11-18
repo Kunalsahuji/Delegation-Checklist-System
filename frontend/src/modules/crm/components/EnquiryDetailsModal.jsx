@@ -136,7 +136,9 @@ export default function EnquiryDetailsModal({
             <div className="space-y-0.5">
               <span className="text-[11px] font-semibold text-slate-500 uppercase">Primary Phone</span>
               <div className="flex items-center gap-2 pt-0.5">
-                <span className="font-mono font-bold text-slate-900 text-sm">{enquiry.clientPhone}</span>
+                <span className="font-mono font-bold text-slate-900 text-sm whitespace-nowrap">
+                  {String(enquiry.clientPhone || '').replace(/\D/g, '').slice(-10) || enquiry.clientPhone}
+                </span>
                 <a
                   href={`tel:${enquiry.clientPhone}`}
                   className="p-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded"

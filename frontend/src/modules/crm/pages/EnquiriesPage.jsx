@@ -25,6 +25,16 @@ import EnquiryFormModal from '../components/EnquiryFormModal';
 import EnquiryDetailsModal from '../components/EnquiryDetailsModal';
 import QualificationModal from '../components/QualificationModal';
 
+// Normalizes any phone string to clean 10-digit format
+function format10DigitPhone(phone) {
+  if (!phone) return '—';
+  const digits = String(phone).replace(/\D/g, '');
+  if (digits.length >= 10) {
+    return digits.slice(-10);
+  }
+  return digits || phone;
+}
+
 export default function EnquiriesPage() {
   const { showSuccess, showError } = useToast();
 
@@ -461,7 +471,9 @@ export default function EnquiriesPage() {
                 <div className="p-4 space-y-2.5 flex-1 text-xs">
                   {/* Phone & City */}
                   <div className="flex items-center justify-between text-slate-600">
-                    <span className="font-mono font-semibold text-slate-800">{enq.clientPhone}</span>
+                    <span className="font-mono font-semibold text-slate-800 whitespace-nowrap">
+                      {format10DigitPhone(enq.clientPhone)}
+                    </span>
                     <span className="text-slate-500 truncate max-w-[120px]">{enq.city || enq.source}</span>
                   </div>
 
@@ -579,7 +591,7 @@ export default function EnquiriesPage() {
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="px-4 py-3">Code / Client</th>
-                  <th className="px-4 py-3">Phone</th>
+                  <th className="px-4 py-3 whitespace-nowrap w-36">Phone</th>
                   <th className="px-4 py-3">Project / Type</th>
                   <th className="px-4 py-3">Budget</th>
                   <th className="px-4 py-3">Next Follow-Up</th>
@@ -612,7 +624,9 @@ export default function EnquiriesPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-mono text-slate-700">{enq.clientPhone}</td>
+                    <td className="px-4 py-3 font-mono font-medium text-slate-700 whitespace-nowrap">
+                      {format10DigitPhone(enq.clientPhone)}
+                    </td>
                     <td className="px-4 py-3 text-slate-700">
                       <p className="font-semibold">{enq.project || '—'}</p>
                       <p className="text-[10px] text-slate-400">{enq.propertyType}</p>

@@ -152,7 +152,8 @@ export default function LeadsPage() {
       label: 'TOTAL LEADS',
       value: kpis.totalLeads,
       hint: 'All customer leads registered',
-      tone: 'default',
+      tone: 'blue',
+      icon: Users,
       info: {
         title: 'Total Leads',
         summary: 'All active, in-progress, won, and dropped customer opportunities registered in the CRM pipeline.',
@@ -170,6 +171,7 @@ export default function LeadsPage() {
       value: kpis.activePipeline,
       hint: 'In active stage progression',
       tone: 'sky',
+      icon: TrendingUp,
       info: {
         title: 'Active Pipeline',
         summary: 'Qualified buyers currently moving through the 8-stage sales progression pipeline.',
@@ -186,7 +188,8 @@ export default function LeadsPage() {
       label: 'VISIT STAGE',
       value: kpis.visitStageCount,
       hint: 'Visit Confirmed & Feedback',
-      tone: 'warning',
+      tone: 'purple',
+      icon: MapPin,
       info: {
         title: 'Site Visit Stage',
         summary: 'Leads that have confirmed a physical project tour or completed a site visit awaiting feedback.',
@@ -204,7 +207,8 @@ export default function LeadsPage() {
       label: 'WON DEALS',
       value: kpis.wonDeals,
       hint: 'Closed bookings & sales',
-      tone: 'success',
+      tone: 'emerald',
+      icon: CheckCircle2,
       info: {
         title: 'Won Deals',
         summary: 'Successfully closed sales transactions with finalized plot/villa inventory and booking revenue.',
@@ -222,6 +226,7 @@ export default function LeadsPage() {
       value: kpis.droppedCount,
       hint: 'Withdrawn or lost leads',
       tone: 'danger',
+      icon: Clock,
       info: {
         title: 'Dropped & Lost Leads',
         summary: 'Leads that exited the pipeline due to competitor purchase, budget mismatch, or unresponsive calls.',

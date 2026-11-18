@@ -366,8 +366,8 @@ export const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Top 6 Executive KPI Metric Cards - Responsive Breakpoints */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2.5 sm:gap-3.5">
+      {/* Top 6 Executive KPI Metric Cards - 3-Liner Cards with Icons & Field Colors */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3.5">
         <StatCard
           title="Checklist Items"
           value={checklistStats?.pending ?? checklistStats?.totalWork}
@@ -388,7 +388,7 @@ export const DashboardPage = () => {
           loading={loading}
           subtext="Assigned tasks"
           icon={ListTodo}
-          variant="default"
+          variant="purple"
           onClick={() => navigate('/delegation/list')}
           info={{
             title: 'Delegation Tasks',
@@ -402,7 +402,7 @@ export const DashboardPage = () => {
           loading={loading}
           subtext={`${crmData?.kpis?.totalEnquiries || 0} total enquiries`}
           icon={TrendingUp}
-          variant="primary"
+          variant="indigo"
           onClick={() => navigate('/crm/leads')}
           info={{
             title: 'Active CRM Leads',
@@ -430,7 +430,7 @@ export const DashboardPage = () => {
           loading={loading}
           subtext={`${crmData?.kpis?.totalBrokers || 0} active partners`}
           icon={Award}
-          variant="default"
+          variant="orange"
           onClick={() => navigate('/crm/brokers')}
           info={{
             title: 'Broker Yards Sold',
@@ -444,7 +444,7 @@ export const DashboardPage = () => {
           loading={loading}
           subtext={`${deptCount || 0} departments`}
           icon={Users2}
-          variant="success"
+          variant="sky"
           onClick={() => navigate('/master/users')}
           info={{
             title: 'Active Staff & Doers',

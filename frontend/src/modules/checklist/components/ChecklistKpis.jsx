@@ -1,81 +1,90 @@
+import React from 'react';
 import { CheckCircle2, Clock, AlertTriangle, Calendar, Layers } from 'lucide-react';
+import WorkKpiStrip from '../../../components/WorkKpiStrip';
 
 export const ChecklistKpis = ({ stats, activeFilter, onSelectFilter }) => {
-  const cards = [
+  const items = [
     {
+      key: 'all',
       id: 'all',
-      title: 'Total',
+      label: 'TOTAL WORK',
       value: stats?.total ?? 0,
       icon: Layers,
-      variant: 'default',
+      tone: 'blue',
+      hint: 'All recurring operational items',
+      active: activeFilter === 'all' || !activeFilter,
+      onClick: () => onSelectFilter('all'),
+      info: {
+        title: 'Total Checklist Work',
+        summary: 'All recurring operational compliance occurrences in the current filtered view.',
+        calculation: 'Sum of all items across frequencies and assignees.',
+      },
     },
     {
+      key: 'dueToday',
       id: 'dueToday',
-      title: 'Due today',
+      label: 'DUE TODAY',
       value: stats?.dueToday ?? 0,
       icon: Calendar,
-      variant: 'primary',
+      tone: 'sky',
+      hint: 'Scheduled for completion today',
+      active: activeFilter === 'dueToday',
+      onClick: () => onSelectFilter('dueToday'),
+      info: {
+        title: 'Due Today',
+        summary: 'Checklist occurrences scheduled for completion before end of today.',
+        calculation: 'Count of pending items scheduled for today.',
+      },
     },
     {
+      key: 'pending',
       id: 'pending',
-      title: 'Pending',
+      label: 'PENDING',
       value: stats?.pending ?? 0,
       icon: Clock,
-      variant: 'warning',
+      tone: 'warning',
+      hint: stats?.overdue ? `${stats.overdue} of them overdue` : 'Awaiting check-off',
+      active: activeFilter === 'pending',
+      onClick: () => onSelectFilter('pending'),
+      info: {
+        title: 'Pending Checklist Work',
+        summary: 'Scheduled checklist occurrences currently open and awaiting completion.',
+        calculation: 'Occurrences with status = "pending".',
+      },
     },
     {
+      key: 'overdue',
       id: 'overdue',
-      title: 'Overdue',
+      label: 'OVERDUE',
       value: stats?.overdue ?? 0,
       icon: AlertTriangle,
-      variant: 'danger',
+      tone: 'danger',
+      hint: 'Requires immediate action',
+      active: activeFilter === 'overdue',
+      onClick: () => onSelectFilter('overdue'),
+      info: {
+        title: 'Overdue Items',
+        summary: 'Pending tasks whose due date or time has passed without completion.',
+        calculation: 'Status = "pending" and dueDate < today.',
+      },
     },
     {
+      key: 'done',
       id: 'done',
-      title: 'Completed',
+      label: 'COMPLETED',
       value: stats?.completed ?? 0,
       icon: CheckCircle2,
-      variant: 'success',
+      tone: 'success',
+      hint: `${stats?.total ? Math.round(((stats.completed || 0) / stats.total) * 100) : 0}% completion rate`,
+      active: activeFilter === 'done',
+      onClick: () => onSelectFilter('done'),
+      info: {
+        title: 'Completed Occurrences',
+        summary: 'Checklist items verified and ticked Done.',
+        calculation: 'Occurrences with status = "done".',
+      },
     },
   ];
 
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3">
-      {cards.map((card) => {
-        const Icon = card.icon;
-        const isActive = activeFilter === card.id;
-
-        return (
-          <button
-            key={card.id}
-            type="button"
-            onClick={() => onSelectFilter(card.id)}
-            className={`text-left p-3.5 rounded-xl border bg-white shadow-subtle transition-all cursor-pointer ${
-              isActive
-                ? 'ring-2 ring-brand-500 border-brand-500 shadow-sm'
-                : 'border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-semibold uppercase tracking-wider">{card.title}</span>
-              <Icon
-                className={`w-4 h-4 ${
-                  card.variant === 'danger'
-                    ? 'text-rose-500'
-                    : card.variant === 'success'
-                    ? 'text-emerald-500'
-                    : card.variant === 'warning'
-                    ? 'text-amber-500'
-                    : 'text-slate-400'
-                }`}
-              />
-            </div>
-            <div className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
-              {card.value}
-            </div>
-          </button>
-        );
-      })}
-    </div>
-  );
+  return <WorkKpiStrip items={items} columns="grid-cols-2 sm:grid-cols-5" label="Checklist KPIs" />;
 };

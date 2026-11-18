@@ -17,6 +17,7 @@ import {
   Edit2,
   Trash2,
   Filter,
+  AlertCircle,
 } from 'lucide-react';
 import { crmEnquiryApi } from '../../../api/crmEnquiryApi';
 import { useToast } from '../../../context/ToastContext';
@@ -145,7 +146,8 @@ export default function EnquiriesPage() {
       label: 'TOTAL ENQUIRIES',
       value: kpis.totalEnquiries,
       hint: 'Inbound prospective buyers',
-      tone: 'default',
+      tone: 'blue',
+      icon: Phone,
       info: {
         title: 'Total Enquiries',
         summary: 'All incoming prospective buyer inquiries recorded across advertisements, walk-ins, phone calls, and referral partners.',
@@ -164,6 +166,7 @@ export default function EnquiriesPage() {
       value: kpis.qualifiedCount,
       hint: `${kpis.totalEnquiries ? Math.round((kpis.qualifiedCount / kpis.totalEnquiries) * 100) : 0}% qualification rate`,
       tone: 'success',
+      icon: CheckCircle2,
       info: {
         title: 'Qualified Enquiries',
         summary: 'Prospective buyers verified through tele-sales screening and ready for sales pipeline assignment or site visits.',
@@ -181,6 +184,7 @@ export default function EnquiriesPage() {
       value: kpis.pendingCount,
       hint: 'Awaiting call / verification',
       tone: 'warning',
+      icon: Clock,
       info: {
         title: 'Pending Screening',
         summary: 'New or in-progress inbound inquiries undergoing initial outreach, qualification calls, or awaiting customer response.',
@@ -198,6 +202,7 @@ export default function EnquiriesPage() {
       value: kpis.overdueCount,
       hint: 'Follow-up date passed',
       tone: 'danger',
+      icon: AlertCircle,
       info: {
         title: 'Overdue Follow-ups',
         summary: 'Inquiries whose scheduled callback or follow-up deadline has passed without an updated activity log or status change.',
@@ -215,6 +220,7 @@ export default function EnquiriesPage() {
       value: kpis.dueTodayCount,
       hint: 'Scheduled for today',
       tone: 'sky',
+      icon: Calendar,
       info: {
         title: 'Due Today Follow-ups',
         summary: 'Inquiries scheduled for customer callback, reminder follow-up, or site visit coordination on today\'s calendar date.',

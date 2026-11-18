@@ -192,8 +192,9 @@ export default function ChecklistDashboardPage() {
             key: 'total',
             label: 'TOTAL WORK',
             value: total,
-            tone: 'default',
+            tone: 'blue',
             hint: 'Everything due up to today',
+            icon: Layers,
             onClick: () => navigate('/checklist/list?status=all'),
             info: {
               title: 'Total Work',
@@ -205,8 +206,9 @@ export default function ChecklistDashboardPage() {
             key: 'done',
             label: 'COMPLETED',
             value: completed,
-            tone: completed > 0 ? 'success' : 'default',
+            tone: 'success',
             hint: `${completionRate}% completed`,
+            icon: CheckCircle2,
             onClick: () => navigate('/checklist/list?status=done'),
             info: {
               title: 'Completed Occurrences',
@@ -218,8 +220,9 @@ export default function ChecklistDashboardPage() {
             key: 'pending',
             label: 'PENDING',
             value: pending,
-            tone: 'default',
+            tone: 'warning',
             hint: overdue ? `${overdue} of them overdue` : 'Up to date',
+            icon: Clock,
             onClick: () => navigate('/checklist/list?status=pending'),
             info: {
               title: 'Pending Checklist Work',
@@ -231,8 +234,9 @@ export default function ChecklistDashboardPage() {
             key: 'overdue',
             label: 'OVERDUE',
             value: overdue,
-            tone: overdue > 0 ? 'danger' : 'default',
+            tone: 'danger',
             hint: 'Requires immediate action',
+            icon: AlertTriangle,
             onClick: () => navigate('/checklist/list?status=overdue'),
             info: {
               title: 'Overdue Checklist Items',
@@ -246,6 +250,7 @@ export default function ChecklistDashboardPage() {
             value: dueToday,
             tone: dueToday > 0 ? 'sky' : 'default',
             hint: 'Due before end of day',
+            icon: Calendar,
             onClick: () => navigate('/checklist/list?slice=today'),
             info: {
               title: 'Due Today',

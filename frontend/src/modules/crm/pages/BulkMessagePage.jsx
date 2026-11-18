@@ -14,6 +14,7 @@ import {
   Users,
   MessageSquare,
   Sparkles,
+  TrendingUp,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import { crmBulkMessageApi } from '../../../api/crmBulkMessageApi';
@@ -104,7 +105,9 @@ export default function BulkMessagePage() {
       key: 'total-campaigns',
       label: 'TOTAL CAMPAIGNS',
       value: kpis.totalCampaigns,
-      status: 'neutral',
+      tone: 'blue',
+      hint: 'Broadcast dispatches',
+      icon: Send,
       active: statusFilter === '',
       info: {
         title: 'Broadcast Campaigns',
@@ -120,7 +123,9 @@ export default function BulkMessagePage() {
       key: 'messages-sent',
       label: 'MESSAGES DELIVERED',
       value: kpis.totalSent.toLocaleString(),
-      status: 'positive',
+      tone: 'success',
+      hint: 'Outbound delivered',
+      icon: CheckCircle2,
       active: statusFilter === 'completed',
       info: {
         title: 'Delivered Messages',
@@ -136,7 +141,9 @@ export default function BulkMessagePage() {
       key: 'reachable-audience',
       label: 'AUDIENCE REACH',
       value: `${kpis.estimatedAudience.toLocaleString()} Clients`,
-      status: 'positive',
+      tone: 'purple',
+      hint: 'Addressable contacts',
+      icon: Users,
       info: {
         title: 'Audience Addressability',
         summary: 'Total unique client and broker phone contacts currently reachable in CRM.',
@@ -151,7 +158,9 @@ export default function BulkMessagePage() {
       key: 'success-rate',
       label: 'SUCCESS RATE',
       value: `${kpis.successRate}%`,
-      status: 'positive',
+      tone: 'emerald',
+      hint: 'Delivery reliability',
+      icon: TrendingUp,
       info: {
         title: 'Broadcast Success Rate',
         summary: 'Proportion of dispatched messages successfully delivered to recipient handsets.',

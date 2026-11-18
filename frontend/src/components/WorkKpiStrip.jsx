@@ -12,6 +12,8 @@ const TONES = {
   purple: 'text-purple-600',
   indigo: 'text-indigo-600',
   emerald: 'text-emerald-600',
+  rose: 'text-rose-600',
+  amber: 'text-amber-600',
 };
 
 /**
@@ -35,6 +37,7 @@ export default function WorkKpiStrip({
     if (count === 3) return 'grid-cols-1 sm:grid-cols-3';
     if (count === 4) return 'grid-cols-2 sm:grid-cols-4';
     if (count === 6) return 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6';
+    if (count === 7) return 'grid-cols-2 sm:grid-cols-4 lg:grid-cols-7';
     return 'grid-cols-2 sm:grid-cols-5';
   };
 

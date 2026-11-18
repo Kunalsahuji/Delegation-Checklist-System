@@ -10,6 +10,8 @@ import {
   Bell,
   CheckCircle2,
   Users,
+  PhoneCall,
+  TrendingUp,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import { crmCalendarApi } from '../../../api/crmCalendarApi';
@@ -134,7 +136,9 @@ export default function CalendarPage() {
       key: 'total-activities',
       label: 'TOTAL ACTIVITIES',
       value: activities.length,
-      status: 'neutral',
+      tone: 'blue',
+      hint: 'Scheduled events this month',
+      icon: CalendarIcon,
       info: {
         title: 'Monthly Calendar Activities',
         summary: 'Unified schedule of customer appointments, site tours, and planned milestones.',
@@ -145,7 +149,9 @@ export default function CalendarPage() {
       key: 'site-visits',
       label: 'SITE VISITS',
       value: visitCount,
-      status: 'positive',
+      tone: 'purple',
+      hint: 'Customer site walkthroughs',
+      icon: MapPin,
       info: {
         title: 'Field Site Visits',
         summary: 'Physical customer site tours scheduled or completed this month.',
@@ -156,7 +162,9 @@ export default function CalendarPage() {
       key: 'follow-ups',
       label: 'FOLLOW-UPS',
       value: followupCount,
-      status: 'warning',
+      tone: 'orange',
+      hint: 'Client callbacks & updates',
+      icon: PhoneCall,
       info: {
         title: 'Client Follow-ups',
         summary: 'Customer callbacks, discussions, and meeting follow-ups.',
@@ -167,7 +175,9 @@ export default function CalendarPage() {
       key: 'stage-milestones',
       label: 'STAGE TARGETS',
       value: milestoneCount,
-      status: 'neutral',
+      tone: 'success',
+      hint: 'Target milestone deadlines',
+      icon: TrendingUp,
       info: {
         title: 'Pipeline Stage Targets',
         summary: 'Target deadlines set on active deals to progress them to the next sales stage.',

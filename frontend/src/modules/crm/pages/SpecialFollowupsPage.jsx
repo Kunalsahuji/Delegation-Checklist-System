@@ -10,6 +10,7 @@ import {
   Clock,
   Sparkles,
   TrendingUp,
+  Flame,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import StageBadge from '../components/StageBadge';
@@ -99,7 +100,9 @@ export default function SpecialFollowupsPage() {
       key: 'special-total',
       label: 'SPECIAL FOLLOW-UPS',
       value: pagination.total,
-      status: 'warning',
+      tone: 'orange',
+      hint: 'VIP priority clients',
+      icon: Star,
       active: kpiFilter === 'all',
       info: {
         title: 'Special High-Priority Leads',
@@ -112,7 +115,9 @@ export default function SpecialFollowupsPage() {
       key: 'hot-leads',
       label: 'HOT TEMPERATURE',
       value: hotCount,
-      status: 'negative',
+      tone: 'danger',
+      hint: 'Ready for purchase',
+      icon: Flame,
       active: kpiFilter === 'hot',
       info: {
         title: 'Hot Temperature Buyers',
@@ -125,7 +130,9 @@ export default function SpecialFollowupsPage() {
       key: 'high-value',
       label: 'HIGH BUDGET (₹50L+)',
       value: highBudgetCount,
-      status: 'positive',
+      tone: 'purple',
+      hint: 'Luxury & high-ticket',
+      icon: Building,
       active: kpiFilter === 'high-value',
       info: {
         title: 'High-Value Deals',
@@ -138,7 +145,9 @@ export default function SpecialFollowupsPage() {
       key: 'due-today',
       label: 'DUE TODAY',
       value: dueTodayCount,
-      status: dueTodayCount > 0 ? 'warning' : 'neutral',
+      tone: dueTodayCount > 0 ? 'sky' : 'default',
+      hint: 'Scheduled for today',
+      icon: Calendar,
       active: kpiFilter === 'due-today',
       info: {
         title: 'Special Follow-ups Due Today',

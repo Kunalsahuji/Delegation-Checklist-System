@@ -178,7 +178,9 @@ export default function MetaLeadsPage() {
       key: 'total-meta-leads',
       label: 'TOTAL AD LEADS',
       value: kpis.total,
-      status: 'neutral',
+      tone: 'blue',
+      hint: 'Inbound Meta form leads',
+      icon: Share2,
       active: statusFilter === '',
       info: {
         title: 'Meta Ad Form Submissions',
@@ -194,7 +196,9 @@ export default function MetaLeadsPage() {
       key: 'pending-meta-leads',
       label: 'PENDING ASSIGNMENT',
       value: kpis.pending,
-      status: kpis.pending > 0 ? 'warning' : 'positive',
+      tone: 'warning',
+      hint: 'Awaiting team distribution',
+      icon: Clock,
       active: statusFilter === 'pending',
       info: {
         title: 'Unassigned Holding Queue',
@@ -210,7 +214,9 @@ export default function MetaLeadsPage() {
       key: 'assigned-meta-leads',
       label: 'RELEASED TO CRM',
       value: kpis.assigned,
-      status: 'positive',
+      tone: 'success',
+      hint: 'Converted to enquiries',
+      icon: CheckCircle2,
       active: statusFilter === 'assigned',
       info: {
         title: 'Assigned into CRM Pipeline',
@@ -226,7 +232,9 @@ export default function MetaLeadsPage() {
       key: 'skipped-meta-leads',
       label: 'SKIPPED / DUPLICATES',
       value: kpis.skipped,
-      status: 'neutral',
+      tone: 'orange',
+      hint: 'Duplicate or test clicks',
+      icon: AlertTriangle,
       active: statusFilter === 'skipped',
       info: {
         title: 'Skipped Submissions',

@@ -136,7 +136,9 @@ export default function BrokersPage() {
       key: 'total-partners',
       label: 'TOTAL ASSOCIATES',
       value: kpis.totalBrokers,
-      status: 'neutral',
+      tone: 'blue',
+      hint: 'Registered channel partners',
+      icon: Handshake,
       active: !levelFilter && !statusFilter,
       info: {
         title: 'Registered Channel Partners',
@@ -153,7 +155,9 @@ export default function BrokersPage() {
       key: 'total-yards',
       label: 'TOTAL YARDS SOLD',
       value: `${kpis.totalYards.toLocaleString()} Sq.Yd`,
-      status: 'positive',
+      tone: 'orange',
+      hint: 'Cumulative partner volume',
+      icon: Building,
       info: {
         title: 'Cumulative Yards (Gaj) Sold',
         summary: 'Aggregate plot and villa land area sold through channel partner network transactions.',
@@ -169,7 +173,9 @@ export default function BrokersPage() {
       key: 'referral-leads',
       label: 'ACTIVE BROKER LEADS',
       value: kpis.totalReferralLeads,
-      status: 'positive',
+      tone: 'sky',
+      hint: 'Introduced buyer pipeline',
+      icon: TrendingUp,
       active: statusFilter === 'Active',
       info: {
         title: 'Partner Referral Pipeline',
@@ -185,7 +191,9 @@ export default function BrokersPage() {
       key: 'senior-partners',
       label: 'SENIOR PARTNERS',
       value: kpis.seniorBrokers,
-      status: 'neutral',
+      tone: 'purple',
+      hint: 'Sales Managers & Directors',
+      icon: Award,
       active: levelFilter === 'Sales Manager',
       info: {
         title: 'Senior Network Partners',

@@ -132,7 +132,8 @@ export default function ProjectsPage() {
       label: 'TOTAL PROJECTS',
       value: kpis.totalProjects,
       hint: `${kpis.openProjects} open for booking`,
-      tone: 'default',
+      tone: 'blue',
+      icon: Building2,
       active: kpiFilter === 'all' && statusFilter === 'all' && typeFilter === 'all',
       info: {
         title: 'Total Projects',
@@ -152,6 +153,7 @@ export default function ProjectsPage() {
       value: kpis.totalUnits,
       hint: 'Plots, villas & shops',
       tone: 'sky',
+      icon: Layers,
       active: kpiFilter === 'has_units',
       info: {
         title: 'Inventory Units',
@@ -169,6 +171,7 @@ export default function ProjectsPage() {
       value: kpis.availableUnits,
       hint: `${kpis.totalUnits ? Math.round((kpis.availableUnits / kpis.totalUnits) * 100) : 0}% available`,
       tone: 'success',
+      icon: CheckCircle2,
       active: kpiFilter === 'available',
       info: {
         title: 'Available Units',
@@ -185,7 +188,8 @@ export default function ProjectsPage() {
       label: 'BOOKED / SOLD',
       value: kpis.bookedUnits,
       hint: `${kpis.totalUnits ? Math.round((kpis.bookedUnits / kpis.totalUnits) * 100) : 0}% booked`,
-      tone: 'danger',
+      tone: 'orange',
+      icon: Home,
       active: kpiFilter === 'booked',
       info: {
         title: 'Booked / Sold Units',

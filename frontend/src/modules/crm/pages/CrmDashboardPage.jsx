@@ -78,7 +78,7 @@ export default function CrmDashboardPage() {
       key: 'qualification-rate',
       label: 'QUALIFICATION RATE',
       value: `${kpis.qualificationRate || 0}%`,
-      tone: (kpis.qualificationRate || 0) > 0 ? 'success' : 'default',
+      tone: 'emerald',
       hint: `${kpis.qualifiedEnquiries || 0} of ${kpis.totalEnquiries || 0} verified`,
       icon: TrendingUp,
       onClick: () => navigate('/crm/enquiries?status=qualified'),
@@ -92,7 +92,7 @@ export default function CrmDashboardPage() {
       key: 'site-visits',
       label: 'SITE VISITS CONDUCTED',
       value: kpis.totalVisits || 0,
-      tone: (kpis.totalVisits || 0) > 0 ? 'purple' : 'default',
+      tone: 'purple',
       hint: `${kpis.verifiedVisits || 0} GPS verified tours`,
       icon: MapPin,
       onClick: () => navigate('/crm/visit'),
@@ -106,7 +106,7 @@ export default function CrmDashboardPage() {
       key: 'broker-yards',
       label: 'BROKER YARDS SOLD',
       value: `${(kpis.totalYards || 0).toLocaleString()} Sq.Yd`,
-      tone: (kpis.totalYards || 0) > 0 ? 'orange' : 'default',
+      tone: 'orange',
       hint: `Across ${kpis.totalBrokers || 0} active partners`,
       icon: Building,
       onClick: () => navigate('/crm/brokers'),
@@ -120,7 +120,7 @@ export default function CrmDashboardPage() {
       key: 'deals-won',
       label: 'DEALS WON / CLOSURES',
       value: kpis.wonLeads || 0,
-      tone: (kpis.wonLeads || 0) > 0 ? 'emerald' : 'default',
+      tone: 'emerald',
       hint: `${kpis.winRate || 0}% win conversion rate`,
       icon: Award,
       onClick: () => navigate('/crm/leads?status=won'),
@@ -247,33 +247,48 @@ export default function CrmDashboardPage() {
             </div>
 
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-rose-50 border border-rose-200 rounded-xl p-3 text-center">
-                <div className="flex items-center justify-center text-rose-600 mb-1">
-                  <Flame className="w-4 h-4" />
+              <div className="bg-rose-50/70 border border-rose-200/80 rounded-xl p-3 text-left">
+                <div className="flex items-center gap-1.5 text-rose-600 mb-1">
+                  <Flame className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-[11px] font-semibold text-rose-700 uppercase tracking-wide truncate">
+                    Hot Intent
+                  </span>
                 </div>
-                <div className="text-lg font-bold text-rose-900">{temperatures.hot}</div>
-                <div className="text-[10px] font-semibold text-rose-700 uppercase tracking-wide">
-                  Hot (High Intent)
+                <div className="text-xl sm:text-2xl font-bold text-rose-700 tabular-nums">
+                  {temperatures.hot}
                 </div>
-              </div>
-
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
-                <div className="flex items-center justify-center text-amber-600 mb-1">
-                  <ThermometerSun className="w-4 h-4" />
-                </div>
-                <div className="text-lg font-bold text-amber-900">{temperatures.warm}</div>
-                <div className="text-[10px] font-semibold text-amber-700 uppercase tracking-wide">
-                  Warm (Evaluating)
+                <div className="text-[10px] text-rose-600/80 truncate mt-0.5">
+                  Immediate visit ready
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-center">
-                <div className="flex items-center justify-center text-blue-600 mb-1">
-                  <Snowflake className="w-4 h-4" />
+              <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 text-left">
+                <div className="flex items-center gap-1.5 text-amber-600 mb-1">
+                  <ThermometerSun className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-[11px] font-semibold text-amber-700 uppercase tracking-wide truncate">
+                    Warm Intent
+                  </span>
                 </div>
-                <div className="text-lg font-bold text-blue-900">{temperatures.cold}</div>
-                <div className="text-[10px] font-semibold text-blue-700 uppercase tracking-wide">
-                  Cold (Low Fit)
+                <div className="text-xl sm:text-2xl font-bold text-amber-700 tabular-nums">
+                  {temperatures.warm}
+                </div>
+                <div className="text-[10px] text-amber-600/80 truncate mt-0.5">
+                  Active evaluation
+                </div>
+              </div>
+
+              <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-3 text-left">
+                <div className="flex items-center gap-1.5 text-blue-600 mb-1">
+                  <Snowflake className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-[11px] font-semibold text-blue-700 uppercase tracking-wide truncate">
+                    Cold Intent
+                  </span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold text-blue-700 tabular-nums">
+                  {temperatures.cold}
+                </div>
+                <div className="text-[10px] text-blue-600/80 truncate mt-0.5">
+                  Long-term prospect
                 </div>
               </div>
             </div>
@@ -304,38 +319,56 @@ export default function CrmDashboardPage() {
 
             <div className="grid grid-cols-3 gap-3">
               <Link
-                to="/crm/followups"
-                className="bg-red-50 border border-red-200 rounded-xl p-3 text-center hover:bg-red-100/70 transition-colors"
+                to="/crm/followups?status=overdue"
+                className="bg-rose-50/70 border border-rose-200/80 rounded-xl p-3 text-left hover:bg-rose-100/70 transition-colors block"
               >
-                <div className="text-lg font-bold text-red-900">
+                <div className="flex items-center gap-1.5 text-rose-600 mb-1">
+                  <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-[11px] font-semibold text-rose-700 uppercase tracking-wide truncate">
+                    Overdue
+                  </span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold text-rose-700 tabular-nums">
                   {operations.overdueReminders || 0}
                 </div>
-                <div className="text-[10px] font-semibold text-red-700 uppercase tracking-wide mt-0.5">
-                  Overdue Tasks
+                <div className="text-[10px] text-rose-600/80 truncate mt-0.5">
+                  Immediate action
                 </div>
               </Link>
 
               <Link
-                to="/crm/followups"
-                className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center hover:bg-emerald-100/70 transition-colors"
+                to="/crm/followups?status=dueToday"
+                className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-3 text-left hover:bg-emerald-100/70 transition-colors block"
               >
-                <div className="text-lg font-bold text-emerald-900">
+                <div className="flex items-center gap-1.5 text-emerald-600 mb-1">
+                  <Clock className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wide truncate">
+                    Due Today
+                  </span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold text-emerald-700 tabular-nums">
                   {operations.todayReminders || 0}
                 </div>
-                <div className="text-[10px] font-semibold text-emerald-700 uppercase tracking-wide mt-0.5">
-                  Due Today
+                <div className="text-[10px] text-emerald-600/80 truncate mt-0.5">
+                  Before end of day
                 </div>
               </Link>
 
               <Link
                 to="/crm/special-followups"
-                className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center hover:bg-amber-100/70 transition-colors"
+                className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 text-left hover:bg-amber-100/70 transition-colors block"
               >
-                <div className="text-lg font-bold text-amber-900">
+                <div className="flex items-center gap-1.5 text-amber-600 mb-1">
+                  <Star className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-[11px] font-semibold text-amber-700 uppercase tracking-wide truncate">
+                    Starred VIP
+                  </span>
+                </div>
+                <div className="text-xl sm:text-2xl font-bold text-amber-700 tabular-nums">
                   {operations.specialFollowups || 0}
                 </div>
-                <div className="text-[10px] font-semibold text-amber-700 uppercase tracking-wide mt-0.5">
-                  Starred VIP
+                <div className="text-[10px] text-amber-600/80 truncate mt-0.5">
+                  Priority client care
                 </div>
               </Link>
             </div>

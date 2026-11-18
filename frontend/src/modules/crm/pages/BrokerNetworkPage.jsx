@@ -152,7 +152,9 @@ export default function BrokerNetworkPage() {
       key: 'network-partners',
       label: 'TOTAL PARTNERS',
       value: totalBrokers,
-      status: 'neutral',
+      tone: 'blue',
+      hint: 'Across 8 network tiers',
+      icon: Users,
       info: {
         title: 'Active Network Partners',
         summary: 'Total channel partners active across all 8 organizational tiers.',
@@ -163,7 +165,9 @@ export default function BrokerNetworkPage() {
       key: 'network-yards',
       label: 'TOTAL YARDS SOLD',
       value: `${totalYards.toLocaleString()} Sq.Yd`,
-      status: 'positive',
+      tone: 'orange',
+      hint: 'Cumulative partner volume',
+      icon: Building,
       info: {
         title: 'Cumulative Network Sales',
         summary: 'Total land area (Gaj/Sq.Yds) delivered collectively across all tiers.',
@@ -174,7 +178,9 @@ export default function BrokerNetworkPage() {
       key: 'senior-leaders',
       label: 'SENIOR LEADERS',
       value: seniorLeaders,
-      status: 'positive',
+      tone: 'purple',
+      hint: '500+ Sq.Yd partners',
+      icon: Award,
       info: {
         title: 'Managerial & Executive Partners',
         summary: 'Partners who have delivered 500+ yards, qualifying for higher commission slabs.',
@@ -185,7 +191,9 @@ export default function BrokerNetworkPage() {
       key: 'directorship',
       label: 'DIRECTORS & AD',
       value: topDirectors,
-      status: 'neutral',
+      tone: 'emerald',
+      hint: 'Top leadership tier',
+      icon: Crown,
       info: {
         title: 'Directorship Leadership',
         summary: 'Top tier partners exceeding 7,000+ yards with 4.5% - 5.0% commission brackets.',

@@ -14,6 +14,7 @@ import {
   Trash2,
   Calendar,
   ExternalLink,
+  TrendingUp,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import { crmVisitApi } from '../../../api/crmVisitApi';
@@ -149,7 +150,9 @@ export default function VisitsPage() {
       key: 'total-visits',
       label: 'TOTAL SITE VISITS',
       value: stats.total,
-      status: 'neutral',
+      tone: 'blue',
+      hint: 'All customer visits',
+      icon: MapPin,
       active: kpiFilter === 'all' && !geoFilter,
       info: {
         title: 'Total Site Visits',
@@ -167,7 +170,9 @@ export default function VisitsPage() {
       key: 'geo-verified',
       label: 'GEO-VERIFIED VISITS',
       value: stats.geoVerified,
-      status: 'positive',
+      tone: 'success',
+      hint: `${stats.total ? Math.round((stats.geoVerified / stats.total) * 100) : 0}% authenticated`,
+      icon: ShieldCheck,
       active: kpiFilter === 'geo-verified' || geoFilter === 'true',
       info: {
         title: 'Geo-Fence Verified Visits',
@@ -184,7 +189,9 @@ export default function VisitsPage() {
       key: 'today-visits',
       label: "TODAY'S VISITS",
       value: stats.today,
-      status: 'positive',
+      tone: 'purple',
+      hint: 'Conducted today',
+      icon: Calendar,
       active: kpiFilter === 'today',
       info: {
         title: "Today's Field Visits",
@@ -201,7 +208,9 @@ export default function VisitsPage() {
       key: 'month-visits',
       label: 'THIS MONTH',
       value: stats.month,
-      status: 'neutral',
+      tone: 'sky',
+      hint: 'Current calendar month',
+      icon: TrendingUp,
       active: kpiFilter === 'month',
       info: {
         title: 'Visits This Month',

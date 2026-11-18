@@ -281,31 +281,70 @@ const getNetworkHierarchy = async () => {
     .sort({ totalYards: -1 })
     .lean();
 
-  // Group by level
-  const hierarchy = BROKER_LEVELS.slice().reverse().map((tier) => {
+  const COMMISSION_SLABS = {
+    'Sales Director': '6.0%',
+    'Assistant Sales Director': '5.0%',
+    'Regional Sales Manager': '4.5%',
+    'Area Sales Manager': '4.0%',
+    'Senior Sales Manager': '3.5%',
+    'Sales Manager': '3.0%',
+    Executive: '2.5%',
+    Associate: '2.0%',
+  };
+
+  const reversedTiers = BROKER_LEVELS.slice().reverse();
+
+  // Group by level from highest to lowest
+  const hierarchy = reversedTiers.map((tier, idx) => {
     const members = brokers.filter((b) => b.level === tier.name);
     const tierYards = members.reduce((acc, curr) => acc + (curr.totalYards || 0), 0);
+    const nextTier = idx > 0 ? reversedTiers[idx - 1] : null;
 
-    return {
-      levelName: tier.name,
-      minYards: tier.min,
-      maxYards: tier.max,
-      memberCount: members.length,
-      totalYards: tierYards,
-      members: members.map((m) => ({
+    const formattedBrokers = members.map((m) => {
+      const currentYards = Math.max(0, Number(m.totalYards) || 0);
+      const yardsToNext = nextTier ? Math.max(0, nextTier.min - currentYards) : 0;
+      const progressRange = nextTier ? nextTier.min - tier.min : 1;
+      const progressPercentage = nextTier
+        ? Math.min(100, Math.max(0, Math.round(((currentYards - tier.min) / progressRange) * 100)))
+        : 100;
+
+      return {
         _id: m._id,
-        brokerCode: m.brokerCode,
+        code: m.brokerCode || `BRK-${String(m._id).slice(-5).toUpperCase()}`,
+        brokerCode: m.brokerCode || `BRK-${String(m._id).slice(-5).toUpperCase()}`,
         name: m.name,
         phone: m.phone,
         agencyName: m.agencyName,
-        city: m.city,
-        totalYards: m.totalYards || 0,
-        manager: m.managedBy?.name || m.managedByName || 'General',
-      })),
+        city: m.city || 'Jaipur',
+        totalYards: currentYards,
+        commissionRate: m.commissionRate || 2,
+        managedBy: m.managedBy || { name: m.managedByName || 'General' },
+        progress: {
+          nextLevelName: nextTier ? nextTier.name : 'Top Level',
+          yardsToNext,
+          percentage: progressPercentage,
+        },
+      };
+    });
+
+    return {
+      tier: tier.name,
+      levelName: tier.name,
+      minYards: tier.min,
+      maxYards: tier.max,
+      count: members.length,
+      memberCount: members.length,
+      totalYards: tierYards,
+      commission: COMMISSION_SLABS[tier.name] || '2.0%',
+      brokers: formattedBrokers,
+      members: formattedBrokers,
     };
   });
 
-  return hierarchy;
+  return {
+    totalBrokers: brokers.length,
+    hierarchy,
+  };
 };
 
 module.exports = {

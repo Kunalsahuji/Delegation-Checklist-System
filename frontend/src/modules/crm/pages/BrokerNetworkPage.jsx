@@ -93,14 +93,24 @@ export default function BrokerNetworkPage() {
     try {
       setLoading(true);
       const res = await crmBrokerApi.getNetwork();
-      if (res.success) {
-        setTotalBrokers(res.data.totalBrokers || 0);
-        setHierarchyData(res.data.hierarchy || []);
+      if (res.success && res.data) {
+        const rawData = res.data;
+        const hierarchyList = Array.isArray(rawData)
+          ? rawData
+          : rawData.hierarchy || [];
+        const total = Array.isArray(rawData)
+          ? hierarchyList.reduce((acc, t) => acc + (t.count || t.memberCount || 0), 0)
+          : rawData.totalBrokers || hierarchyList.reduce((acc, t) => acc + (t.count || t.memberCount || 0), 0);
+
+        setTotalBrokers(total);
+        setHierarchyData(hierarchyList);
 
         // Expand tiers with members by default
         const initialExpanded = {};
-        (res.data.hierarchy || []).forEach((t) => {
-          if (t.count > 0) initialExpanded[t.tier] = true;
+        hierarchyList.forEach((t) => {
+          const tierKey = t.tier || t.levelName;
+          const memberCount = t.count ?? t.memberCount ?? 0;
+          if (memberCount > 0) initialExpanded[tierKey] = true;
         });
         setExpandedTiers(initialExpanded);
       }

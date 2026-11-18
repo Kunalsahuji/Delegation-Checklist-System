@@ -543,102 +543,102 @@ export const DashboardPage = () => {
         <div className="xl:col-span-5 bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div>
             {/* Responsive Card Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3">
-              <div className="flex items-start sm:items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center font-bold shrink-0 mt-0.5 sm:mt-0">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center font-bold shrink-0">
                   <PieIcon className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                    <h3 className="text-sm font-bold text-slate-900 tracking-tight">
-                      Lead Acquisition Channels
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-sm font-bold text-slate-900 tracking-tight truncate">
+                      Acquisition Channels
                     </h3>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 font-semibold border border-violet-200 shrink-0">
-                      Inbound Mix
-                    </span>
                     <MetricInfoBadge
                       title="Lead Acquisition Channels"
                       summary="Inbound lead distribution by marketing acquisition channel and campaign origin."
                       calculation="Percentage and count breakdown of enquiries by source (Meta Ads, Direct Call, Broker, Website, Walk-In)."
                     />
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5 hidden xs:block sm:block truncate">
-                    Source breakdown of buyer enquiries & marketing campaign ROI
+                  <p className="text-[11px] text-slate-500 truncate">
+                    Inbound marketing mix & enquiry sources
                   </p>
                 </div>
               </div>
               <Link
                 to="/crm/enquiries"
-                className="text-xs text-brand-600 hover:text-brand-700 font-semibold inline-flex items-center gap-1 shrink-0 self-end sm:self-center hover:underline"
+                className="text-xs text-brand-600 hover:text-brand-700 font-semibold inline-flex items-center gap-0.5 shrink-0 hover:underline"
               >
                 <span>Enquiries</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            {/* Donut Chart with Centered KPI */}
-            <div className="relative w-full h-48 sm:h-52 flex items-center justify-center mt-1">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <RechartsTooltip content={<SourceTooltip total={totalInbound} />} />
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={48}
-                    outerRadius={72}
-                    paddingAngle={3}
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-              {/* Inner Center Label */}
-              <div className="absolute pointer-events-none text-center">
-                <div className="text-lg sm:text-xl font-bold text-slate-900 leading-none">{totalInbound}</div>
-                <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mt-0.5">
-                  Inbound
+            {/* Donut Chart & Breakdown Side-by-Side to prevent vertical overflow */}
+            <div className="grid grid-cols-1 sm:grid-cols-12 items-center gap-3 sm:gap-4 my-2">
+              {/* Donut Chart with Centered KPI */}
+              <div className="sm:col-span-6 relative w-full h-44 flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <RechartsTooltip content={<SourceTooltip total={totalInbound} />} />
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={44}
+                      outerRadius={66}
+                      paddingAngle={3}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                {/* Inner Center Label */}
+                <div className="absolute pointer-events-none text-center">
+                  <div className="text-base sm:text-lg font-bold text-slate-900 leading-none">{totalInbound}</div>
+                  <div className="text-[9px] text-slate-500 uppercase tracking-wider font-semibold mt-0.5">
+                    Inbound
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Breakdown List */}
-          <div className="space-y-1.5 pt-2 border-t border-slate-100 text-xs">
-            {pieData.map((source, idx) => {
-              const pct = totalInbound > 0 ? Math.round((source.value / totalInbound) * 100) : 0;
-              return (
-                <div key={idx} className="flex items-center justify-between text-[11px] text-slate-600">
-                  <div className="flex items-center gap-2 min-w-0 pr-2">
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: source.color }} />
-                    <span className="truncate text-slate-700 font-medium">{source.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2 font-mono shrink-0">
-                    <span className="text-slate-900 font-semibold">{source.value}</span>
-                    <span className="text-slate-400 text-[10px] w-9 text-right">({pct}%)</span>
-                  </div>
-                </div>
-              );
-            })}
+              {/* Breakdown List */}
+              <div className="sm:col-span-6 space-y-1.5 text-xs">
+                {pieData.map((source, idx) => {
+                  const pct = totalInbound > 0 ? Math.round((source.value / totalInbound) * 100) : 0;
+                  return (
+                    <div key={idx} className="flex items-center justify-between text-[11px] text-slate-600">
+                      <div className="flex items-center gap-1.5 min-w-0 pr-1">
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: source.color }} />
+                        <span className="truncate text-slate-700 font-medium">{source.name}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 font-mono shrink-0">
+                        <span className="text-slate-900 font-semibold">{source.value}</span>
+                        <span className="text-slate-400 text-[10px] w-8 text-right">({pct}%)</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Core Operational Workspaces: 3 Dedicated Cards - Responsive Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+      {/* Core Operational Workspaces: 3 Dedicated Cards - 2 cols on tablet/1024px laptop, 3 cols on xl: (1280px+) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
         {/* Workspace 1: Checklist Operations */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center font-bold shadow-2xs">
-                <CheckSquare className="w-5 h-5" />
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center font-bold shadow-2xs">
+                <CheckSquare className="w-4.5 h-4.5" />
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="badge badge-info text-[10px] sm:text-xs">Recurring Operations</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="badge badge-info text-[10px] px-2 py-0.5">Recurring</span>
                 <MetricInfoBadge
                   title="Checklist Workspace"
                   summary="Standard operational procedure engine with daily, weekly, and monthly recurrence, skip-holiday rules, remarks, and one-click completion."
@@ -647,48 +647,54 @@ export const DashboardPage = () => {
               </div>
             </div>
             <h2 className="text-base font-bold text-slate-900">Checklist Workspace</h2>
-            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
-              Standard operating procedures with daily, weekly, and monthly recurrence, skip-holiday rules, remarks, and one-click completion.
+            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed line-clamp-2">
+              Standard operating procedures with daily, weekly, and monthly recurrence, skip-holiday rules, and one-click completion.
             </p>
-            <div className="space-y-2 mb-6 text-xs text-slate-600">
+            <div className="space-y-2 mb-4 text-xs text-slate-600">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Items to Tick view with instant completion</span>
+                <span className="truncate">Items to Tick view with instant completion</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Checklist Setup drawer for recurring definitions</span>
+                <span className="truncate">Checklist Setup drawer for recurring definitions</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Weekly Performance Report (% Work Not Done)</span>
+                <span className="truncate">Weekly Performance Report (% Work Not Done)</span>
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-2 pt-3 border-t border-slate-100">
-            <Link to="/checklist/dashboard" className="w-full sm:flex-1">
-              <Button variant="secondary" className="w-full text-xs py-2">
+          <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+            <Link to="/checklist/dashboard" className="flex-1">
+              <button
+                type="button"
+                className="w-full py-2 px-2.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-colors cursor-pointer text-center"
+              >
                 Dashboard
-              </Button>
+              </button>
             </Link>
-            <Link to="/checklist/list" className="w-full sm:flex-1">
-              <Button variant="primary" className="w-full text-xs py-2">
-                <span>Open Checklists</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-              </Button>
+            <Link to="/checklist/list" className="flex-1">
+              <button
+                type="button"
+                className="w-full py-2 px-2.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center justify-center gap-1 whitespace-nowrap"
+              >
+                <span>Checklists</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+              </button>
             </Link>
           </div>
         </div>
 
         {/* Workspace 2: Delegation Tasks */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shadow-2xs">
-                <ListTodo className="w-5 h-5" />
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shadow-2xs">
+                <ListTodo className="w-4.5 h-4.5" />
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="badge badge-success text-[10px] sm:text-xs">Assigned Tasks</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="badge badge-success text-[10px] px-2 py-0.5">Assigned Tasks</span>
                 <MetricInfoBadge
                   title="Delegation Workspace"
                   summary="One-off task delegation desk with audit-locked original deadlines, mandatory extension reason logging, and score compliance."
@@ -697,48 +703,54 @@ export const DashboardPage = () => {
               </div>
             </div>
             <h2 className="text-base font-bold text-slate-900">Delegation Workspace</h2>
-            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
-              One-off task delegation with immutable original due dates, mandatory reason logging on date revisions, and weekly score compliance.
+            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed line-clamp-2">
+              One-off task delegation with immutable original due dates, mandatory reason logging on date revisions, and compliance scoring.
             </p>
-            <div className="space-y-2 mb-6 text-xs text-slate-600">
+            <div className="space-y-2 mb-4 text-xs text-slate-600">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Delegation List with overdue & week-shifted tags</span>
+                <span className="truncate">Delegation List with overdue & week-shifted tags</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Date Revision Modal with mandatory reason tracking</span>
+                <span className="truncate">Date Revision Modal with mandatory reason tracking</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Red / Yellow / Green weekly performance report</span>
+                <span className="truncate">Red / Yellow / Green weekly performance report</span>
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-2 pt-3 border-t border-slate-100">
-            <Link to="/delegation/dashboard" className="w-full sm:flex-1">
-              <Button variant="secondary" className="w-full text-xs py-2">
+          <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+            <Link to="/delegation/dashboard" className="flex-1">
+              <button
+                type="button"
+                className="w-full py-2 px-2.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-colors cursor-pointer text-center"
+              >
                 Dashboard
-              </Button>
+              </button>
             </Link>
-            <Link to="/delegation/list" className="w-full sm:flex-1">
-              <Button variant="primary" className="w-full text-xs py-2">
-                <span>Open Delegations</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-              </Button>
+            <Link to="/delegation/list" className="flex-1">
+              <button
+                type="button"
+                className="w-full py-2 px-2.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 text-white rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center justify-center gap-1 whitespace-nowrap"
+              >
+                <span>Delegations</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+              </button>
             </Link>
           </div>
         </div>
 
         {/* Workspace 3: Real Estate CRM & Sales */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-sm flex flex-col justify-between md:col-span-2 lg:col-span-1">
+        <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm flex flex-col justify-between md:col-span-2 xl:col-span-1">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center font-bold shadow-2xs">
-                <Building2 className="w-5 h-5" />
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-9 h-9 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center font-bold shadow-2xs">
+                <Building2 className="w-4.5 h-4.5" />
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="badge badge-primary text-[10px] sm:text-xs">End-to-End Sales</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="badge badge-primary text-[10px] px-2 py-0.5">Real Estate CRM</span>
                 <MetricInfoBadge
                   title="Real Estate CRM Workspace"
                   summary="Complete property sales platform with 8-stage conversion funnel, GPS-stamped site visit verification, follow-up radar, and broker pyramid."
@@ -747,35 +759,41 @@ export const DashboardPage = () => {
               </div>
             </div>
             <h2 className="text-base font-bold text-slate-900">Real Estate CRM</h2>
-            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed line-clamp-2">
               Complete property sales pipeline, GPS-stamped site visit verification, automatic follow-up reminders, and broker hierarchy tracking.
             </p>
-            <div className="space-y-2 mb-6 text-xs text-slate-600">
+            <div className="space-y-2 mb-4 text-xs text-slate-600">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-violet-600 shrink-0" />
-                <span>8-Stage sales funnel with strict stage transitions</span>
+                <span className="truncate">8-Stage sales funnel with strict stage transitions</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-violet-600 shrink-0" />
-                <span>Geo-stamped site visit verification with radius bounds</span>
+                <span className="truncate">Geo-stamped site visit verification with radius bounds</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-violet-600 shrink-0" />
-                <span>8-tier channel partner hierarchy & yardage milestones</span>
+                <span className="truncate">8-tier channel partner hierarchy & yardage milestones</span>
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-2 pt-3 border-t border-slate-100">
-            <Link to="/crm/dashboard" className="w-full sm:flex-1">
-              <Button variant="secondary" className="w-full text-xs py-2">
+          <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+            <Link to="/crm/dashboard" className="flex-1">
+              <button
+                type="button"
+                className="w-full py-2 px-2.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-2xs transition-colors cursor-pointer text-center"
+              >
                 Dashboard
-              </Button>
+              </button>
             </Link>
-            <Link to="/crm/leads" className="w-full sm:flex-1">
-              <Button variant="primary" className="w-full text-xs py-2 bg-violet-600 hover:bg-violet-700">
+            <Link to="/crm/leads" className="flex-1">
+              <button
+                type="button"
+                className="w-full py-2 px-2.5 text-xs font-semibold text-white bg-violet-600 hover:bg-violet-700 rounded-lg shadow-sm transition-colors cursor-pointer inline-flex items-center justify-center gap-1 whitespace-nowrap"
+              >
                 <span>Open Leads</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-              </Button>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+              </button>
             </Link>
           </div>
         </div>

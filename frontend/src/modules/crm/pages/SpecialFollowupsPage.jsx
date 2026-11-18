@@ -198,7 +198,7 @@ export default function SpecialFollowupsPage() {
 
         {/* Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[950px] text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-10 text-center">★</th>
@@ -274,13 +274,13 @@ export default function SpecialFollowupsPage() {
                           showOrder={true}
                         />
                         <span
-                          className={`px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0 ${
+                          className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 ${
                             item.temperature === 'hot'
-                              ? 'bg-rose-100 text-rose-700'
-                              : 'bg-amber-100 text-amber-700'
+                              ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                              : 'bg-amber-50 text-amber-700 border border-amber-200'
                           }`}
                         >
-                          {item.temperature === 'hot' ? '🔥 Hot' : '⚡ Warm'}
+                          {item.temperature === 'hot' ? 'HOT' : 'WARM'}
                         </span>
                       </div>
                     </td>

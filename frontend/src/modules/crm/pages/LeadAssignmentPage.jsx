@@ -462,7 +462,7 @@ export default function LeadAssignmentPage() {
 
         {/* Qualified Leads Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[1000px] text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                 <th className="py-3 px-4 w-10 text-center">
@@ -478,12 +478,12 @@ export default function LeadAssignmentPage() {
                     )}
                   </button>
                 </th>
-                <th className="py-3 px-4">Lead ID & Date</th>
-                <th className="py-3 px-4">Client Contact</th>
-                <th className="py-3 px-4">Project & Budget</th>
-                <th className="py-3 px-4">Stage & Temp</th>
-                <th className="py-3 px-4">Assigned Representative</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+                <th className="py-3 px-4 w-44">Lead ID & Date</th>
+                <th className="py-3 px-4 w-48">Client Contact</th>
+                <th className="py-3 px-4 w-44">Project & Budget</th>
+                <th className="py-3 px-4 min-w-[280px]">Stage & Temp</th>
+                <th className="py-3 px-4 w-48">Assigned Representative</th>
+                <th className="py-3 px-4 w-28 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs">
@@ -569,30 +569,25 @@ export default function LeadAssignmentPage() {
                             showOrder={true}
                           />
                           <span
-                            className={`px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0 ${
+                            className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 ${
                               lead.temperature === 'hot'
-                                ? 'bg-rose-100 text-rose-700'
+                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
                                 : lead.temperature === 'warm'
-                                ? 'bg-amber-100 text-amber-700'
-                                : 'bg-blue-100 text-blue-700'
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                : 'bg-sky-50 text-sky-700 border border-sky-200'
                             }`}
                           >
-                            {lead.temperature === 'hot' ? '🔥 Hot' : lead.temperature === 'warm' ? '⚡ Warm' : '❄ Cold'}
+                            {lead.temperature === 'hot' ? 'HOT' : lead.temperature === 'warm' ? 'WARM' : 'COLD'}
                           </span>
                         </div>
                       </td>
 
                       <td className="py-3.5 px-4">
                         {isAssigned ? (
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">
-                              {lead.assignedTo?.name?.charAt(0) || 'U'}
-                            </div>
-                            <div>
-                              <div className="font-medium text-slate-900">{lead.assignedTo?.name}</div>
-                              <div className="text-[10px] text-slate-400">
-                                {lead.assignedTo?.role || 'Sales'}
-                              </div>
+                          <div>
+                            <div className="font-semibold text-slate-900">{lead.assignedTo?.name}</div>
+                            <div className="text-[11px] text-slate-400">
+                              {lead.assignedTo?.role || 'Sales'}
                             </div>
                           </div>
                         ) : (

@@ -469,14 +469,9 @@ export default function CrmDashboardPage() {
                     key={idx}
                     className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100"
                   >
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center">
-                        {t.user.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="text-xs font-semibold text-slate-900">{t.user}</div>
-                        <div className="text-[10px] text-slate-400">{t.role}</div>
-                      </div>
+                    <div>
+                      <div className="text-xs font-semibold text-slate-900">{t.user}</div>
+                      <div className="text-[10px] text-slate-400">{t.role}</div>
                     </div>
 
                     <div className="text-right">

@@ -173,7 +173,7 @@ export default function EnquiryDetailsModal({
                       : 'bg-slate-100 text-slate-700 border border-slate-200'
                   }`}
                 >
-                  {enquiry.temperature === 'hot' ? '🔥 Hot' : enquiry.temperature === 'warm' ? '☀️ Warm' : '❄️ Cold'}
+                  {enquiry.temperature === 'hot' ? 'Hot' : enquiry.temperature === 'warm' ? 'Warm' : 'Cold'}
                 </span>
               </div>
             </div>

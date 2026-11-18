@@ -304,7 +304,7 @@ export default function VisitsPage() {
 
         {/* Visits Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full min-w-[950px] text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200/80 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                 <th className="py-3 px-4">Visit Date & #</th>
@@ -392,14 +392,9 @@ export default function VisitsPage() {
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-[10px]">
-                          {(visit.visitorName || visit.visitorId?.name || 'S').charAt(0)}
-                        </div>
-                        <span className="font-medium text-slate-800">
-                          {visit.visitorName || visit.visitorId?.name || 'Staff'}
-                        </span>
-                      </div>
+                      <span className="font-semibold text-slate-800">
+                        {visit.visitorName || visit.visitorId?.name || 'Staff'}
+                      </span>
                     </td>
 
                     <td className="py-3.5 px-4">

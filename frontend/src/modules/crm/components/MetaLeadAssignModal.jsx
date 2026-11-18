@@ -156,18 +156,9 @@ export default function MetaLeadAssignModal({
                           : 'hover:bg-slate-100 text-slate-700'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                            isSelected ? 'bg-purple-600 text-white' : 'bg-slate-200 text-slate-600'
-                          }`}
-                        >
-                          {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                        </div>
-                        <div>
-                          <div className="text-xs font-semibold">{user.name}</div>
-                          <div className="text-[10px] text-slate-400">{user.email || user.role}</div>
-                        </div>
+                      <div>
+                        <div className="text-xs font-semibold">{user.name}</div>
+                        <div className="text-[10px] text-slate-400">{user.email || user.role}</div>
                       </div>
                       {isSelected && <Check className="w-4 h-4 text-purple-600" />}
                     </div>

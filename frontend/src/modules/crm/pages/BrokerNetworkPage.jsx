@@ -338,22 +338,17 @@ export default function BrokerNetworkPage() {
                           >
                             <div>
                               <div className="flex items-start justify-between gap-2 mb-2">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs shrink-0">
-                                    {broker.name ? broker.name.charAt(0).toUpperCase() : 'B'}
+                                <div>
+                                  <div className="font-bold text-slate-900 text-xs flex items-center gap-1">
+                                    <span>{broker.name}</span>
+                                    {broker.code && (
+                                      <span className="font-mono text-[9px] bg-slate-100 text-slate-500 px-1 py-0.2 rounded">
+                                        {broker.code}
+                                      </span>
+                                    )}
                                   </div>
-                                  <div>
-                                    <div className="font-bold text-slate-900 text-xs flex items-center gap-1">
-                                      <span>{broker.name}</span>
-                                      {broker.code && (
-                                        <span className="font-mono text-[9px] bg-slate-100 text-slate-500 px-1 py-0.2 rounded">
-                                          {broker.code}
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="text-[10px] text-slate-400 truncate max-w-[150px]">
-                                      {broker.agencyName || 'Independent Partner'}
-                                    </div>
+                                  <div className="text-[10px] text-slate-400 truncate max-w-[180px]">
+                                    {broker.agencyName || 'Independent Partner'}
                                   </div>
                                 </div>
 

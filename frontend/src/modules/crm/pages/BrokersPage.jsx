@@ -319,7 +319,7 @@ export default function BrokersPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
+            <table className="w-full min-w-[950px] text-left text-xs text-slate-600">
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-semibold uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="py-3 px-4">Partner Code & Name</th>
@@ -338,19 +338,15 @@ export default function BrokersPage() {
                     <tr key={broker._id} className="hover:bg-slate-50/80 transition-colors">
                       {/* Name & Code */}
                       <td className="py-3 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs shrink-0">
-                            {broker.name ? broker.name.charAt(0).toUpperCase() : 'B'}
+                        <div>
+                          <div className="font-semibold text-slate-900 flex items-center gap-1.5">
+                            <span>{broker.name}</span>
+                            {broker.code && (
+                              <span className="font-mono text-[10px] bg-slate-100 text-slate-600 px-1 py-0.2 rounded border border-slate-200">
+                                {broker.code}
+                              </span>
+                            )}
                           </div>
-                          <div>
-                            <div className="font-semibold text-slate-900 flex items-center gap-1.5">
-                              <span>{broker.name}</span>
-                              {broker.code && (
-                                <span className="font-mono text-[10px] bg-slate-100 text-slate-600 px-1 py-0.2 rounded border border-slate-200">
-                                  {broker.code}
-                                </span>
-                              )}
-                            </div>
                             <div className="text-[11px] text-slate-400 flex items-center gap-1">
                               {broker.email ? (
                                 <a
@@ -364,7 +360,6 @@ export default function BrokersPage() {
                               )}
                             </div>
                           </div>
-                        </div>
                       </td>
 
                       {/* Agency & City */}

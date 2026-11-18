@@ -178,16 +178,11 @@ export default function CampaignDetailsModal({ isOpen, onClose, campaignId }) {
               <div className="max-h-56 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
                 {(campaign.recipients || []).map((r, i) => (
                   <div key={i} className="p-2.5 flex items-center justify-between text-xs hover:bg-slate-50">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px] flex items-center justify-center">
-                        {r.name ? r.name.charAt(0).toUpperCase() : 'C'}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-900">{r.name}</div>
-                        <div className="flex items-center gap-1 text-[10px] text-slate-400">
-                          <Phone className="w-2.5 h-2.5" />
-                          <span>{r.phone}</span>
-                        </div>
+                    <div>
+                      <div className="font-semibold text-slate-900">{r.name}</div>
+                      <div className="flex items-center gap-1 text-[10px] text-slate-400">
+                        <Phone className="w-2.5 h-2.5" />
+                        <span>{r.phone}</span>
                       </div>
                     </div>
 

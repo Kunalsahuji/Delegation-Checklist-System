@@ -208,11 +208,11 @@ export default function LeadDetailsModal({
   const getTempBadge = (temp) => {
     switch (temp) {
       case 'hot':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">🔥 HOT</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">HOT</span>;
       case 'cold':
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-sky-50 text-sky-700 border border-sky-200">❄ COLD</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-sky-50 text-sky-700 border border-sky-200">COLD</span>;
       default:
-        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">⚡ WARM</span>;
+        return <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">WARM</span>;
     }
   };
 

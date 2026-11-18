@@ -237,11 +237,11 @@ export default function LeadsPage() {
   const getTempPill = (temp) => {
     switch (temp) {
       case 'hot':
-        return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">🔥 HOT</span>;
+        return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">HOT</span>;
       case 'cold':
-        return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-sky-700 border border-sky-200">❄ COLD</span>;
+        return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-sky-50 text-sky-700 border border-sky-200">COLD</span>;
       default:
-        return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">⚡ WARM</span>;
+        return <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">WARM</span>;
     }
   };
 
@@ -481,17 +481,17 @@ export default function LeadsPage() {
         /* TABLE VIEW */
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-2xs">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full min-w-[980px] text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                  <th className="py-3 px-4">Lead #</th>
-                  <th className="py-3 px-4">Client Name & Phone</th>
-                  <th className="py-3 px-4">Current Stage</th>
-                  <th className="py-3 px-4">Temp</th>
-                  <th className="py-3 px-4">Project</th>
-                  <th className="py-3 px-4">Budget</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                  <th className="py-3 px-4 w-32">Lead #</th>
+                  <th className="py-3 px-4 w-48">Client Name & Phone</th>
+                  <th className="py-3 px-4 min-w-[240px]">Current Stage</th>
+                  <th className="py-3 px-4 w-20">Temp</th>
+                  <th className="py-3 px-4 w-40">Project</th>
+                  <th className="py-3 px-4 w-28">Budget</th>
+                  <th className="py-3 px-4 w-24">Status</th>
+                  <th className="py-3 px-4 w-28 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">

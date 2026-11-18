@@ -111,11 +111,11 @@ export default function StageBadge({
   return (
     <span
       title={`Stage ${resolvedOrder ? `${resolvedOrder}: ` : ''}${stageName}`}
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg border text-[10.5px] sm:text-[11px] font-medium sm:font-semibold leading-snug transition-all max-w-[180px] sm:max-w-none ${theme.bg} ${theme.text} ${theme.border} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-semibold leading-normal whitespace-nowrap transition-all shrink-0 ${theme.bg} ${theme.text} ${theme.border} ${className}`}
     >
       {showOrder && resolvedOrder && (
         <span
-          className={`px-1 py-0.2 rounded text-[9.5px] font-bold tracking-tight shrink-0 ${theme.orderBg}`}
+          className={`px-1.5 py-0.5 rounded text-[10px] font-bold tracking-tight shrink-0 ${theme.orderBg}`}
         >
           S{resolvedOrder}
         </span>
@@ -128,7 +128,7 @@ export default function StageBadge({
         />
       )}
 
-      <span className="truncate sm:whitespace-normal break-words">
+      <span className="font-semibold">
         {stageName}
       </span>
     </span>

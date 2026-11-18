@@ -452,7 +452,7 @@ export default function EnquiriesPage() {
                           : 'bg-slate-100 text-slate-600'
                       }`}
                     >
-                      {enq.temperature === 'hot' ? '🔥 Hot' : enq.temperature === 'warm' ? '☀️ Warm' : '❄️ Cold'}
+                      {enq.temperature === 'hot' ? 'Hot' : enq.temperature === 'warm' ? 'Warm' : 'Cold'}
                     </span>
                   </div>
                 </div>
@@ -575,7 +575,7 @@ export default function EnquiriesPage() {
         /* Table View */
         <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full min-w-[950px] text-left text-xs border-collapse">
               <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider text-[10px]">
                 <tr>
                   <th className="px-4 py-3">Code / Client</th>

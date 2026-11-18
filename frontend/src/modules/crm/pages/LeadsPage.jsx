@@ -21,7 +21,7 @@ import { crmLeadApi } from '../../../api/crmLeadApi';
 import { crmProjectApi } from '../../../api/crmProjectApi';
 import { useToast } from '../../../context/ToastContext';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
-import StageBadge from '../components/StageBadge';
+import StageBadge, { formatShortStageName } from '../components/StageBadge';
 import LeadDetailsModal from '../components/LeadDetailsModal';
 import LeadFormModal from '../components/LeadFormModal';
 
@@ -373,7 +373,7 @@ export default function LeadsPage() {
             <option value="all">All Stages</option>
             {stages.map((st) => (
               <option key={st._id} value={st._id}>
-                Step {st.order}: {st.name}
+                S{st.order}: {formatShortStageName(st.name, st.order)}
               </option>
             ))}
           </select>
@@ -403,11 +403,10 @@ export default function LeadsPage() {
                   <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: st.color || '#3B82F6' }}
+                        className={`w-2 h-2 rounded-full shrink-0 ${st.order === 4 || st.order === 8 ? 'bg-emerald-500' : 'bg-slate-400'}`}
                       />
                       <span className="text-xs font-bold text-slate-800 truncate" title={st.name}>
-                        {st.name}
+                        S{st.order}: {formatShortStageName(st.name, st.order)}
                       </span>
                     </div>
                     <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-white text-slate-700 border border-slate-200">

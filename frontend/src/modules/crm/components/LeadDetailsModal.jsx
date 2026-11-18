@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { crmLeadApi } from '../../../api/crmLeadApi';
 import { useToast } from '../../../context/ToastContext';
-import StageBadge from './StageBadge';
+import StageBadge, { formatShortStageName } from './StageBadge';
 
 export default function LeadDetailsModal({
   lead,
@@ -363,9 +363,9 @@ export default function LeadDetailsModal({
                       }`}
                       title={st.name}
                     >
-                      {st.name}
+                      {formatShortStageName(st.name, st.order)}
                     </span>
-                    <span className="text-[10px] text-slate-400">Step {st.order}</span>
+                    <span className="text-[10px] text-slate-400">S{st.order}</span>
                   </div>
                 </div>
               );
@@ -596,7 +596,7 @@ export default function LeadDetailsModal({
                 >
                   {stages.map((st) => (
                     <option key={st._id} value={st._id}>
-                      Step {st.order}: {st.name}
+                      S{st.order}: {formatShortStageName(st.name, st.order)}
                     </option>
                   ))}
                 </select>

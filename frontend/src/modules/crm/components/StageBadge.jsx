@@ -1,99 +1,140 @@
 import React from 'react';
 
 /**
- * Stage color configurations mapped by stage order (1-8) and normalized names.
- * Uses soft pastel backgrounds, crisp contrast borders, and vibrant dot indicators.
+ * Standard Short Stage Names for Real Estate Sales Pipeline
+ * Replaces long, wordy descriptions with concise, executive-level 1-2 word titles.
  */
-const STAGE_THEMES = {
+export const SHORT_STAGE_NAMES = {
+  1: 'Visit Call',
+  2: 'Details Sent',
+  3: 'Reminder Call',
+  4: 'Visit Confirmed',
+  5: 'Feedback Call',
+  6: 'Sales Follow-up',
+  7: 'Negotiation',
+  8: 'Final Deal',
+};
+
+/**
+ * Normalizes any legacy or wordy stage string/object into a concise 1-2 word stage title.
+ */
+export function formatShortStageName(stage, order = null) {
+  const resolvedOrder = resolveStageOrder(stage, order);
+  if (resolvedOrder && SHORT_STAGE_NAMES[resolvedOrder]) {
+    return SHORT_STAGE_NAMES[resolvedOrder];
+  }
+
+  const rawName = (typeof stage === 'string' ? stage : stage?.name || '').trim();
+  if (!rawName) return 'Stage 1';
+
+  const lower = rawName.toLowerCase();
+  if (lower.includes('visit confirmation by s/c') || lower.includes('call for visit')) return 'Visit Call';
+  if (lower.includes('whatsapp') || lower.includes('email confirmation')) return 'Details Sent';
+  if (lower.includes('remind call') || lower.includes('telesales')) return 'Reminder Call';
+  if (lower.includes('visit confirmed')) return 'Visit Confirmed';
+  if (lower.includes('feedback call') || lower.includes('co-ordinator')) return 'Feedback Call';
+  if (lower.includes('follow-up call by sales') || lower.includes('sales person')) return 'Sales Follow-up';
+  if (lower.includes('negotiation') || lower.includes('family visit')) return 'Negotiation';
+  if (lower.includes('final deal') || lower.includes('deal won') || lower.includes('call for final')) return 'Final Deal';
+
+  return rawName;
+}
+
+/**
+ * Clean, Calm, Professional Enterprise Stage Palette
+ * Replaces irritating rainbow/neon colors with subtle, executive neutral slate and soft milestone accents.
+ */
+export const STAGE_THEMES = {
   1: {
-    bg: 'bg-blue-50/90',
-    text: 'text-blue-800',
-    border: 'border-blue-200',
-    dot: 'bg-blue-600',
-    orderBg: 'bg-blue-200/80 text-blue-900',
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    dot: 'bg-slate-400',
+    orderBg: 'bg-slate-200/80 text-slate-700',
   },
   2: {
-    bg: 'bg-cyan-50/90',
-    text: 'text-cyan-800',
-    border: 'border-cyan-200',
-    dot: 'bg-cyan-600',
-    orderBg: 'bg-cyan-200/80 text-cyan-900',
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    dot: 'bg-slate-400',
+    orderBg: 'bg-slate-200/80 text-slate-700',
   },
   3: {
-    bg: 'bg-purple-50/90',
-    text: 'text-purple-800',
-    border: 'border-purple-200',
-    dot: 'bg-purple-600',
-    orderBg: 'bg-purple-200/80 text-purple-900',
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    dot: 'bg-slate-400',
+    orderBg: 'bg-slate-200/80 text-slate-700',
   },
   4: {
-    bg: 'bg-emerald-50/90',
+    // Visit Confirmed - Key Positive Field Milestone
+    bg: 'bg-emerald-50/80',
     text: 'text-emerald-800',
     border: 'border-emerald-200',
-    dot: 'bg-emerald-600',
-    orderBg: 'bg-emerald-200/80 text-emerald-900',
+    dot: 'bg-emerald-500',
+    orderBg: 'bg-emerald-200/80 text-emerald-800',
   },
   5: {
-    bg: 'bg-green-50/90',
-    text: 'text-green-800',
-    border: 'border-green-200',
-    dot: 'bg-green-600',
-    orderBg: 'bg-green-200/80 text-green-900',
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    dot: 'bg-slate-400',
+    orderBg: 'bg-slate-200/80 text-slate-700',
   },
   6: {
-    bg: 'bg-rose-50/90',
-    text: 'text-rose-800',
-    border: 'border-rose-200',
-    dot: 'bg-rose-600',
-    orderBg: 'bg-rose-200/80 text-rose-900',
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    dot: 'bg-blue-400',
+    orderBg: 'bg-slate-200/80 text-slate-700',
   },
   7: {
-    bg: 'bg-fuchsia-50/90',
-    text: 'text-fuchsia-800',
-    border: 'border-fuchsia-200',
-    dot: 'bg-fuchsia-600',
-    orderBg: 'bg-fuchsia-200/80 text-fuchsia-900',
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    dot: 'bg-indigo-400',
+    orderBg: 'bg-slate-200/80 text-slate-700',
   },
   8: {
-    bg: 'bg-amber-50/90',
-    text: 'text-amber-900',
-    border: 'border-amber-200',
-    dot: 'bg-amber-600',
-    orderBg: 'bg-amber-200/80 text-amber-950',
+    // Final Deal - Deal Closed Milestone
+    bg: 'bg-emerald-50/80',
+    text: 'text-emerald-800',
+    border: 'border-emerald-200',
+    dot: 'bg-emerald-500',
+    orderBg: 'bg-emerald-200/80 text-emerald-800',
   },
   default: {
-    bg: 'bg-slate-100',
-    text: 'text-slate-800',
+    bg: 'bg-slate-50',
+    text: 'text-slate-700',
     border: 'border-slate-200',
-    dot: 'bg-slate-500',
-    orderBg: 'bg-slate-200 text-slate-800',
+    dot: 'bg-slate-400',
+    orderBg: 'bg-slate-200/80 text-slate-700',
   },
 };
 
 /**
  * Resolves stage order from stage object, stage name, or explicit order prop.
  */
-function resolveStageOrder(stage, order) {
+export function resolveStageOrder(stage, order) {
   if (order && Number(order) >= 1 && Number(order) <= 8) return Number(order);
   if (typeof stage === 'object' && stage?.order) return Number(stage.order);
 
   const name = (typeof stage === 'string' ? stage : stage?.name || '').toLowerCase();
-  if (name.includes('visit confirmation by s/c') || name.includes('call for visit')) return 1;
-  if (name.includes('whatsapp') || name.includes('email confirmation')) return 2;
-  if (name.includes('remind call') || name.includes('telesales')) return 3;
+  if (name.includes('visit confirmation by s/c') || name.includes('call for visit') || name.includes('visit call')) return 1;
+  if (name.includes('whatsapp') || name.includes('email confirmation') || name.includes('details sent')) return 2;
+  if (name.includes('remind call') || name.includes('telesales') || name.includes('reminder call')) return 3;
   if (name.includes('visit confirmed')) return 4;
   if (name.includes('feedback call') || name.includes('co-ordinator')) return 5;
-  if (name.includes('follow-up call by sales') || name.includes('sales person')) return 6;
+  if (name.includes('follow-up call by sales') || name.includes('sales person') || name.includes('sales follow-up')) return 6;
   if (name.includes('negotiation') || name.includes('family visit')) return 7;
-  if (name.includes('final deal') || name.includes('deal won')) return 8;
+  if (name.includes('final deal') || name.includes('deal won') || name.includes('call for final')) return 8;
 
   return null;
 }
 
 /**
  * Enterprise Responsive Stage Badge
- * Renders a color-coded, mobile-adaptive pipeline stage badge.
- * Uses rounded-lg instead of rounded-full to avoid vertical ballooning when multi-line text wraps on small screens.
+ * Renders a clean, calm, professional pipeline stage badge with concise short titles.
  */
 export default function StageBadge({
   stage = '',
@@ -103,15 +144,15 @@ export default function StageBadge({
   showOrder = false,
   className = '',
 }) {
-  const stageName =
-    (typeof stage === 'string' ? stage : stage?.name) || 'Stage 1';
   const resolvedOrder = resolveStageOrder(stage, order);
+  const displayName = formatShortStageName(stage, resolvedOrder);
   const theme = STAGE_THEMES[resolvedOrder] || STAGE_THEMES.default;
+  const originalTooltip = typeof stage === 'string' ? stage : stage?.name || displayName;
 
   return (
     <span
-      title={`Stage ${resolvedOrder ? `${resolvedOrder}: ` : ''}${stageName}`}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-semibold leading-normal whitespace-nowrap transition-all shrink-0 ${theme.bg} ${theme.text} ${theme.border} ${className}`}
+      title={`Stage ${resolvedOrder ? `${resolvedOrder}: ` : ''}${originalTooltip}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-medium leading-normal whitespace-nowrap transition-colors shrink-0 ${theme.bg} ${theme.text} ${theme.border} ${className}`}
     >
       {showOrder && resolvedOrder && (
         <span
@@ -124,12 +165,11 @@ export default function StageBadge({
       {showDot && (
         <span
           className={`w-1.5 h-1.5 rounded-full shrink-0 ${theme.dot}`}
-          style={color ? { backgroundColor: color } : undefined}
         />
       )}
 
-      <span className="font-semibold">
-        {stageName}
+      <span className="font-semibold text-slate-800">
+        {displayName}
       </span>
     </span>
   );

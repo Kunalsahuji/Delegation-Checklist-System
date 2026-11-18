@@ -8,6 +8,10 @@ const TONES = {
   success: 'text-emerald-600',
   sky: 'text-sky-600',
   orange: 'text-orange-600',
+  blue: 'text-blue-600',
+  purple: 'text-purple-600',
+  indigo: 'text-indigo-600',
+  emerald: 'text-emerald-600',
 };
 
 /**
@@ -78,9 +82,18 @@ export default function WorkKpiStrip({
                 }`}
               >
                 <div className="flex items-center justify-between w-full gap-1 mb-0.5">
-                  <span className="block truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">
-                    {item.label}
-                  </span>
+                  <div className="flex items-center gap-1.5 min-w-0 truncate">
+                    {item.icon && (
+                      <item.icon
+                        className={`w-3.5 h-3.5 shrink-0 ${
+                          TONES[item.tone] || 'text-slate-400'
+                        }`}
+                      />
+                    )}
+                    <span className="block truncate text-[11px] font-medium uppercase tracking-wide text-slate-500">
+                      {item.label}
+                    </span>
+                  </div>
                   {infoData && (
                     <MetricInfoBadge
                       title={infoData.title || item.label}

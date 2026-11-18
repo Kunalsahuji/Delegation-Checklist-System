@@ -41,20 +41,21 @@ import { checklistApi } from '../modules/checklist/api/checklistApi';
 import { delegationApi } from '../modules/delegation/api/delegationApi';
 import { crmDashboardApi } from '../api/crmDashboardApi';
 import { axiosClient } from '../api/axiosClient';
+import { formatShortStageName } from '../modules/crm/components/StageBadge';
 
 const CACHE_KEY = 'taskflow_unified_dashboard_cache';
 const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes fresh cache window
 
-// Langdi 8 Pipeline Stage Colors
+// Clean, Calm, Professional Pipeline Colors (Non-irritating slate & milestone emerald)
 const STAGE_COLORS = [
-  '#2563EB', // S1: Blue
-  '#0891B2', // S2: Cyan
-  '#7C3AED', // S3: Purple
-  '#059669', // S4: Emerald
-  '#16A34A', // S5: Green
-  '#E11D48', // S6: Rose
-  '#C026D3', // S7: Fuchsia
-  '#D97706', // S8: Amber
+  '#64748B', // S1: Visit Call (Slate)
+  '#64748B', // S2: Details Sent (Slate)
+  '#64748B', // S3: Reminder Call (Slate)
+  '#10B981', // S4: Visit Confirmed (Emerald milestone)
+  '#64748B', // S5: Feedback Call (Slate)
+  '#3B82F6', // S6: Sales Follow-up (Subtle blue)
+  '#6366F1', // S7: Negotiation (Subtle indigo)
+  '#10B981', // S8: Final Deal (Emerald milestone)
 ];
 
 // Helper to normalize inbound lead source names from DB
@@ -241,24 +242,28 @@ export const DashboardPage = () => {
   const pipelineData = useMemo(() => {
     const funnel = crmData?.funnel || [];
     if (funnel.length > 0) {
-      return funnel.map((item, idx) => ({
-        id: `S${item.order || idx + 1}`,
-        label: `S${item.order || idx + 1}`,
-        name: item.stage || `Stage ${item.order || idx + 1}`,
-        count: Number(item.count || 0),
-        color: STAGE_COLORS[idx % STAGE_COLORS.length],
-      }));
+      return funnel.map((item, idx) => {
+        const order = item.order || idx + 1;
+        const shortName = formatShortStageName(item.stage, order);
+        return {
+          id: `S${order}`,
+          label: `S${order}`,
+          name: shortName,
+          count: Number(item.count || 0),
+          color: STAGE_COLORS[(order - 1) % STAGE_COLORS.length],
+        };
+      });
     }
-    // Fallback default 8 stages
+    // Fallback default 8 stages with short names
     const defaultLabels = [
-      'Call For Visit Confirmation By S/C',
-      'Whatsapp & Email Confirmation By S/C',
-      'Remind Call By Telesales',
+      'Visit Call',
+      'Details Sent',
+      'Reminder Call',
       'Visit Confirmed',
-      'Feedback Call by Sales Co-ordinator',
-      'Follow-Up Call By Sales Person',
-      'Call For Negotiation and Family Visit',
-      'Call For Final Deal',
+      'Feedback Call',
+      'Sales Follow-up',
+      'Negotiation',
+      'Final Deal',
     ];
     return defaultLabels.map((name, idx) => ({
       id: `S${idx + 1}`,

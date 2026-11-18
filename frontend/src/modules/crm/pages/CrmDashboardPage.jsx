@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   RefreshCw,
@@ -27,72 +27,8 @@ import MetricInfoBadge from '../../../components/MetricInfoBadge';
 import { crmDashboardApi } from '../../../api/crmDashboardApi';
 import { useToast } from '../../../context/ToastContext';
 
-const STAGE_DETAILS = {
-  1: {
-    title: 'Stage 1: Call For Visit Confirmation By S/C',
-    summary:
-      'Initial telephonic outreach by the Sales Coordinator to verify client requirements, confirm buyer intent, and propose an on-site property tour.',
-    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 1.',
-  },
-  2: {
-    title: 'Stage 2: WhatsApp & Email Confirmation by S/C',
-    summary:
-      'Formal dispatch of project layout brochures, GPS navigation links, and scheduled date/time slot confirmations via WhatsApp and Email.',
-    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 2.',
-  },
-  3: {
-    title: 'Stage 3: Remind Call By Telesales',
-    summary:
-      'Courtesy reminder call by the telesales desk 24 hours prior to the scheduled site visit to reconfirm arrival timings and guest transport arrangements.',
-    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 3.',
-  },
-  4: {
-    title: 'Stage 4: Visit Confirmed & Ready',
-    summary:
-      'Appointment formally locked in the CRM calendar. Project sales rep, inspection vehicle, and entry gate pass assigned for client arrival.',
-    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 4.',
-  },
-  5: {
-    title: 'Stage 5: Feedback Call by Sales Coordinator',
-    summary:
-      'Post-visit debrief conducted within 2–4 hours of site tour completion to document client reactions, preferred plot/villa numbers, and address initial concerns.',
-    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 5.',
-  },
-  6: {
-    title: 'Stage 6: Follow-Up Call By Sales Person',
-    summary:
-      'Senior sales executive follow-up presenting tailored payment schedules, unit reservations, bank loan eligibility, and custom price proposals.',
-    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 6.',
-  },
-  7: {
-    title: 'Stage 7: Call For Negotiation & Family Visit',
-    summary:
-      'Commercial negotiation milestone resolving square yard rate discounts, payment milestones, and facilitating secondary decision-maker/family visits.',
-    calculation: 'Count of active buyer leads currently situated at Pipeline Stage 7.',
-  },
-  8: {
-    title: 'Stage 8: Call For Final Deal & Closing',
-    summary:
-      'Closing conversation to finalize token advance booking deposit, execute Agreement to Sell (ATS), and initiate final registry and deed execution.',
-    calculation: 'Count of buyer leads currently situated at Stage 8 or marked Won.',
-  },
-};
-
-const getStageInfo = (stageName = '', order = 1) => {
-  if (STAGE_DETAILS[order]) {
-    return {
-      ...STAGE_DETAILS[order],
-      title: STAGE_DETAILS[order].title,
-    };
-  }
-  return {
-    title: `Stage ${order}: ${stageName}`,
-    summary: `Prospective buyer opportunity currently advancing through ${stageName}.`,
-    calculation: `Count of active pipeline leads situated in ${stageName}.`,
-  };
-};
-
 export default function CrmDashboardPage() {
+  const navigate = useNavigate();
   const { showError } = useToast();
 
   const [data, setData] = useState(null);
@@ -117,7 +53,6 @@ export default function CrmDashboardPage() {
   };
 
   const kpis = data?.kpis || {};
-  const funnel = data?.funnel || [];
   const leadSources = data?.leadSources || [];
   const temperatures = data?.temperatures || { hot: 0, warm: 0, cold: 0 };
   const operations = data?.operations || {};
@@ -129,7 +64,10 @@ export default function CrmDashboardPage() {
       key: 'total-enquiries',
       label: 'TOTAL ENQUIRIES',
       value: kpis.totalEnquiries || 0,
-      status: 'neutral',
+      tone: 'blue',
+      hint: `${kpis.newEnquiries || 0} new · ${(kpis.totalEnquiries || 0) - (kpis.newEnquiries || 0)} in review`,
+      icon: PhoneCall,
+      onClick: () => navigate('/crm/enquiries'),
       info: {
         title: 'Inbound Enquiries',
         summary: 'Total prospective buyer enquiries registered across phone, walk-in, and digital ads.',
@@ -140,7 +78,10 @@ export default function CrmDashboardPage() {
       key: 'qualification-rate',
       label: 'QUALIFICATION RATE',
       value: `${kpis.qualificationRate || 0}%`,
-      status: (kpis.qualificationRate || 0) >= 30 ? 'positive' : 'neutral',
+      tone: (kpis.qualificationRate || 0) > 0 ? 'success' : 'default',
+      hint: `${kpis.qualifiedEnquiries || 0} of ${kpis.totalEnquiries || 0} verified`,
+      icon: TrendingUp,
+      onClick: () => navigate('/crm/enquiries?status=qualified'),
       info: {
         title: 'Qualification Funnel Conversion',
         summary: 'Percentage of raw buyer inquiries verified as qualified opportunities.',
@@ -151,7 +92,10 @@ export default function CrmDashboardPage() {
       key: 'site-visits',
       label: 'SITE VISITS CONDUCTED',
       value: kpis.totalVisits || 0,
-      status: 'positive',
+      tone: (kpis.totalVisits || 0) > 0 ? 'purple' : 'default',
+      hint: `${kpis.verifiedVisits || 0} GPS verified tours`,
+      icon: MapPin,
+      onClick: () => navigate('/crm/visit'),
       info: {
         title: 'Customer Site Tours',
         summary: 'Physical on-site villa and plot inspections recorded with geo-fence verification.',
@@ -162,7 +106,10 @@ export default function CrmDashboardPage() {
       key: 'broker-yards',
       label: 'BROKER YARDS SOLD',
       value: `${(kpis.totalYards || 0).toLocaleString()} Sq.Yd`,
-      status: 'positive',
+      tone: (kpis.totalYards || 0) > 0 ? 'orange' : 'default',
+      hint: `Across ${kpis.totalBrokers || 0} active partners`,
+      icon: Building,
+      onClick: () => navigate('/crm/brokers'),
       info: {
         title: 'Cumulative Partner Yardage (Gaj)',
         summary: 'Aggregate plot land and built-up area sold through channel partner network.',
@@ -173,7 +120,10 @@ export default function CrmDashboardPage() {
       key: 'deals-won',
       label: 'DEALS WON / CLOSURES',
       value: kpis.wonLeads || 0,
-      status: 'positive',
+      tone: (kpis.wonLeads || 0) > 0 ? 'emerald' : 'default',
+      hint: `${kpis.winRate || 0}% win conversion rate`,
+      icon: Award,
+      onClick: () => navigate('/crm/leads?status=won'),
       info: {
         title: 'Closed Deals & Registry',
         summary: 'Total prospective buyer deals successfully closed with token booking, ATS agreement, or registry deed.',
@@ -226,68 +176,8 @@ export default function CrmDashboardPage() {
         </div>
       </div>
 
-      {/* KPI Strip */}
-      <WorkKpiStrip items={kpiItems} />
-
-      {/* 8-Stage Conversion Funnel Visual */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs w-full space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-blue-600" />
-            <h2 className="text-sm font-bold text-slate-900">8-Stage Sales Pipeline Funnel</h2>
-            <MetricInfoBadge
-              title="8-Stage Sales Pipeline Funnel"
-              summary="Visual milestone progression tracking prospective property buyers across 8 structured sales stages from initial inquiry to final registry."
-              calculation="Count of active leads currently situated in each pipeline milestone (Contact Initiated → Final Registry)."
-            />
-          </div>
-          <Link
-            to="/crm/leads"
-            className="text-xs text-blue-600 hover:underline font-semibold flex items-center gap-1"
-          >
-            <span>View All Leads</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-          {funnel.map((item, idx) => {
-            const stageOrder = item.order || idx + 1;
-            const stageInfo = getStageInfo(item.stage, stageOrder);
-
-            return (
-              <div
-                key={item.stage || idx}
-                className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-center flex flex-col justify-between hover:bg-blue-50/50 hover:border-blue-200 transition-colors relative"
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="text-[10px] font-bold text-slate-400 font-mono">
-                      STAGE {stageOrder}
-                    </span>
-                    <MetricInfoBadge
-                      title={stageInfo.title}
-                      summary={stageInfo.summary}
-                      calculation={stageInfo.calculation}
-                      className="shrink-0"
-                    />
-                  </div>
-                  <div
-                    className="text-[11px] font-semibold text-slate-800 line-clamp-2 mt-0.5 min-h-[32px] text-center"
-                    title={item.stage}
-                  >
-                    {item.stage}
-                  </div>
-                </div>
-                <div className="mt-2 pt-2 border-t border-slate-200/60">
-                  <span className="text-base font-extrabold text-blue-700">{item.count}</span>
-                  <span className="text-[10px] text-slate-400 block">Active</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {/* Top 5 Metric Strip - 3-Liner Cards with Icons & Field Colors */}
+      <WorkKpiStrip items={kpiItems} columns="grid-cols-2 sm:grid-cols-5" />
 
       {/* 2-Column Analytics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">

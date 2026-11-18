@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Calendar, Clock, Bell, User, CheckSquare } from 'lucide-react';
 import { crmFollowupApi } from '../../../api/crmFollowupApi';
+import { axiosClient } from '../../../api/axiosClient';
 import { useToast } from '../../../context/ToastContext';
 
 export default function FollowupFormModal({
@@ -13,6 +14,30 @@ export default function FollowupFormModal({
 }) {
   const { showSuccess, showError } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const [internalUsers, setInternalUsers] = useState(
+    Array.isArray(salesPersons) && salesPersons.length > 0 ? salesPersons : []
+  );
+
+  useEffect(() => {
+    if (Array.isArray(salesPersons) && salesPersons.length > 0) {
+      setInternalUsers(salesPersons);
+    } else if (isOpen) {
+      axiosClient
+        .get('/master/users')
+        .then((res) => {
+          const list = res?.data || (Array.isArray(res) ? res : []);
+          setInternalUsers(list);
+        })
+        .catch(() => {});
+    }
+  }, [isOpen, salesPersons]);
+
+  const displayUsers =
+    internalUsers.length > 0
+      ? internalUsers
+      : Array.isArray(salesPersons)
+      ? salesPersons
+      : [];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -180,9 +205,9 @@ export default function FollowupFormModal({
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl outline-none focus:border-blue-500 bg-white"
               >
                 <option value="">Current User / Self</option>
-                {salesPersons.map((user) => (
+                {displayUsers.map((user) => (
                   <option key={user._id || user.userId} value={user._id || user.userId}>
-                    {user.name} ({user.role || 'Sales'})
+                    {user.name} ({user.role || 'Staff'})
                   </option>
                 ))}
               </select>

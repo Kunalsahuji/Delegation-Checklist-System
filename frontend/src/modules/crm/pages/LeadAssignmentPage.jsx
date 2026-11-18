@@ -531,9 +531,13 @@ export default function LeadAssignmentPage() {
                         </button>
                       </td>
 
-                      <td className="py-3.5 px-4">
-                        <div className="font-semibold text-slate-800">{lead.leadNumber}</div>
-                        <div className="text-[11px] text-slate-400">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <div className="font-mono text-xs font-bold text-slate-900 tracking-tight">
+                          <span className="inline-block px-2 py-0.5 rounded bg-slate-100/90 border border-slate-200/90 text-slate-800">
+                            {lead.leadNumber}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5 font-sans font-medium">
                           {new Date(lead.createdAt).toLocaleDateString('en-IN', {
                             day: 'numeric',
                             month: 'short',

@@ -484,7 +484,7 @@ export default function LeadsPage() {
             <table className="w-full min-w-[980px] text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                  <th className="py-3 px-4 w-32">Lead #</th>
+                  <th className="py-3 px-4 w-44 whitespace-nowrap">Lead ID & Date</th>
                   <th className="py-3 px-4 w-48">Client Name & Phone</th>
                   <th className="py-3 px-4 min-w-[240px]">Current Stage</th>
                   <th className="py-3 px-4 w-20">Temp</th>
@@ -519,7 +519,21 @@ export default function LeadsPage() {
                     onClick={() => handleOpenDetails(lead)}
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer"
                   >
-                    <td className="py-3 px-4 font-mono font-bold text-slate-900">{lead.leadNumber}</td>
+                    <td className="py-3 px-4 whitespace-nowrap">
+                      <div className="font-mono text-xs font-bold text-slate-900 tracking-tight">
+                        <span className="inline-block px-2 py-0.5 rounded bg-slate-100/90 border border-slate-200/90 text-slate-800">
+                          {lead.leadNumber}
+                        </span>
+                      </div>
+                      {lead.createdAt && (
+                        <div className="text-[10px] text-slate-400 mt-0.5 font-sans font-medium">
+                          {new Date(lead.createdAt).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                          })}
+                        </div>
+                      )}
+                    </td>
                     <td className="py-3 px-4">
                       <div className="font-semibold text-slate-900">{lead.clientName}</div>
                       <div className="text-[11px] text-slate-400">{lead.clientPhone}</div>

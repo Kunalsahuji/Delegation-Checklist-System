@@ -138,7 +138,7 @@ export default function LeadAssignmentPage() {
       label: 'UNASSIGNED LEADS',
       value: kpis.unassignedLeads,
       status: kpis.unassignedLeads > 0 ? 'warning' : 'neutral',
-      active: statusFilter === 'unassigned',
+      active: statusFilter === 'unassigned' && !selectedRepFilter,
       info: {
         title: 'Unassigned Leads',
         summary: 'Qualified inbound deals awaiting sales representative assignment.',
@@ -155,14 +155,16 @@ export default function LeadAssignmentPage() {
       label: 'ACTIVE SALES REPS',
       value: kpis.totalSalesPersons,
       status: 'neutral',
-      active: statusFilter === 'assigned',
+      active: statusFilter === 'assigned' && !selectedRepFilter,
       info: {
         title: 'Active Sales Representatives',
         summary: 'Total team members available to take ownership of prospective buyer deals.',
         calculation: 'Count of active users in the system',
       },
       onClick: () => {
+        setShowWorkload(true);
         setStatusFilter('assigned');
+        setSelectedRepFilter('');
         setPagination((p) => ({ ...p, page: 1 }));
       },
     },
@@ -188,13 +190,15 @@ export default function LeadAssignmentPage() {
       label: 'ASSIGNED TODAY',
       value: kpis.assignedToday,
       status: 'positive',
+      active: statusFilter === 'assigned_today' && !selectedRepFilter,
       info: {
         title: 'Assigned Today',
         summary: 'Deals assigned or distributed to representatives today.',
         calculation: 'Count of assignment audit logs with timestamp >= 00:00 today',
       },
       onClick: () => {
-        setStatusFilter('assigned');
+        setStatusFilter('assigned_today');
+        setSelectedRepFilter('');
         setPagination((p) => ({ ...p, page: 1 }));
       },
     },
@@ -203,13 +207,15 @@ export default function LeadAssignmentPage() {
       label: 'REASSIGNMENTS',
       value: kpis.reassignmentsCount,
       status: 'neutral',
+      active: statusFilter === 'reassignments' && !selectedRepFilter,
       info: {
         title: 'Lead Reassignments',
         summary: 'Total instances where lead ownership was transferred between representatives.',
         calculation: 'Count of assignment logs where triggerType = "reassign" or previousAssignee is not null',
       },
       onClick: () => {
-        setStatusFilter('all');
+        setStatusFilter('reassignments');
+        setSelectedRepFilter('');
         setPagination((p) => ({ ...p, page: 1 }));
       },
     },
@@ -333,10 +339,11 @@ export default function LeadAssignmentPage() {
         {/* Workspace Toolbar */}
         <div className="p-4 border-b border-slate-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3 bg-white">
           {/* Status Tabs */}
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl w-fit">
+          <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1 rounded-xl w-fit">
             <button
               onClick={() => {
                 setStatusFilter('all');
+                setSelectedRepFilter('');
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
@@ -345,11 +352,12 @@ export default function LeadAssignmentPage() {
                   : 'text-slate-600 hover:text-slate-800'
               }`}
             >
-              All Leads
+              All Leads ({kpis.totalActiveLeads})
             </button>
             <button
               onClick={() => {
                 setStatusFilter('unassigned');
+                setSelectedRepFilter('');
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
@@ -358,11 +366,12 @@ export default function LeadAssignmentPage() {
                   : 'text-slate-600 hover:text-slate-800'
               }`}
             >
-              Unassigned Only ({kpis.unassignedLeads})
+              Unassigned ({kpis.unassignedLeads})
             </button>
             <button
               onClick={() => {
                 setStatusFilter('assigned');
+                setSelectedRepFilter('');
                 setPagination((prev) => ({ ...prev, page: 1 }));
               }}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
@@ -372,6 +381,34 @@ export default function LeadAssignmentPage() {
               }`}
             >
               Assigned Only
+            </button>
+            <button
+              onClick={() => {
+                setStatusFilter('assigned_today');
+                setSelectedRepFilter('');
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                statusFilter === 'assigned_today'
+                  ? 'bg-white text-emerald-700 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-800'
+              }`}
+            >
+              Assigned Today ({kpis.assignedToday})
+            </button>
+            <button
+              onClick={() => {
+                setStatusFilter('reassignments');
+                setSelectedRepFilter('');
+                setPagination((prev) => ({ ...prev, page: 1 }));
+              }}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                statusFilter === 'reassignments'
+                  ? 'bg-white text-purple-700 shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-800'
+              }`}
+            >
+              Reassignments ({kpis.reassignmentsCount})
             </button>
           </div>
 

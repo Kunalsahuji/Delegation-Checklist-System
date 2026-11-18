@@ -117,6 +117,16 @@ const listQualifiedLeads = async (query = {}) => {
     filter.assignedTo = null;
   } else if (assignmentStatus === 'assigned') {
     filter.assignedTo = { $ne: null };
+  } else if (assignmentStatus === 'assigned_today') {
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const todayLeadIds = await LeadAssignment.find({ assignedAt: { $gte: startOfToday } }).distinct('leadId');
+    filter._id = { $in: todayLeadIds };
+  } else if (assignmentStatus === 'reassignments') {
+    const reassignedLeadIds = await LeadAssignment.find({
+      $or: [{ triggerType: 'reassign' }, { previousAssignee: { $ne: null } }],
+    }).distinct('leadId');
+    filter._id = { $in: reassignedLeadIds };
   }
 
   if (temperature) {

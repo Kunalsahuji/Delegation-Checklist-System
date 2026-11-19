@@ -31,6 +31,7 @@ import PmsProjectListPage from './modules/pms/pages/PmsProjectListPage';
 import PmsProjectDetailPage from './modules/pms/pages/PmsProjectDetailPage';
 import PmsPlotListPage from './modules/pms/pages/PmsPlotListPage';
 import PmsLegalCaseListPage from './modules/pms/pages/PmsLegalCaseListPage';
+import PmsLandPurchaseListPage from './modules/pms/pages/PmsLandPurchaseListPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -104,6 +105,7 @@ export default function App() {
               <Route path="pms/projects/:id" element={<PmsProjectDetailPage />} />
               <Route path="pms/plots" element={<PmsPlotListPage />} />
               <Route path="pms/legal-cases" element={<PmsLegalCaseListPage />} />
+              <Route path="pms/land-purchases" element={<PmsLandPurchaseListPage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

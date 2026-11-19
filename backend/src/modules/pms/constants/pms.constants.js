@@ -229,6 +229,33 @@ const LEGAL_DOCUMENT_ITEMS = [
   { key: 'otherDocuments', label: 'Other Documents' },
 ];
 
+// ---- Land Purchase & Registry (Module 03 / Stage 3) ----
+const LAND_PURCHASE_STATUS = [
+  'negotiation',
+  'priceApproval',
+  'tokenPayment',
+  'saleAgreement',
+  'registry',
+  'mutation',
+  'completed',
+  'cancelled',
+];
+
+const LAND_PURCHASE_SECTION_KEYS = [
+  'negotiation',
+  'priceApproval',
+  'tokenPayment',
+  'saleAgreement',
+  'registry',
+  'mutation',
+];
+
+const LAND_PURCHASE_SECTION_STATUS = ['pending', 'inProgress', 'completed'];
+
+const LAND_PURCHASE_DECISIONS = ['approved', 'rejected'];
+
+const PAYMENT_MODES = ['bankTransfer', 'cheque', 'cash', 'upi', 'dd'];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -257,4 +284,9 @@ module.exports = {
   TITLE_VERIFICATION_ITEMS,
   ENCUMBRANCE_ITEMS,
   LEGAL_DOCUMENT_ITEMS,
+  LAND_PURCHASE_STATUS,
+  LAND_PURCHASE_SECTION_KEYS,
+  LAND_PURCHASE_SECTION_STATUS,
+  LAND_PURCHASE_DECISIONS,
+  PAYMENT_MODES,
 };

@@ -154,6 +154,7 @@ class PlotService {
 
     const plot = new Plot({
       ...data,
+      project: data.project || data.projectId,
       code,
       area: {
         value: areaValue,

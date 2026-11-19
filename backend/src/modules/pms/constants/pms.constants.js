@@ -127,9 +127,53 @@ const PMS_PROJECT_STATUS = ['planning', 'active', 'onHold', 'completed', 'cancel
 
 const AREA_UNITS = ['sqft', 'sqyd', 'sqm', 'acre', 'bigha'];
 
+const PLOT_STATUS = [
+  'identified',
+  'visitScheduled',
+  'visited',
+  'underAnalysis',
+  'feasibilityDone',
+  'approved',
+  'rejected',
+];
+
+const PLOT_SOURCES = ['broker', 'direct', 'agent', 'online', 'other'];
+
+const ZONING_TYPES = ['residential', 'commercial', 'agricultural', 'mixed', 'industrial'];
+
+const SITE_VISIT_STATUS = ['scheduled', 'submitted', 'completed', 'cancelled'];
+
+const OBSERVATION_RATINGS = ['good', 'average', 'poor', 'na'];
+
+const VISIT_RECOMMENDATIONS = ['proceed', 'hold', 'drop'];
+
+const MARKET_ANALYSIS_STATUS = ['draft', 'completed'];
+
+const DEMAND_LEVELS = ['high', 'medium', 'low'];
+
+const FEASIBILITY_STATUS = ['draft', 'submitted', 'approved', 'rejected'];
+
+const FEASIBILITY_VERDICTS = ['pending', 'feasible', 'feasibleWithConditions', 'notFeasible'];
+
+const RISK_SEVERITIES = ['low', 'medium', 'high'];
+
+const POSITIVE_VERDICTS = ['feasible', 'feasibleWithConditions'];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
   PMS_PROJECT_STATUS,
   AREA_UNITS,
+  PLOT_STATUS,
+  PLOT_SOURCES,
+  ZONING_TYPES,
+  SITE_VISIT_STATUS,
+  OBSERVATION_RATINGS,
+  VISIT_RECOMMENDATIONS,
+  MARKET_ANALYSIS_STATUS,
+  DEMAND_LEVELS,
+  FEASIBILITY_STATUS,
+  FEASIBILITY_VERDICTS,
+  RISK_SEVERITIES,
+  POSITIVE_VERDICTS,
 };

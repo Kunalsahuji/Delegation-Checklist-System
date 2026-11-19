@@ -371,7 +371,6 @@ export default function PmsProjectListPage() {
                 </div>
 
                 <h3 className="font-bold text-slate-900 text-sm line-clamp-1">{proj.name}</h3>
-                {proj.nameHi && <p className="text-xs text-slate-400 mt-0.5">{proj.nameHi}</p>}
 
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-2">
                   <MapPin className="w-3.5 h-3.5 text-slate-400" />
@@ -480,7 +479,6 @@ export default function PmsProjectListPage() {
                         </span>
                         <div>
                           <div className="font-bold text-slate-900 hover:text-brand-600">{proj.name}</div>
-                          {proj.nameHi && <div className="text-[11px] text-slate-400">{proj.nameHi}</div>}
                         </div>
                       </div>
                     </td>

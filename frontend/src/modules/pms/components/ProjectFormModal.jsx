@@ -119,31 +119,19 @@ export default function ProjectFormModal({ isOpen, onClose, project, onSaved }) 
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4 text-xs">
-          {/* Project Name (En & Hi) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Project Name (English) <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="e.g. Royal Palms Residency"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
-              />
-            </div>
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">Project Name (Hindi / स्थानीय)</label>
-              <input
-                type="text"
-                value={formData.nameHi}
-                onChange={(e) => setFormData({ ...formData, nameHi: e.target.value })}
-                placeholder="उदा. रॉयल पाल्म्स रेजीडेंसी"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
-              />
-            </div>
+          {/* Project Name */}
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Project Name <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="e.g. Emerald Foothills Estate"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none"
+            />
           </div>
 
           {/* Project Code & Locality */}

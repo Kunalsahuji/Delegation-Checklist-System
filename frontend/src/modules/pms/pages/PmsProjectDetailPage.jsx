@@ -137,9 +137,6 @@ export default function PmsProjectDetailPage() {
                 {project.code}
               </span>
               <h1 className="text-lg font-bold text-slate-900 tracking-tight">{project.name}</h1>
-              {project.nameHi && (
-                <span className="text-xs text-slate-400 font-normal">({project.nameHi})</span>
-              )}
               <span
                 className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                   project.status === 'active'

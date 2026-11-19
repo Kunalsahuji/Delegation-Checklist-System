@@ -647,7 +647,17 @@ export default function LeadAssignmentPage() {
         {!loading && pagination.total > 0 && (
           <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-white">
             <div>
-              Showing {leads.length} of {pagination.total} leads
+              Showing <span className="font-semibold text-slate-800">{leads.length}</span> of{' '}
+              <span className="font-semibold text-slate-800">{pagination.total}</span>{' '}
+              {statusFilter === 'unassigned'
+                ? 'unassigned leads'
+                : statusFilter === 'assigned'
+                ? 'assigned leads'
+                : statusFilter === 'assigned_today'
+                ? 'leads assigned today'
+                : statusFilter === 'reassignments'
+                ? 'reassignments'
+                : 'leads'}
             </div>
             <div className="flex items-center gap-1.5">
               <button

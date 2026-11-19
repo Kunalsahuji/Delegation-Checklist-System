@@ -266,7 +266,7 @@ export default function DelegationTable({
         <div className="text-center sm:text-left">
           Showing <span className="font-semibold text-slate-700">{total === 0 ? 0 : startIndex + 1}</span> to{' '}
           <span className="font-semibold text-slate-700">{Math.min(startIndex + limit, total)}</span> of{' '}
-          <span className="font-semibold text-slate-700">{total}</span> items
+          <span className="font-semibold text-slate-700">{total}</span> delegated tasks
         </div>
 
         <div className="flex items-center gap-1.5">

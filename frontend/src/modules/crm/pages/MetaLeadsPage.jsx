@@ -585,7 +585,15 @@ export default function MetaLeadsPage() {
             <div>
               Showing page <span className="font-semibold text-slate-900">{pagination.page}</span> of{' '}
               <span className="font-semibold text-slate-900">{pagination.totalPages}</span> ({pagination.total}{' '}
-              leads)
+              {statusFilter === 'pending'
+                ? 'pending meta leads'
+                : statusFilter === 'assigned'
+                ? 'assigned meta leads'
+                : statusFilter === 'converted'
+                ? 'converted meta leads'
+                : statusFilter === 'failed'
+                ? 'failed meta leads'
+                : 'meta ad leads'})
             </div>
             <div className="flex items-center gap-1">
               <button

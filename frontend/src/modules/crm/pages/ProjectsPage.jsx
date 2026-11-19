@@ -41,7 +41,7 @@ export default function ProjectsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [kpiFilter, setKpiFilter] = useState('all'); // 'all', 'has_units', 'available', 'booked'
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
+  const [viewMode, setViewMode] = useState('table'); // default table, 'grid' on click
 
   // Modals state
   const [projectModalOpen, setProjectModalOpen] = useState(false);
@@ -592,6 +592,23 @@ export default function ProjectsPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Table Summary Footer */}
+          {!loading && filteredProjects.length > 0 && (
+            <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+              <div>
+                Showing <span className="font-semibold text-slate-900">{filteredProjects.length}</span> of{' '}
+                <span className="font-semibold text-slate-900">{projects.length}</span>{' '}
+                {kpiFilter === 'available'
+                  ? 'projects with available units'
+                  : kpiFilter === 'booked'
+                  ? 'projects with booked units'
+                  : kpiFilter === 'has_units'
+                  ? 'projects with active units'
+                  : 'real estate projects'}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

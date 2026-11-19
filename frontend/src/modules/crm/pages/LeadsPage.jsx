@@ -43,7 +43,7 @@ export default function LeadsPage() {
   });
 
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState('kanban'); // 'kanban' | 'table'
+  const [viewMode, setViewMode] = useState('table'); // default table, kanban on click
 
   // Filters
   const [search, setSearch] = useState('');
@@ -607,7 +607,18 @@ export default function LeadsPage() {
                 <span className="font-semibold text-slate-700">
                   {Math.min(pagination.page * pagination.limit, pagination.total)}
                 </span>{' '}
-                of <span className="font-semibold text-slate-700">{pagination.total}</span> leads
+                of <span className="font-semibold text-slate-700">{pagination.total}</span>{' '}
+                {statusFilter === 'won'
+                  ? 'won deals'
+                  : statusFilter === 'dropped' || statusFilter === 'lost'
+                  ? 'dropped / lost leads'
+                  : stageFilter === 'visit_stages'
+                  ? 'visit stage leads'
+                  : statusFilter === 'active'
+                  ? 'active pipeline leads'
+                  : temperatureFilter !== 'all'
+                  ? `${temperatureFilter} temperature leads`
+                  : 'sales leads'}
               </div>
               <div className="flex items-center gap-1.5">
                 <button

@@ -18,6 +18,7 @@ import {
   Trash2,
   Filter,
   AlertCircle,
+  UserCheck,
 } from 'lucide-react';
 import { crmEnquiryApi } from '../../../api/crmEnquiryApi';
 import { useToast } from '../../../context/ToastContext';
@@ -59,7 +60,7 @@ export default function EnquiriesPage() {
   const [sourceFilter, setSourceFilter] = useState('all');
   const [followupFilter, setFollowupFilter] = useState('all'); // 'all' | 'today' | 'overdue' | 'upcoming'
   const [specialFilter, setSpecialFilter] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
+  const [viewMode, setViewMode] = useState('table'); // default table, 'grid' on click
 
   // Modals
   const [formModalOpen, setFormModalOpen] = useState(false);
@@ -609,9 +610,11 @@ export default function EnquiriesPage() {
                       <button
                         type="button"
                         onClick={() => handleOpenQualifyModal(enq)}
-                        className="px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-md transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-md shadow-2xs hover:shadow-xs active:scale-95 transition-all cursor-pointer"
+                        title="Qualify this enquiry into a sales lead"
                       >
-                        Qualify
+                        <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Qualify</span>
                       </button>
                     )}
                     <button
@@ -724,15 +727,17 @@ export default function EnquiriesPage() {
                         <button
                           type="button"
                           onClick={() => handleOpenQualifyModal(enq)}
-                          className="px-2 py-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-md shadow-2xs hover:shadow-xs active:scale-95 transition-all cursor-pointer"
+                          title="Qualify this enquiry into a sales lead"
                         >
-                          Qualify
+                          <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Qualify</span>
                         </button>
                       )}
                       <button
                         type="button"
                         onClick={() => handleOpenDetailsModal(enq)}
-                        className="p-1 text-slate-500 hover:text-slate-800 rounded"
+                        className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors"
                         title="View Details"
                       >
                         <Eye className="w-3.5 h-3.5" />
@@ -740,7 +745,7 @@ export default function EnquiriesPage() {
                       <button
                         type="button"
                         onClick={() => handleOpenEditModal(enq)}
-                        className="p-1 text-slate-500 hover:text-slate-800 rounded"
+                        className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors"
                         title="Edit"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -748,7 +753,7 @@ export default function EnquiriesPage() {
                       <button
                         type="button"
                         onClick={() => handleDeleteEnquiry(enq)}
-                        className="p-1 text-slate-400 hover:text-rose-600 rounded"
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
                         title="Delete"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -770,7 +775,20 @@ export default function EnquiriesPage() {
             <span className="font-semibold text-slate-700">
               {Math.min(pagination.page * pagination.limit, pagination.total)}
             </span>{' '}
-            of <span className="font-semibold text-slate-700">{pagination.total}</span> enquiries
+            of <span className="font-semibold text-slate-700">{pagination.total}</span>{' '}
+            {statusFilter === 'qualified'
+              ? 'qualified enquiries'
+              : statusFilter === 'pending'
+              ? 'pending enquiries'
+              : statusFilter === 'overdue'
+              ? 'overdue enquiries'
+              : statusFilter === 'dueToday'
+              ? 'enquiries due today'
+              : specialFilter
+              ? 'special follow-up enquiries'
+              : statusFilter === 'lost'
+              ? 'lost / dropped enquiries'
+              : 'enquiries'}
           </div>
           <div className="flex items-center gap-1.5">
             <button

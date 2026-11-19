@@ -504,7 +504,11 @@ export default function BrokersPage() {
             <div>
               Showing page <span className="font-semibold text-slate-900">{pagination.page}</span> of{' '}
               <span className="font-semibold text-slate-900">{pagination.totalPages}</span> ({pagination.total}{' '}
-              partners)
+              {kpiFilter === 'yards'
+                ? 'partners with sales volume'
+                : kpiFilter === 'senior' || levelFilter === 'Sales Manager'
+                ? 'senior channel partners'
+                : 'registered channel partners'})
             </div>
             <div className="flex items-center gap-1">
               <button

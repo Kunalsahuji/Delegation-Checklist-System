@@ -408,7 +408,16 @@ export default function ChecklistItemsReport({ departments = [], users = [] }) {
         <div className="py-3 px-4 border-t border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
           <div>
             Showing <span className="font-semibold text-slate-800">{items.length}</span> of{' '}
-            <span className="font-semibold text-slate-800">{total}</span> total checklist items
+            <span className="font-semibold text-slate-800">{total}</span>{' '}
+            {status === 'pending'
+              ? 'pending checklist items'
+              : status === 'overdue'
+              ? 'overdue checklist items'
+              : status === 'completed'
+              ? 'completed checklist items'
+              : status === 'skipped'
+              ? 'skipped checklist items'
+              : 'total checklist items'}
           </div>
           <div className="flex items-center gap-2">
             <button

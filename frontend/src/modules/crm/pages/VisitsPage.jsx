@@ -454,7 +454,15 @@ export default function VisitsPage() {
         {!loading && pagination.total > 0 && (
           <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-white">
             <div>
-              Showing {visits.length} of {pagination.total} visits
+              Showing <span className="font-semibold text-slate-800">{visits.length}</span> of{' '}
+              <span className="font-semibold text-slate-800">{pagination.total}</span>{' '}
+              {kpiFilter === 'geo-verified' || geoFilter === 'true'
+                ? 'geo-verified site visits'
+                : kpiFilter === 'today'
+                ? 'site visits conducted today'
+                : kpiFilter === 'month'
+                ? 'site visits this month'
+                : 'site visits'}
             </div>
             <div className="flex items-center gap-1.5">
               <button

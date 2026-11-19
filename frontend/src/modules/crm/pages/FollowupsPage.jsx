@@ -495,7 +495,19 @@ export default function FollowupsPage() {
         {!loading && pagination.total > 0 && (
           <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-white">
             <div>
-              Showing {reminders.length} of {pagination.total} follow-ups
+              Showing <span className="font-semibold text-slate-800">{reminders.length}</span> of{' '}
+              <span className="font-semibold text-slate-800">{pagination.total}</span>{' '}
+              {filterStatus === 'all'
+                ? 'pending follow-ups'
+                : filterStatus === 'dueToday'
+                ? 'follow-ups due today'
+                : filterStatus === 'overdue'
+                ? 'overdue follow-ups'
+                : filterStatus === 'completed'
+                ? 'completed follow-ups'
+                : filterStatus === 'special'
+                ? 'special follow-ups'
+                : 'follow-ups'}
             </div>
             <div className="flex items-center gap-1.5">
               <button

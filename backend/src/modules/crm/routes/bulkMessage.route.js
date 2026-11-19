@@ -11,6 +11,8 @@ router.get('/kpis', bulkMessageController.getKPIs);
 // Templates & Preview
 router.get('/templates', bulkMessageController.getTemplates);
 router.post('/preview', bulkMessageController.previewAudience);
+router.get('/messages', bulkMessageController.listDeliveredMessages);
+router.get('/audience', bulkMessageController.getAudienceDirectory);
 
 // Campaigns CRUD
 router.get('/', bulkMessageController.listCampaigns);

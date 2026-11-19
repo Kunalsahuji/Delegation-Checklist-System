@@ -10,4 +10,6 @@ export const crmBulkMessageApi = {
   listCampaigns: (params = {}) => axiosClient.get(BASE_URL, { params }),
   getCampaignById: (id) => axiosClient.get(`${BASE_URL}/${id}`),
   deleteCampaign: (id) => axiosClient.delete(`${BASE_URL}/${id}`),
+  getDeliveredMessages: (params = {}) => axiosClient.get(`${BASE_URL}/messages`, { params }),
+  getAudienceDirectory: (params = {}) => axiosClient.get(`${BASE_URL}/audience`, { params }),
 };

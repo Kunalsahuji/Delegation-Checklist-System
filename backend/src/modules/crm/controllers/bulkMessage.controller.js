@@ -72,6 +72,38 @@ class BulkMessageController {
       next(err);
     }
   }
+
+  async listDeliveredMessages(req, res, next) {
+    try {
+      const result = await bulkMessageService.listDeliveredMessages(req.query);
+      res.status(200).json({
+        success: true,
+        data: result.data,
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        totalPages: result.totalPages,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getAudienceDirectory(req, res, next) {
+    try {
+      const result = await bulkMessageService.getAudienceDirectory(req.query);
+      res.status(200).json({
+        success: true,
+        data: result.data,
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        totalPages: result.totalPages,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new BulkMessageController();

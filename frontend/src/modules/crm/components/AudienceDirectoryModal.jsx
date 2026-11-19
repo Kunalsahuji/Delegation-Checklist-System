@@ -12,6 +12,8 @@ import {
   Filter,
 } from 'lucide-react';
 import { crmBulkMessageApi } from '../../../api/crmBulkMessageApi';
+import { crmEnquiryApi } from '../../../api/crmEnquiryApi';
+import { crmLeadApi } from '../../../api/crmLeadApi';
 
 export default function AudienceDirectoryModal({ isOpen, onClose, onLaunchCampaign }) {
   const [loading, setLoading] = useState(true);
@@ -28,10 +30,65 @@ export default function AudienceDirectoryModal({ isOpen, onClose, onLaunchCampai
   const loadAudience = async () => {
     try {
       setLoading(true);
-      const res = await crmBulkMessageApi.previewAudience({ mode: 'all' });
-      if (res.success && res.data) {
-        setRecipients(res.data.recipients || []);
+      // Attempt 1: Direct backend audience directory
+      try {
+        const res = await crmBulkMessageApi.getAudienceDirectory();
+        if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+          setRecipients(res.data);
+          setLoading(false);
+          return;
+        }
+        if (res?.data?.recipients && res.data.recipients.length > 0) {
+          setRecipients(res.data.recipients);
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        // Fallback to direct enquiry & lead fetch
       }
+
+      // Attempt 2: Direct enquiry and lead client contacts from database
+      const [enqRes, leadRes] = await Promise.all([
+        crmEnquiryApi.getEnquiries({ limit: 100 }),
+        crmLeadApi.getLeads({ limit: 100 }),
+      ]);
+
+      const enquiries = enqRes?.enquiries || enqRes?.data || [];
+      const leads = leadRes?.leads || leadRes?.data?.leads || (Array.isArray(leadRes?.data) ? leadRes.data : []);
+
+      const phoneMap = new Map();
+
+      enquiries.forEach((e) => {
+        const raw = String(e.clientPhone || '').replace(/\D/g, '');
+        const phone = raw.length >= 10 ? raw.slice(-10) : raw;
+        if (phone && !phoneMap.has(phone)) {
+          phoneMap.set(phone, {
+            name: e.clientName || 'Prospective Buyer',
+            phone,
+            type: 'Enquiry',
+            code: e.enquiryNumber || 'ENQ',
+            project: e.project || 'General Inquiry',
+            status: e.status || 'New Lead',
+          });
+        }
+      });
+
+      leads.forEach((l) => {
+        const raw = String(l.clientPhone || '').replace(/\D/g, '');
+        const phone = raw.length >= 10 ? raw.slice(-10) : raw;
+        if (phone && !phoneMap.has(phone)) {
+          phoneMap.set(phone, {
+            name: l.clientName || 'Qualified Lead',
+            phone,
+            type: 'Lead',
+            code: l.leadNumber || 'LD',
+            project: l.project || l.projectId?.name || 'General Lead',
+            status: l.currentStageName || l.currentStageId?.name || l.status || 'Active',
+          });
+        }
+      });
+
+      setRecipients(Array.from(phoneMap.values()));
     } catch (err) {
       console.error('Failed to load audience directory', err);
     } finally {

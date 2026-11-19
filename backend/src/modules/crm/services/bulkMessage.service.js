@@ -411,6 +411,91 @@ class BulkMessageService {
     }
     return campaign;
   }
+
+  /**
+   * Get all delivered messages across campaigns
+   */
+  async listDeliveredMessages({ page = 1, limit = 20, search = '' } = {}) {
+    const campaigns = await BulkCampaign.find({ deletedAt: null })
+      .select('name templateName recipients createdAt')
+      .lean();
+
+    let allDelivered = [];
+    campaigns.forEach((camp) => {
+      (camp.recipients || []).forEach((r) => {
+        if (r.status === 'delivered' || r.status === 'sent') {
+          allDelivered.push({
+            campaignName: camp.name,
+            templateName: camp.templateName,
+            recipientName: r.name || 'Client',
+            phone: r.phone,
+            status: r.status,
+            sentAt: r.sentAt || camp.createdAt,
+          });
+        }
+      });
+    });
+
+    if (search && search.trim()) {
+      const q = search.trim().toLowerCase();
+      allDelivered = allDelivered.filter(
+        (m) =>
+          (m.recipientName && m.recipientName.toLowerCase().includes(q)) ||
+          (m.phone && m.phone.includes(q)) ||
+          (m.campaignName && m.campaignName.toLowerCase().includes(q))
+      );
+    }
+
+    const currentPage = Math.max(1, parseInt(page, 10) || 1);
+    const perPage = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+    const total = allDelivered.length;
+    const skip = (currentPage - 1) * perPage;
+    const data = allDelivered.slice(skip, skip + perPage);
+
+    return {
+      data,
+      total,
+      page: currentPage,
+      limit: perPage,
+      totalPages: Math.ceil(total / perPage) || 1,
+    };
+  }
+
+  /**
+   * Get audience directory contacts
+   */
+  async getAudienceDirectory({ page = 1, limit = 50, search = '', type = 'all' } = {}) {
+    const recipients = await this.collectRecipients({ mode: 'all' });
+    let filtered = recipients;
+
+    if (type && type !== 'all') {
+      filtered = filtered.filter((r) => r.type === type);
+    }
+
+    if (search && search.trim()) {
+      const q = search.trim().toLowerCase();
+      filtered = filtered.filter(
+        (r) =>
+          (r.name && r.name.toLowerCase().includes(q)) ||
+          (r.phone && r.phone.includes(q)) ||
+          (r.project && r.project.toLowerCase().includes(q))
+      );
+    }
+
+    const currentPage = Math.max(1, parseInt(page, 10) || 1);
+    const perPage = Math.min(100, Math.max(1, parseInt(limit, 10) || 50));
+    const total = filtered.length;
+    const skip = (currentPage - 1) * perPage;
+    const data = filtered.slice(skip, skip + perPage);
+
+    return {
+      data,
+      total,
+      page: currentPage,
+      limit: perPage,
+      totalPages: Math.ceil(total / perPage) || 1,
+    };
+  }
 }
 
 module.exports = new BulkMessageService();

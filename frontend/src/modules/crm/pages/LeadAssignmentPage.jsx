@@ -138,7 +138,7 @@ export default function LeadAssignmentPage() {
       key: 'unassigned',
       label: 'UNASSIGNED LEADS',
       value: kpis.unassignedLeads,
-      tone: 'warning',
+      tone: kpis.unassignedLeads > 0 ? 'warning' : 'default',
       hint: kpis.unassignedLeads > 0 ? 'Awaiting ownership' : 'All leads assigned',
       icon: UserX,
       active: statusFilter === 'unassigned' && !selectedRepFilter,

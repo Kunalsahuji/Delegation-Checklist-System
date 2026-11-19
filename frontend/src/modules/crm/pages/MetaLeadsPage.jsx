@@ -196,7 +196,7 @@ export default function MetaLeadsPage() {
       key: 'pending-meta-leads',
       label: 'PENDING ASSIGNMENT',
       value: kpis.pending,
-      tone: 'warning',
+      tone: kpis.pending > 0 ? 'warning' : 'default',
       hint: 'Awaiting team distribution',
       icon: Clock,
       active: statusFilter === 'pending',

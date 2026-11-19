@@ -13,6 +13,8 @@ import {
   CheckCircle2,
   Clock,
   User,
+  Users,
+  TrendingUp,
   Filter,
   Layers,
   ChevronRight,

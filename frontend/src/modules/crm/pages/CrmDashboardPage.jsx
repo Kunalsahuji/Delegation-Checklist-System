@@ -12,6 +12,8 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
+  Star,
   Flame,
   ThermometerSun,
   Snowflake,

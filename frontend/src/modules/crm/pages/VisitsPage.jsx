@@ -189,7 +189,7 @@ export default function VisitsPage() {
       key: 'today-visits',
       label: "TODAY'S VISITS",
       value: stats.today,
-      tone: 'purple',
+      tone: stats.today > 0 ? 'purple' : 'default',
       hint: 'Conducted today',
       icon: Calendar,
       active: kpiFilter === 'today',

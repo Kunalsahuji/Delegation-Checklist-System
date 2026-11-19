@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('../../auth/models/user.model');
 const {
   FEASIBILITY_STATUS,
   FEASIBILITY_VERDICTS,

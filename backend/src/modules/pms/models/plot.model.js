@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('../../auth/models/user.model');
 const { PLOT_STATUS, AREA_UNITS, PLOT_SOURCES, ZONING_TYPES } = require('../constants/pms.constants');
 
 const brokerInfoSchema = new mongoose.Schema(

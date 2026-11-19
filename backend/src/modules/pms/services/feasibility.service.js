@@ -40,6 +40,16 @@ class FeasibilityService {
   }
 
   /**
+   * Get feasibility by plot ID
+   */
+  async getFeasibilityByPlot(plotId) {
+    return await Feasibility.findOne({ plot: plotId, deletedAt: null })
+      .populate('decidedBy', 'name email avatar')
+      .populate('createdBy', 'name email')
+      .lean();
+  }
+
+  /**
    * Create or update feasibility for a plot
    */
   async saveFeasibility(plotId, data, userId) {

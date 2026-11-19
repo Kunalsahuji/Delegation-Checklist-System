@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('../../auth/models/user.model');
 const { PMS_PROJECT_STATUS } = require('../constants/pms.constants');
 
 // Model name is PmsProject (NOT Project) — 'Project' is registered by the CRM's

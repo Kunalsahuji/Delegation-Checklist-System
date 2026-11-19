@@ -67,6 +67,18 @@ export const ChecklistWorkspacePage = () => {
     fetchMaster();
   }, []);
 
+  // Keep filters in sync when URL searchParams change
+  useEffect(() => {
+    setFilters({
+      q: searchParams.get('q') || '',
+      department: searchParams.get('department') || '',
+      frequency: searchParams.get('frequency') || '',
+      status: searchParams.get('status') || 'all',
+      assignee: searchParams.get('assignee') || '',
+      slice: searchParams.get('slice') || '',
+    });
+  }, [searchParams]);
+
   // Fetch Occurrences or Tasks based on activeTab
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -85,11 +97,11 @@ export const ChecklistWorkspacePage = () => {
         ]);
 
         if (occRes.success) {
-          setOccurrences(occRes.items);
-          setPagination(occRes.pagination);
+          setOccurrences(occRes.items || []);
+          setPagination(occRes.pagination || null);
         }
         if (statsRes.success) {
-          setStats(statsRes.data);
+          setStats(statsRes.data || null);
         }
       } else {
         const taskRes = await checklistApi.listTasks({
@@ -98,7 +110,7 @@ export const ChecklistWorkspacePage = () => {
           q: filters.q,
         });
         if (taskRes.success) {
-          setTasks(taskRes.data);
+          setTasks(taskRes.data || []);
         }
       }
     } catch (err) {
@@ -106,7 +118,16 @@ export const ChecklistWorkspacePage = () => {
     } finally {
       setLoading(false);
     }
-  }, [activeTab, filters, page, toast]);
+  }, [
+    activeTab,
+    filters.q,
+    filters.department,
+    filters.frequency,
+    filters.status,
+    filters.assignee,
+    filters.slice,
+    page,
+  ]);
 
   useEffect(() => {
     fetchData();
@@ -147,21 +168,28 @@ export const ChecklistWorkspacePage = () => {
     setSearchParams(next);
   };
 
-  // KPI card selection
+  // KPI card selection with clean single URL update
   const handleKpiSelect = (kpiId) => {
+    const next = new URLSearchParams(searchParams);
+    next.set('page', '1');
     if (kpiId === 'all') {
-      handleFilterChange('status', 'all');
-      handleFilterChange('slice', '');
+      next.delete('status');
+      next.delete('slice');
+      setFilters((prev) => ({ ...prev, status: 'all', slice: '' }));
     } else if (kpiId === 'dueToday') {
-      handleFilterChange('slice', 'dueToday');
-      handleFilterChange('status', 'all');
+      next.set('slice', 'dueToday');
+      next.delete('status');
+      setFilters((prev) => ({ ...prev, slice: 'dueToday', status: 'all' }));
     } else if (kpiId === 'overdue') {
-      handleFilterChange('slice', 'overdue');
-      handleFilterChange('status', 'all');
+      next.set('slice', 'overdue');
+      next.delete('status');
+      setFilters((prev) => ({ ...prev, slice: 'overdue', status: 'all' }));
     } else {
-      handleFilterChange('status', kpiId);
-      handleFilterChange('slice', '');
+      next.set('status', kpiId);
+      next.delete('slice');
+      setFilters((prev) => ({ ...prev, status: kpiId, slice: '' }));
     }
+    setSearchParams(next);
   };
 
   // Page change

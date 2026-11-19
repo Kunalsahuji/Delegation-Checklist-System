@@ -40,6 +40,9 @@ export default function EnquiriesPage() {
   const { showSuccess, showError } = useToast();
 
   const [enquiries, setEnquiries] = useState([]);
+  const [pagination, setPagination] = useState({ page: 1, limit: 15, total: 0, totalPages: 1 });
+  const [sortBy, setSortBy] = useState('createdAt');
+  const [sortOrder, setSortOrder] = useState('desc');
   const [kpis, setKpis] = useState({
     totalEnquiries: 0,
     qualifiedCount: 0,
@@ -72,6 +75,10 @@ export default function EnquiriesPage() {
     try {
       setLoading(true);
       const res = await crmEnquiryApi.getEnquiries({
+        page: pagination.page,
+        limit: pagination.limit,
+        sortBy,
+        sortOrder,
         search,
         status: statusFilter,
         temperature: temperatureFilter,
@@ -80,6 +87,11 @@ export default function EnquiriesPage() {
         special: specialFilter,
       });
       setEnquiries(res.enquiries || []);
+      setPagination((prev) => ({
+        ...prev,
+        total: res.totalCount !== undefined ? res.totalCount : (res.enquiries?.length || 0),
+        totalPages: res.totalPages || Math.ceil((res.totalCount || 0) / prev.limit) || 1,
+      }));
       if (res.kpis) {
         setKpis(res.kpis);
       }
@@ -88,7 +100,7 @@ export default function EnquiriesPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter, temperatureFilter, sourceFilter, followupFilter, specialFilter]);
+  }, [pagination.page, pagination.limit, sortBy, sortOrder, search, statusFilter, temperatureFilter, sourceFilter, followupFilter, specialFilter]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -158,6 +170,7 @@ export default function EnquiriesPage() {
         setStatusFilter('all');
         setFollowupFilter('all');
         setSpecialFilter(false);
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -177,6 +190,7 @@ export default function EnquiriesPage() {
       onClick: () => {
         setStatusFilter('qualified');
         setFollowupFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -187,15 +201,16 @@ export default function EnquiriesPage() {
       hint: 'Awaiting call / verification',
       tone: 'warning',
       icon: Clock,
-      active: statusFilter === 'new',
+      active: statusFilter === 'pending',
       info: {
         title: 'Pending Screening',
         summary: 'New or in-progress inbound inquiries undergoing initial outreach, qualification calls, or awaiting customer response.',
         calculation: 'Enquiries with status in ["new", "contacted", "hold"].',
       },
       onClick: () => {
-        setStatusFilter('new');
+        setStatusFilter('pending');
         setFollowupFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -215,6 +230,7 @@ export default function EnquiriesPage() {
       onClick: () => {
         setFollowupFilter('overdue');
         setStatusFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -234,6 +250,7 @@ export default function EnquiriesPage() {
       onClick: () => {
         setFollowupFilter('today');
         setStatusFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
   ];
@@ -334,10 +351,14 @@ export default function EnquiriesPage() {
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-brand-500"
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setPagination((p) => ({ ...p, page: 1 }));
+            }}
+            className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-brand-500 font-medium"
           >
             <option value="all">All Statuses</option>
+            <option value="pending">Pending (New, Contacted, Hold)</option>
             <option value="new">New</option>
             <option value="contacted">Contacted</option>
             <option value="qualified">Qualified</option>
@@ -347,8 +368,11 @@ export default function EnquiriesPage() {
 
           <select
             value={temperatureFilter}
-            onChange={(e) => setTemperatureFilter(e.target.value)}
-            className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-brand-500"
+            onChange={(e) => {
+              setTemperatureFilter(e.target.value);
+              setPagination((p) => ({ ...p, page: 1 }));
+            }}
+            className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-brand-500 font-medium"
           >
             <option value="all">All Temperature</option>
             <option value="hot">🔥 Hot</option>
@@ -358,8 +382,11 @@ export default function EnquiriesPage() {
 
           <select
             value={sourceFilter}
-            onChange={(e) => setSourceFilter(e.target.value)}
-            className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-brand-500"
+            onChange={(e) => {
+              setSourceFilter(e.target.value);
+              setPagination((p) => ({ ...p, page: 1 }));
+            }}
+            className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-brand-500 font-medium"
           >
             <option value="all">All Sources</option>
             <option value="phone">Direct Phone</option>
@@ -369,11 +396,34 @@ export default function EnquiriesPage() {
             <option value="reference">Reference</option>
           </select>
 
+          <select
+            value={`${sortBy}:${sortOrder}`}
+            onChange={(e) => {
+              const [sb, so] = e.target.value.split(':');
+              setSortBy(sb);
+              setSortOrder(so);
+              setPagination((p) => ({ ...p, page: 1 }));
+            }}
+            className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-brand-500 font-medium"
+            title="Sort enquiries"
+          >
+            <option value="createdAt:desc">Newest First</option>
+            <option value="createdAt:asc">Oldest First</option>
+            <option value="name:asc">Name (A → Z)</option>
+            <option value="name:desc">Name (Z → A)</option>
+            <option value="budget:desc">Budget (High → Low)</option>
+            <option value="budget:asc">Budget (Low → High)</option>
+            <option value="followup:asc">Follow-up (Earliest)</option>
+          </select>
+
           {/* Special Follow-up Toggle */}
           <button
             type="button"
-            onClick={() => setSpecialFilter((v) => !v)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+            onClick={() => {
+              setSpecialFilter((v) => !v);
+              setPagination((p) => ({ ...p, page: 1 }));
+            }}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors cursor-pointer ${
               specialFilter
                 ? 'bg-amber-50 text-amber-700 border-amber-300'
                 : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
@@ -708,6 +758,40 @@ export default function EnquiriesPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {!loading && pagination.total > 0 && (
+        <div className="p-4 bg-white border border-slate-200 rounded-xl shadow-2xs flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+          <div>
+            Showing <span className="font-semibold text-slate-700">{(pagination.page - 1) * pagination.limit + 1}</span> to{' '}
+            <span className="font-semibold text-slate-700">
+              {Math.min(pagination.page * pagination.limit, pagination.total)}
+            </span>{' '}
+            of <span className="font-semibold text-slate-700">{pagination.total}</span> enquiries
+          </div>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              disabled={pagination.page <= 1}
+              onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
+              className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+            >
+              Previous
+            </button>
+            <span className="px-2 font-medium text-slate-700">
+              Page {pagination.page} of {pagination.totalPages}
+            </span>
+            <button
+              type="button"
+              disabled={pagination.page >= pagination.totalPages}
+              onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
+              className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+            >
+              Next
+            </button>
           </div>
         </div>
       )}

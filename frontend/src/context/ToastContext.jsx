@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { X, CheckCircle, AlertTriangle, AlertCircle, Info } from 'lucide-react';
 
 const ToastContext = createContext(null);
@@ -21,15 +21,29 @@ export const ToastProvider = ({ children }) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const toast = {
+  const toast = useMemo(() => ({
     success: (msg, duration) => addToast({ message: msg, type: 'success', duration }),
     error: (msg, duration) => addToast({ message: msg, type: 'error', duration }),
     warning: (msg, duration) => addToast({ message: msg, type: 'warning', duration }),
     info: (msg, duration) => addToast({ message: msg, type: 'info', duration }),
-  };
+  }), [addToast]);
+
+  const value = useMemo(() => ({
+    toast,
+    addToast,
+    removeToast,
+    success: toast.success,
+    error: toast.error,
+    warning: toast.warning,
+    info: toast.info,
+    showSuccess: toast.success,
+    showError: toast.error,
+    showWarning: toast.warning,
+    showInfo: toast.info,
+  }), [toast, addToast, removeToast]);
 
   return (
-    <ToastContext.Provider value={{ toast, addToast, removeToast }}>
+    <ToastContext.Provider value={value}>
       {children}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
         {toasts.map((t) => (
@@ -66,17 +80,5 @@ export const ToastProvider = ({ children }) => {
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (!context) throw new Error('useToast must be used within a ToastProvider');
-  const t = context.toast;
-  return {
-    ...t,
-    toast: t,
-    success: t.success,
-    error: t.error,
-    warning: t.warning,
-    info: t.info,
-    showSuccess: t.success,
-    showError: t.error,
-    showWarning: t.warning,
-    showInfo: t.info,
-  };
+  return context;
 };

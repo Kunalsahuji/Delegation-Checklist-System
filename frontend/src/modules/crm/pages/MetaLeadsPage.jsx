@@ -580,7 +580,7 @@ export default function MetaLeadsPage() {
         )}
 
         {/* Pagination Footer */}
-        {pagination.totalPages > 1 && (
+        {!loading && pagination.total > 0 && (
           <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
             <div>
               Showing page <span className="font-semibold text-slate-900">{pagination.page}</span> of{' '}

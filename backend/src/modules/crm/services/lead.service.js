@@ -44,7 +44,11 @@ async function listLeads(query = {}) {
   const filter = { deletedAt: null };
 
   if (status && status !== 'all') {
-    filter.status = status;
+    if (status === 'dropped') {
+      filter.status = { $in: ['dropped', 'lost'] };
+    } else {
+      filter.status = status;
+    }
   }
 
   if (temperature && temperature !== 'all') {
@@ -52,7 +56,11 @@ async function listLeads(query = {}) {
   }
 
   if (stageId && stageId !== 'all') {
-    filter.currentStageId = stageId;
+    if (stageId === 'visit_stages') {
+      filter.currentStageOrder = { $in: [4, 5] };
+    } else {
+      filter.currentStageId = stageId;
+    }
   }
 
   if (assignedTo && assignedTo !== 'all') {

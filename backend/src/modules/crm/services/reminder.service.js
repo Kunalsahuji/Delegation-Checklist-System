@@ -195,7 +195,7 @@ const listReminders = async (query = {}, actor = null) => {
     filter.reminderAt = { $gt: endOfToday };
   } else if (filterStatus === 'completed') {
     filter.status = 'completed';
-  } else if (filterStatus === 'pending') {
+  } else if (filterStatus === 'all' || filterStatus === 'pending') {
     filter.status = 'pending';
   }
 

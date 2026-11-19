@@ -31,6 +31,7 @@ export default function LeadsPage() {
   const { showSuccess, showError } = useToast();
 
   const [leads, setLeads] = useState([]);
+  const [pagination, setPagination] = useState({ page: 1, limit: 25, total: 0, totalPages: 1 });
   const [stages, setStages] = useState([]);
   const [projects, setProjects] = useState([]);
   const [kpis, setKpis] = useState({
@@ -75,7 +76,10 @@ export default function LeadsPage() {
   const loadLeads = useCallback(async () => {
     try {
       setLoading(true);
-      const params = {};
+      const params = {
+        page: pagination.page,
+        limit: viewMode === 'kanban' ? 100 : pagination.limit,
+      };
       if (search.trim()) params.search = search.trim();
       if (statusFilter !== 'all') params.status = statusFilter;
       if (temperatureFilter !== 'all') params.temperature = temperatureFilter;
@@ -87,6 +91,14 @@ export default function LeadsPage() {
         res?.data?.leads ||
         (Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : []);
       setLeads(leadsList || []);
+
+      if (res?.pagination) {
+        setPagination((prev) => ({
+          ...prev,
+          total: res.pagination.total || 0,
+          totalPages: res.pagination.totalPages || 1,
+        }));
+      }
 
       if (res?.kpis) {
         setKpis(res.kpis);
@@ -100,11 +112,11 @@ export default function LeadsPage() {
         setStages(res.data.stages);
       }
     } catch (err) {
-      showError(err.message || 'Failed to load leads pipeline');
+      showError(err.message || 'Failed to fetch leads');
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter, temperatureFilter, stageFilter, showError]);
+  }, [pagination.page, pagination.limit, viewMode, search, statusFilter, temperatureFilter, stageFilter]);
 
   useEffect(() => {
     loadMasterData();
@@ -165,6 +177,7 @@ export default function LeadsPage() {
       onClick: () => {
         setStatusFilter('all');
         setStageFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -184,6 +197,7 @@ export default function LeadsPage() {
       onClick: () => {
         setStatusFilter('active');
         setStageFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -194,7 +208,7 @@ export default function LeadsPage() {
       hint: 'Visit Confirmed & Feedback',
       tone: 'purple',
       icon: MapPin,
-      active: statusFilter === 'active' && stages.some((s) => s._id === stageFilter && s.order === 4),
+      active: statusFilter === 'active' && stageFilter === 'visit_stages',
       info: {
         title: 'Site Visit Stage',
         summary: 'Leads that have confirmed a physical project tour or completed a site visit awaiting feedback.',
@@ -202,8 +216,8 @@ export default function LeadsPage() {
       },
       onClick: () => {
         setStatusFilter('active');
-        const visitStage = stages.find((s) => s.order === 4);
-        if (visitStage) setStageFilter(visitStage._id);
+        setStageFilter('visit_stages');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -223,6 +237,7 @@ export default function LeadsPage() {
       onClick: () => {
         setStatusFilter('won');
         setStageFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
     {
@@ -242,6 +257,7 @@ export default function LeadsPage() {
       onClick: () => {
         setStatusFilter('dropped');
         setStageFilter('all');
+        setPagination((p) => ({ ...p, page: 1 }));
       },
     },
   ];
@@ -379,10 +395,14 @@ export default function LeadsPage() {
 
           <select
             value={stageFilter}
-            onChange={(e) => setStageFilter(e.target.value)}
+            onChange={(e) => {
+              setStageFilter(e.target.value);
+              setPagination((p) => ({ ...p, page: 1 }));
+            }}
             className="px-2.5 py-1.5 text-xs border border-slate-200 rounded-lg bg-white text-slate-700 outline-none focus:border-blue-500 max-w-[180px] truncate"
           >
             <option value="all">All Stages</option>
+            <option value="visit_stages">Visits (Stage 4 & 5)</option>
             {stages.map((st) => (
               <option key={st._id} value={st._id}>
                 S{st.order}: {formatShortStageName(st.name, st.order)}
@@ -578,6 +598,40 @@ export default function LeadsPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Table Pagination */}
+          {!loading && pagination.total > 0 && (
+            <div className="p-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 bg-white gap-2">
+              <div>
+                Showing <span className="font-semibold text-slate-700">{(pagination.page - 1) * pagination.limit + 1}</span> to{' '}
+                <span className="font-semibold text-slate-700">
+                  {Math.min(pagination.page * pagination.limit, pagination.total)}
+                </span>{' '}
+                of <span className="font-semibold text-slate-700">{pagination.total}</span> leads
+              </div>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  disabled={pagination.page <= 1}
+                  onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
+                  className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors cursor-pointer"
+                >
+                  Previous
+                </button>
+                <span className="px-2 font-medium text-slate-700">
+                  Page {pagination.page} of {pagination.totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={pagination.page >= pagination.totalPages}
+                  onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
+                  className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors cursor-pointer"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

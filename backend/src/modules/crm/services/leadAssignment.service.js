@@ -15,6 +15,13 @@ const getKPIs = async () => {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
+  const [todayLeadIds, reassignedLeadIds] = await Promise.all([
+    LeadAssignment.find({ assignedAt: { $gte: startOfToday } }).distinct('leadId'),
+    LeadAssignment.find({
+      $or: [{ triggerType: 'reassign' }, { previousAssignee: { $ne: null } }],
+    }).distinct('leadId'),
+  ]);
+
   const [
     unassignedLeads,
     totalSalesPersons,
@@ -22,13 +29,11 @@ const getKPIs = async () => {
     assignedToday,
     reassignmentsCount,
   ] = await Promise.all([
-    Lead.countDocuments({ status: 'active', assignedTo: null }),
+    Lead.countDocuments({ status: { $in: ['active', 'dropped'] }, assignedTo: null }),
     User.countDocuments({ status: 'active' }),
-    Lead.countDocuments({ status: 'active' }),
-    LeadAssignment.countDocuments({ assignedAt: { $gte: startOfToday } }),
-    LeadAssignment.countDocuments({
-      $or: [{ triggerType: 'reassign' }, { previousAssignee: { $ne: null } }],
-    }),
+    Lead.countDocuments({ status: { $in: ['active', 'dropped'] } }),
+    Lead.countDocuments({ status: { $in: ['active', 'dropped'] }, _id: { $in: todayLeadIds } }),
+    Lead.countDocuments({ status: { $in: ['active', 'dropped'] }, _id: { $in: reassignedLeadIds } }),
   ]);
 
   return {

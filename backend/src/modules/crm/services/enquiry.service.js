@@ -60,13 +60,21 @@ class EnquiryService {
     source = 'all',
     followup = 'all', // 'all' | 'today' | 'overdue' | 'upcoming'
     special = false,
+    sortBy = 'date',
+    sortOrder = 'desc',
     page = 1,
     limit = 50,
   } = {}) {
     const filter = { deletedAt: null };
 
     if (status && status !== 'all') {
-      filter.status = status;
+      if (status === 'pending') {
+        filter.status = { $in: ['new', 'contacted', 'hold'] };
+      } else if (status === 'qualified') {
+        filter.status = { $in: ['qualified', 'converted'] };
+      } else {
+        filter.status = status;
+      }
     }
 
     if (temperature && temperature !== 'all') {
@@ -85,6 +93,7 @@ class EnquiryService {
 
     if (followup === 'today') {
       filter.nextFollowupAt = { $gte: todayStart, $lte: todayEnd };
+      filter.status = { $nin: ['qualified', 'converted', 'rejected'] };
     } else if (followup === 'overdue') {
       filter.nextFollowupAt = { $lt: todayStart };
       filter.status = { $nin: ['qualified', 'converted', 'rejected'] };
@@ -103,6 +112,18 @@ class EnquiryService {
       ];
     }
 
+    // Dynamic sort
+    const sortConfig = {};
+    if (sortBy === 'name') {
+      sortConfig.clientName = sortOrder === 'desc' ? -1 : 1;
+    } else if (sortBy === 'followup') {
+      sortConfig.nextFollowupAt = sortOrder === 'desc' ? -1 : 1;
+    } else if (sortBy === 'budget') {
+      sortConfig.budget = sortOrder === 'desc' ? -1 : 1;
+    } else {
+      sortConfig.createdAt = sortOrder === 'asc' ? 1 : -1;
+    }
+
     const skip = (Math.max(1, parseInt(page, 10)) - 1) * parseInt(limit, 10);
     const take = parseInt(limit, 10);
 
@@ -110,7 +131,7 @@ class EnquiryService {
       Enquiry.find(filter)
         .populate('assignedTo', 'name email phone')
         .populate('createdBy', 'name email')
-        .sort({ updatedAt: -1, createdAt: -1 })
+        .sort(sortConfig)
         .skip(skip)
         .limit(take)
         .lean(),
@@ -132,11 +153,11 @@ class EnquiryService {
         pendingCount++;
       }
 
-      if (item.nextFollowupAt) {
+      if (item.nextFollowupAt && !['qualified', 'converted', 'rejected'].includes(item.status)) {
         const fDate = new Date(item.nextFollowupAt);
         if (fDate >= todayStart && fDate <= todayEnd) {
           dueTodayCount++;
-        } else if (fDate < todayStart && !['qualified', 'converted', 'rejected'].includes(item.status)) {
+        } else if (fDate < todayStart) {
           overdueCount++;
         }
       }

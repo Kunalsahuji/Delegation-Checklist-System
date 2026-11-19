@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   ChevronsUpDown,
   Building2,
+  HardHat,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -29,6 +30,9 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
   );
   const [crmOpen, setCrmOpen] = useState(
     location.pathname.startsWith('/crm') || true
+  );
+  const [pmsOpen, setPmsOpen] = useState(
+    location.pathname.startsWith('/pms') || true
   );
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
@@ -387,6 +391,41 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                 }
               >
                 Network
+              </NavLink>
+            </div>
+          )}
+        </div>
+
+        {/* PMS (Project Management System) Section */}
+        <div className="pt-2">
+          <button
+            onClick={() => setPmsOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <HardHat className="w-4 h-4 text-brand-600" />
+              <span>PMS (Projects)</span>
+            </div>
+            {pmsOpen ? (
+              <ChevronDown className="w-4 h-4 text-slate-400" />
+            ) : (
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            )}
+          </button>
+
+          {pmsOpen && (
+            <div className="ml-7 pl-2 mt-1 space-y-0.5 border-l border-slate-200">
+              <NavLink
+                to="/pms/projects"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Project Catalog (13 Stages)
               </NavLink>
             </div>
           )}

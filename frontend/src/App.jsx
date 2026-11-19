@@ -27,6 +27,8 @@ import BrokerNetworkPage from './modules/crm/pages/BrokerNetworkPage';
 import MetaLeadsPage from './modules/crm/pages/MetaLeadsPage';
 import BulkMessagePage from './modules/crm/pages/BulkMessagePage';
 import CrmDashboardPage from './modules/crm/pages/CrmDashboardPage';
+import PmsProjectListPage from './modules/pms/pages/PmsProjectListPage';
+import PmsProjectDetailPage from './modules/pms/pages/PmsProjectDetailPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -93,6 +95,11 @@ export default function App() {
               <Route path="crm/network" element={<BrokerNetworkPage />} />
               <Route path="crm/meta-leads" element={<MetaLeadsPage />} />
               <Route path="crm/bulk-message" element={<BulkMessagePage />} />
+
+              {/* PMS (Project Management System) routes */}
+              <Route path="pms" element={<Navigate to="/pms/projects" replace />} />
+              <Route path="pms/projects" element={<PmsProjectListPage />} />
+              <Route path="pms/projects/:id" element={<PmsProjectDetailPage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

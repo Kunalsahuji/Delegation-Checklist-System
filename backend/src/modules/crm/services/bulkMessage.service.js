@@ -1,6 +1,7 @@
 const BulkCampaign = require('../models/bulkCampaign.model');
 const Enquiry = require('../models/enquiry.model');
 const Lead = require('../models/lead.model');
+const LeadStage = require('../models/leadStage.model');
 const Broker = require('../models/broker.model');
 const Project = require('../../master/models/project.model');
 const User = require('../../auth/models/user.model');
@@ -83,18 +84,17 @@ class BulkMessageService {
     const activeQueued = campaigns.filter((c) => ['queued', 'running'].includes(c.status)).length;
     const successRate = totalSent > 0 ? Math.round((totalDelivered / totalSent) * 100) : 100;
 
-    // Audience reachable count
-    const [enqCount, leadCount] = await Promise.all([
-      Enquiry.countDocuments({ deletedAt: null, clientPhone: { $exists: true, $ne: '' } }),
-      Lead.countDocuments({ deletedAt: null, clientPhone: { $exists: true, $ne: '' } }),
-    ]);
+    // Audience reachable count (deduplicated unique client contacts from CRM)
+    const audienceRecipients = await this.collectRecipients({ mode: 'all' });
+    const estimatedAudience = audienceRecipients.length;
 
     return {
       totalCampaigns,
       totalSent,
+      totalDelivered,
       activeQueued,
       successRate,
-      estimatedAudience: enqCount + leadCount,
+      estimatedAudience,
     };
   }
 
@@ -192,15 +192,6 @@ class BulkMessageService {
             status: l.currentStageName || l.currentStageId?.name || l.status || 'Active',
             createdAt: l.createdAt,
           });
-        }
-      });
-        query.status = { $in: leadStatuses };
-      }
-      const leads = await Lead.find(query).select('clientName clientPhone').lean();
-      leads.forEach((l) => {
-        const p = this.normalizePhone(l.clientPhone);
-        if (p && !phoneMap.has(p)) {
-          phoneMap.set(p, { leadId: l._id, name: l.clientName || 'Client', phone: p });
         }
       });
     } else if (mode === 'project') {

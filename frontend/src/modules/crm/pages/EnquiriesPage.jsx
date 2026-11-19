@@ -148,6 +148,7 @@ export default function EnquiriesPage() {
       hint: 'Inbound prospective buyers',
       tone: 'blue',
       icon: Phone,
+      active: statusFilter === 'all' && followupFilter === 'all' && !specialFilter,
       info: {
         title: 'Total Enquiries',
         summary: 'All incoming prospective buyer inquiries recorded across advertisements, walk-ins, phone calls, and referral partners.',
@@ -167,6 +168,7 @@ export default function EnquiriesPage() {
       hint: `${kpis.totalEnquiries ? Math.round((kpis.qualifiedCount / kpis.totalEnquiries) * 100) : 0}% qualification rate`,
       tone: 'success',
       icon: CheckCircle2,
+      active: statusFilter === 'qualified',
       info: {
         title: 'Qualified Enquiries',
         summary: 'Prospective buyers verified through tele-sales screening and ready for sales pipeline assignment or site visits.',
@@ -185,6 +187,7 @@ export default function EnquiriesPage() {
       hint: 'Awaiting call / verification',
       tone: 'warning',
       icon: Clock,
+      active: statusFilter === 'new',
       info: {
         title: 'Pending Screening',
         summary: 'New or in-progress inbound inquiries undergoing initial outreach, qualification calls, or awaiting customer response.',
@@ -203,6 +206,7 @@ export default function EnquiriesPage() {
       hint: 'Follow-up date passed',
       tone: 'danger',
       icon: AlertCircle,
+      active: followupFilter === 'overdue',
       info: {
         title: 'Overdue Follow-ups',
         summary: 'Inquiries whose scheduled callback or follow-up deadline has passed without an updated activity log or status change.',
@@ -221,6 +225,7 @@ export default function EnquiriesPage() {
       hint: 'Scheduled for today',
       tone: 'sky',
       icon: Calendar,
+      active: followupFilter === 'today',
       info: {
         title: 'Due Today Follow-ups',
         summary: 'Inquiries scheduled for customer callback, reminder follow-up, or site visit coordination on today\'s calendar date.',

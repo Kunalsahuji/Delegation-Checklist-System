@@ -68,6 +68,7 @@ export default function BrokerNetworkPage() {
 
   // Expanded tier cards state
   const [expandedTiers, setExpandedTiers] = useState({});
+  const [tierFilter, setTierFilter] = useState('all'); // 'all', 'yards', 'senior', 'directors'
 
   // Modals
   const [formModalOpen, setFormModalOpen] = useState(false);
@@ -147,6 +148,20 @@ export default function BrokerNetworkPage() {
     .filter((t) => ['Sales Director', 'Assistant Sales Director'].includes(t.tier))
     .reduce((acc, t) => acc + (t.count || 0), 0);
 
+  const displayedTiers = hierarchyData.filter((tierItem) => {
+    if (tierFilter === 'yards') return (tierItem.totalYards || 0) > 0;
+    if (tierFilter === 'senior') return [
+      'Sales Director',
+      'Assistant Sales Director',
+      'Regional Sales Manager',
+      'Area Sales Manager',
+      'Senior Sales Manager',
+      'Sales Manager',
+    ].includes(tierItem.tier);
+    if (tierFilter === 'directors') return ['Sales Director', 'Assistant Sales Director'].includes(tierItem.tier);
+    return true;
+  });
+
   const kpiItems = [
     {
       key: 'network-partners',
@@ -155,24 +170,28 @@ export default function BrokerNetworkPage() {
       tone: 'blue',
       hint: 'Across 8 network tiers',
       icon: Users,
+      active: tierFilter === 'all',
       info: {
         title: 'Active Network Partners',
         summary: 'Total channel partners active across all 8 organizational tiers.',
         calculation: 'Count of active channel partners in the network tree',
       },
+      onClick: () => setTierFilter('all'),
     },
     {
       key: 'network-yards',
       label: 'TOTAL YARDS SOLD',
       value: `${totalYards.toLocaleString()} Sq.Yd`,
       tone: 'orange',
-      hint: 'Cumulative partner volume',
+      hint: 'Tiers with closed volume',
       icon: Building,
+      active: tierFilter === 'yards',
       info: {
         title: 'Cumulative Network Sales',
         summary: 'Total land area (Gaj/Sq.Yds) delivered collectively across all tiers.',
         calculation: 'Sum of totalYards across all hierarchy tiers',
       },
+      onClick: () => setTierFilter(tierFilter === 'yards' ? 'all' : 'yards'),
     },
     {
       key: 'senior-leaders',
@@ -181,11 +200,13 @@ export default function BrokerNetworkPage() {
       tone: 'purple',
       hint: '500+ Sq.Yd partners',
       icon: Award,
+      active: tierFilter === 'senior',
       info: {
         title: 'Managerial & Executive Partners',
         summary: 'Partners who have delivered 500+ yards, qualifying for higher commission slabs.',
         calculation: 'Partners at Sales Manager level and above',
       },
+      onClick: () => setTierFilter(tierFilter === 'senior' ? 'all' : 'senior'),
     },
     {
       key: 'directorship',
@@ -194,11 +215,13 @@ export default function BrokerNetworkPage() {
       tone: 'emerald',
       hint: 'Top leadership tier',
       icon: Crown,
+      active: tierFilter === 'directors',
       info: {
         title: 'Directorship Leadership',
         summary: 'Top tier partners exceeding 7,000+ yards with 4.5% - 5.0% commission brackets.',
         calculation: 'Count of Assistant Sales Directors and Sales Directors',
       },
+      onClick: () => setTierFilter(tierFilter === 'directors' ? 'all' : 'directors'),
     },
   ];
 
@@ -272,7 +295,7 @@ export default function BrokerNetworkPage() {
         </div>
       ) : (
         <div className="space-y-3 w-full">
-          {hierarchyData.map((tierGroup, idx) => {
+          {displayedTiers.map((tierGroup, idx) => {
             const isExpanded = !!expandedTiers[tierGroup.tier];
             const TierIcon = TIER_ICONS[tierGroup.tier] || Users;
             const gradientClass = TIER_GRADIENTS[tierGroup.tier] || '';

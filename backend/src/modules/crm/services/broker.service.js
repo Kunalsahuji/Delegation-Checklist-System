@@ -43,7 +43,9 @@ const getKPIs = async () => {
     totalBrokers,
     totalYards,
     activeBrokerLeads: brokerLeads,
+    totalReferralLeads: brokerLeads,
     seniorPartners: seniorBrokers,
+    seniorBrokers: seniorBrokers,
   };
 };
 
@@ -58,6 +60,9 @@ const listBrokers = async (query = {}) => {
     level = '',
     status = 'active',
     managedBy = '',
+    hasYards = '',
+    minYards = '',
+    seniorOnly = '',
   } = query;
 
   const filter = { deletedAt: null };
@@ -68,6 +73,25 @@ const listBrokers = async (query = {}) => {
 
   if (level && level !== 'all') {
     filter.level = level;
+  }
+
+  if (seniorOnly === 'true' || seniorOnly === true || level === 'senior') {
+    filter.level = {
+      $in: [
+        'Sales Manager',
+        'Senior Sales Manager',
+        'Area Sales Manager',
+        'Regional Sales Manager',
+        'Assistant Sales Director',
+        'Sales Director',
+      ],
+    };
+  }
+
+  if (hasYards === 'true' || hasYards === true) {
+    filter.totalYards = { $gt: 0 };
+  } else if (minYards) {
+    filter.totalYards = { $gte: Number(minYards) };
   }
 
   if (managedBy) {

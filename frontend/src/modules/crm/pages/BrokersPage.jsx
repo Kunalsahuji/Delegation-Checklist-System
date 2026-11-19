@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Handshake,
   Plus,
@@ -38,6 +38,7 @@ const LEVEL_COLORS = {
 };
 
 export default function BrokersPage() {
+  const navigate = useNavigate();
   const { showSuccess, showError } = useToast();
 
   const [kpis, setKpis] = useState({
@@ -56,6 +57,7 @@ export default function BrokersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [levelFilter, setLevelFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [kpiFilter, setKpiFilter] = useState('all'); // 'all', 'yards', 'senior'
 
   // Modals
   const [formModal, setFormModal] = useState({ open: false, broker: null });
@@ -67,7 +69,7 @@ export default function BrokersPage() {
 
   useEffect(() => {
     loadAllData();
-  }, [pagination.page, levelFilter, statusFilter]);
+  }, [pagination.page, levelFilter, statusFilter, kpiFilter]);
 
   const loadSalesPersons = async () => {
     try {
@@ -89,12 +91,21 @@ export default function BrokersPage() {
           page: pagination.page,
           limit: pagination.limit,
           search: searchTerm,
-          level: levelFilter,
+          level: kpiFilter === 'senior' ? '' : levelFilter,
           status: statusFilter,
+          hasYards: kpiFilter === 'yards' ? true : undefined,
+          seniorOnly: kpiFilter === 'senior' ? true : undefined,
         }),
       ]);
 
-      if (kpiRes.success) setKpis(kpiRes.data);
+      if (kpiRes.success && kpiRes.data) {
+        setKpis({
+          totalBrokers: kpiRes.data.totalBrokers || 0,
+          totalYards: kpiRes.data.totalYards || 0,
+          totalReferralLeads: kpiRes.data.activeBrokerLeads ?? kpiRes.data.totalReferralLeads ?? 0,
+          seniorBrokers: kpiRes.data.seniorPartners ?? kpiRes.data.seniorBrokers ?? 0,
+        });
+      }
       if (brokersRes.success) {
         setBrokers(brokersRes.data || []);
         setPagination((prev) => ({
@@ -139,13 +150,14 @@ export default function BrokersPage() {
       tone: 'blue',
       hint: 'Registered channel partners',
       icon: Handshake,
-      active: !levelFilter && !statusFilter,
+      active: kpiFilter === 'all' && !levelFilter && !statusFilter,
       info: {
         title: 'Registered Channel Partners',
         summary: 'Active external brokers and channel associates generating sales in the partner network.',
         calculation: 'Count of active channel partners in Broker master (status not Inactive)',
       },
       onClick: () => {
+        setKpiFilter('all');
         setLevelFilter('');
         setStatusFilter('');
         setPagination((p) => ({ ...p, page: 1 }));
@@ -154,18 +166,19 @@ export default function BrokersPage() {
     {
       key: 'total-yards',
       label: 'TOTAL YARDS SOLD',
-      value: `${kpis.totalYards.toLocaleString()} Sq.Yd`,
+      value: `${(kpis.totalYards || 0).toLocaleString()} Sq.Yd`,
       tone: 'orange',
-      hint: 'Cumulative partner volume',
+      hint: 'Partners with volume > 0',
       icon: Building,
+      active: kpiFilter === 'yards',
       info: {
         title: 'Cumulative Yards (Gaj) Sold',
         summary: 'Aggregate plot and villa land area sold through channel partner network transactions.',
         calculation: 'Sum of totalYards across all active channel partners',
       },
       onClick: () => {
+        setKpiFilter(kpiFilter === 'yards' ? 'all' : 'yards');
         setLevelFilter('');
-        setStatusFilter('');
         setPagination((p) => ({ ...p, page: 1 }));
       },
     },
@@ -174,17 +187,16 @@ export default function BrokersPage() {
       label: 'ACTIVE BROKER LEADS',
       value: kpis.totalReferralLeads,
       tone: 'sky',
-      hint: 'Introduced buyer pipeline',
+      hint: 'Click to view leads in CRM',
       icon: TrendingUp,
-      active: statusFilter === 'Active',
+      active: false,
       info: {
         title: 'Partner Referral Pipeline',
         summary: 'Active buyer leads currently introduced through channel partner referrals.',
-        calculation: 'Count of leads with source Channel Partner / Broker and status not Lost',
+        calculation: 'Count of leads with source Channel Partner / Broker and status active',
       },
       onClick: () => {
-        setStatusFilter('Active');
-        setPagination((p) => ({ ...p, page: 1 }));
+        navigate('/crm/leads?source=broker');
       },
     },
     {
@@ -194,14 +206,15 @@ export default function BrokersPage() {
       tone: 'purple',
       hint: 'Sales Managers & Directors',
       icon: Award,
-      active: levelFilter === 'Sales Manager',
+      active: kpiFilter === 'senior' || levelFilter === 'Sales Manager',
       info: {
         title: 'Senior Network Partners',
         summary: 'Partners who achieved Sales Manager level and above through cumulative sales volume.',
         calculation: 'Count of brokers with level in Sales Manager through Sales Director (500+ yards)',
       },
       onClick: () => {
-        setLevelFilter('Sales Manager');
+        setKpiFilter(kpiFilter === 'senior' ? 'all' : 'senior');
+        setLevelFilter('');
         setPagination((p) => ({ ...p, page: 1 }));
       },
     },

@@ -26,6 +26,7 @@ export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sourceFilter, setSourceFilter] = useState('all'); // 'all', 'visit', 'reminder', 'lead_stage'
 
   // Modals
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -71,16 +72,20 @@ export default function CalendarPage() {
     setCurrentDate(new Date());
   };
 
-  // Group activities by date string 'YYYY-MM-DD'
+  // Group activities by date string 'YYYY-MM-DD' with sourceFilter
   const activitiesByDate = useMemo(() => {
     const map = {};
-    activities.forEach((act) => {
+    const filtered = sourceFilter === 'all'
+      ? activities
+      : activities.filter((a) => a.source === sourceFilter);
+
+    filtered.forEach((act) => {
       const d = new Date(act.at).toISOString().split('T')[0];
       if (!map[d]) map[d] = [];
       map[d].push(act);
     });
     return map;
-  }, [activities]);
+  }, [activities, sourceFilter]);
 
   // Compute calendar grid days (Mon-Sun layout)
   const calendarDays = useMemo(() => {
@@ -139,11 +144,13 @@ export default function CalendarPage() {
       tone: 'blue',
       hint: 'Scheduled events this month',
       icon: CalendarIcon,
+      active: sourceFilter === 'all',
       info: {
         title: 'Monthly Calendar Activities',
         summary: 'Unified schedule of customer appointments, site tours, and planned milestones.',
         calculation: 'Count of all calendar events in the selected month',
       },
+      onClick: () => setSourceFilter('all'),
     },
     {
       key: 'site-visits',
@@ -152,11 +159,13 @@ export default function CalendarPage() {
       tone: 'purple',
       hint: 'Customer site walkthroughs',
       icon: MapPin,
+      active: sourceFilter === 'visit',
       info: {
         title: 'Field Site Visits',
         summary: 'Physical customer site tours scheduled or completed this month.',
         calculation: 'Count of visit reports in calendar date range',
       },
+      onClick: () => setSourceFilter(sourceFilter === 'visit' ? 'all' : 'visit'),
     },
     {
       key: 'follow-ups',
@@ -165,11 +174,13 @@ export default function CalendarPage() {
       tone: 'orange',
       hint: 'Client callbacks & updates',
       icon: PhoneCall,
+      active: sourceFilter === 'reminder',
       info: {
         title: 'Client Follow-ups',
         summary: 'Customer callbacks, discussions, and meeting follow-ups.',
         calculation: 'Count of reminder follow-ups in calendar date range',
       },
+      onClick: () => setSourceFilter(sourceFilter === 'reminder' ? 'all' : 'reminder'),
     },
     {
       key: 'stage-milestones',
@@ -178,11 +189,13 @@ export default function CalendarPage() {
       tone: 'success',
       hint: 'Target milestone deadlines',
       icon: TrendingUp,
+      active: sourceFilter === 'lead_stage',
       info: {
         title: 'Pipeline Stage Targets',
         summary: 'Target deadlines set on active deals to progress them to the next sales stage.',
         calculation: 'Count of lead plannedStageAt milestones in date range',
       },
+      onClick: () => setSourceFilter(sourceFilter === 'lead_stage' ? 'all' : 'lead_stage'),
     },
   ];
 

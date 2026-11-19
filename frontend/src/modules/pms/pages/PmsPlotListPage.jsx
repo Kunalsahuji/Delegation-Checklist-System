@@ -20,6 +20,7 @@ import {
   Layers,
   ArrowRight,
   TrendingUp,
+  Scale,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import { pmsPlotApi } from '../../../api/pmsPlotApi';
@@ -546,6 +547,17 @@ export default function PmsPlotListPage() {
                         <Calculator className="w-3.5 h-3.5 text-purple-600" />
                         <span>Feasibility</span>
                       </button>
+                      {plot.status === 'approved' && (
+                        <button
+                          type="button"
+                          onClick={() => navigate('/pms/legal-cases')}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-md shadow-2xs hover:shadow-xs transition-all cursor-pointer"
+                          title="Move to Legal Verification (Stage 2)"
+                        >
+                          <Scale className="w-3.5 h-3.5 text-indigo-600" />
+                          <span>Legal (S2)</span>
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => {

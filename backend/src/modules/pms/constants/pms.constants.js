@@ -159,6 +159,76 @@ const RISK_SEVERITIES = ['low', 'medium', 'high'];
 
 const POSITIVE_VERDICTS = ['feasible', 'feasibleWithConditions'];
 
+// ---- Legal Verification (Module 02 / Stage 2) ----
+const LEGAL_CASE_STATUS = [
+  'titleVerification',
+  'encumbranceCheck',
+  'documentVerification',
+  'legalOpinion',
+  'approvalPending',
+  'approved',
+  'rejected',
+  'clarificationNeeded',
+  'onHold',
+];
+
+const LEGAL_SECTION_KEYS = [
+  'titleVerification',
+  'encumbranceCheck',
+  'documentVerification',
+  'legalOpinion',
+];
+
+const LEGAL_SECTION_STATUS = ['pending', 'inProgress', 'completed'];
+
+const LEGAL_ITEM_STATUS = ['pending', 'verified', 'rejected', 'na'];
+
+const ENCUMBRANCE_ITEM_STATUS = ['pending', 'clear', 'issueFound', 'na'];
+
+const LEGAL_ADVERSE_ITEM_STATUS = ['rejected', 'issueFound'];
+
+const LEGAL_RECOMMENDATIONS = ['proceed', 'proceedWithConditions', 'doNotProceed'];
+
+const LEGAL_DECISIONS = ['approved', 'rejected', 'clarificationNeeded', 'onHold'];
+
+const TITLE_VERIFICATION_ITEMS = [
+  { key: 'ownerName', label: 'Owner Name' },
+  { key: 'saleDeed', label: 'Sale Deed' },
+  { key: 'motherDeed', label: 'Mother Deed' },
+  { key: 'surveyNumber', label: 'Survey Number' },
+  { key: 'mutation', label: 'Mutation' },
+  { key: 'khata', label: 'Khata' },
+  { key: 'revenueRecord', label: 'Revenue Record' },
+  { key: 'taxReceipt', label: 'Tax Receipt' },
+  { key: 'ownershipChain', label: 'Ownership Chain' },
+];
+
+const ENCUMBRANCE_ITEMS = [
+  { key: 'mortgage', label: 'Mortgage' },
+  { key: 'loan', label: 'Loan' },
+  { key: 'courtCases', label: 'Court Cases' },
+  { key: 'govtAcquisition', label: 'Government Acquisition' },
+  { key: 'legalDisputes', label: 'Legal Disputes' },
+  { key: 'pendingLitigation', label: 'Pending Litigation' },
+  { key: 'encumbranceCertificate', label: 'Encumbrance Certificate' },
+];
+
+const LEGAL_DOCUMENT_ITEMS = [
+  { key: 'saleDeed', label: 'Sale Deed' },
+  { key: 'motherDeed', label: 'Mother Deed' },
+  { key: 'jamabandi', label: 'Jamabandi' },
+  { key: 'khasra', label: 'Khasra' },
+  { key: 'khata', label: 'Khata' },
+  { key: 'mutation', label: 'Mutation' },
+  { key: 'taxReceipt', label: 'Tax Receipt' },
+  { key: 'noc', label: 'NOC' },
+  { key: 'aadhaar', label: 'Aadhaar' },
+  { key: 'pan', label: 'PAN' },
+  { key: 'powerOfAttorney', label: 'Power of Attorney' },
+  { key: 'courtOrder', label: 'Court Order' },
+  { key: 'otherDocuments', label: 'Other Documents' },
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -176,4 +246,15 @@ module.exports = {
   FEASIBILITY_VERDICTS,
   RISK_SEVERITIES,
   POSITIVE_VERDICTS,
+  LEGAL_CASE_STATUS,
+  LEGAL_SECTION_KEYS,
+  LEGAL_SECTION_STATUS,
+  LEGAL_ITEM_STATUS,
+  ENCUMBRANCE_ITEM_STATUS,
+  LEGAL_ADVERSE_ITEM_STATUS,
+  LEGAL_RECOMMENDATIONS,
+  LEGAL_DECISIONS,
+  TITLE_VERIFICATION_ITEMS,
+  ENCUMBRANCE_ITEMS,
+  LEGAL_DOCUMENT_ITEMS,
 };

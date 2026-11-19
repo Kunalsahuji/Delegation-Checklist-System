@@ -30,6 +30,7 @@ import CrmDashboardPage from './modules/crm/pages/CrmDashboardPage';
 import PmsProjectListPage from './modules/pms/pages/PmsProjectListPage';
 import PmsProjectDetailPage from './modules/pms/pages/PmsProjectDetailPage';
 import PmsPlotListPage from './modules/pms/pages/PmsPlotListPage';
+import PmsLegalCaseListPage from './modules/pms/pages/PmsLegalCaseListPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -102,6 +103,7 @@ export default function App() {
               <Route path="pms/projects" element={<PmsProjectListPage />} />
               <Route path="pms/projects/:id" element={<PmsProjectDetailPage />} />
               <Route path="pms/plots" element={<PmsPlotListPage />} />
+              <Route path="pms/legal-cases" element={<PmsLegalCaseListPage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

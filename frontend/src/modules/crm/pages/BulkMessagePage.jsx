@@ -21,6 +21,7 @@ import { crmBulkMessageApi } from '../../../api/crmBulkMessageApi';
 import { useToast } from '../../../context/ToastContext';
 import CampaignCreateModal from '../components/CampaignCreateModal';
 import CampaignDetailsModal from '../components/CampaignDetailsModal';
+import AudienceDirectoryModal from '../components/AudienceDirectoryModal';
 
 export default function BulkMessagePage() {
   const { showSuccess, showError } = useToast();
@@ -43,6 +44,7 @@ export default function BulkMessagePage() {
 
   // Modals
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isAudienceOpen, setIsAudienceOpen] = useState(false);
   const [detailsModal, setDetailsModal] = useState({ open: false, campaignId: null });
 
   useEffect(() => {
@@ -144,14 +146,14 @@ export default function BulkMessagePage() {
       tone: 'purple',
       hint: 'Addressable contacts',
       icon: Users,
+      active: isAudienceOpen,
       info: {
         title: 'Audience Addressability',
-        summary: 'Total unique client and broker phone contacts currently reachable in CRM.',
+        summary: 'Total unique client and broker phone contacts currently reachable in CRM. Click to view full audience directory.',
         calculation: 'Count of distinct phone records across Enquiries, Leads, and Brokers',
       },
       onClick: () => {
-        setStatusFilter('');
-        setPagination((p) => ({ ...p, page: 1 }));
+        setIsAudienceOpen(true);
       },
     },
     {
@@ -161,13 +163,14 @@ export default function BulkMessagePage() {
       tone: 'emerald',
       hint: 'Delivery reliability',
       icon: TrendingUp,
+      active: statusFilter === 'completed',
       info: {
         title: 'Broadcast Success Rate',
-        summary: 'Proportion of dispatched messages successfully delivered to recipient handsets.',
+        summary: 'Proportion of dispatched messages successfully delivered to recipient handsets. Click to filter completed campaigns.',
         calculation: '(totalDelivered / totalSent) * 100',
       },
       onClick: () => {
-        setStatusFilter('completed');
+        setStatusFilter((prev) => (prev === 'completed' ? '' : 'completed'));
         setPagination((p) => ({ ...p, page: 1 }));
       },
     },
@@ -402,7 +405,7 @@ export default function BulkMessagePage() {
         )}
 
         {/* Pagination Footer */}
-        {pagination.totalPages > 1 && (
+        {!loading && pagination.total > 0 && (
           <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
             <div>
               Showing page <span className="font-semibold text-slate-900">{pagination.page}</span> of{' '}
@@ -428,6 +431,13 @@ export default function BulkMessagePage() {
           </div>
         )}
       </div>
+
+      {/* Audience Reach Directory Modal */}
+      <AudienceDirectoryModal
+        isOpen={isAudienceOpen}
+        onClose={() => setIsAudienceOpen(false)}
+        onLaunchCampaign={() => setIsCreateOpen(true)}
+      />
 
       {/* Campaign Create Modal */}
       <CampaignCreateModal

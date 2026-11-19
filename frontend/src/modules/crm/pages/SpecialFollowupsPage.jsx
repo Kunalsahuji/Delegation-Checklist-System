@@ -347,30 +347,55 @@ export default function SpecialFollowupsPage() {
         </div>
 
         {/* Pagination */}
-        {!loading && pagination.total > 0 && (
-          <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 bg-white">
+        {!loading && (
+          <div className="p-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 bg-white gap-2">
             <div>
-              Showing {items.length} of {pagination.total} special follow-ups
+              {kpiFilter === 'hot' ? (
+                <>
+                  Showing <span className="font-semibold text-slate-800">{filteredItems.length}</span> of{' '}
+                  <span className="font-semibold text-slate-800">{hotCount}</span> hot temperature clients{' '}
+                  <span className="text-slate-400 font-normal">({pagination.total} total special follow-ups)</span>
+                </>
+              ) : kpiFilter === 'high-value' ? (
+                <>
+                  Showing <span className="font-semibold text-slate-800">{filteredItems.length}</span> of{' '}
+                  <span className="font-semibold text-slate-800">{highBudgetCount}</span> high budget clients{' '}
+                  <span className="text-slate-400 font-normal">({pagination.total} total special follow-ups)</span>
+                </>
+              ) : kpiFilter === 'due-today' ? (
+                <>
+                  Showing <span className="font-semibold text-slate-800">{filteredItems.length}</span> of{' '}
+                  <span className="font-semibold text-slate-800">{dueTodayCount}</span> due today clients{' '}
+                  <span className="text-slate-400 font-normal">({pagination.total} total special follow-ups)</span>
+                </>
+              ) : (
+                <>
+                  Showing <span className="font-semibold text-slate-800">{filteredItems.length}</span> of{' '}
+                  <span className="font-semibold text-slate-800">{pagination.total}</span> special follow-ups
+                </>
+              )}
             </div>
-            <div className="flex items-center gap-1.5">
-              <button
-                disabled={pagination.page <= 1}
-                onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
-                className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
-              >
-                Previous
-              </button>
-              <span className="px-2 font-medium text-slate-700">
-                Page {pagination.page} of {pagination.totalPages}
-              </span>
-              <button
-                disabled={pagination.page >= pagination.totalPages}
-                onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
-                className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
-              >
-                Next
-              </button>
-            </div>
+            {pagination.total > 0 && (
+              <div className="flex items-center gap-1.5">
+                <button
+                  disabled={pagination.page <= 1}
+                  onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
+                  className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors cursor-pointer"
+                >
+                  Previous
+                </button>
+                <span className="px-2 font-medium text-slate-700">
+                  Page {pagination.page} of {pagination.totalPages}
+                </span>
+                <button
+                  disabled={pagination.page >= pagination.totalPages}
+                  onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
+                  className="px-3 py-1 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors cursor-pointer"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

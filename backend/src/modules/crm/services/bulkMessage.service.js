@@ -108,24 +108,43 @@ class BulkMessageService {
     if (mode === 'all') {
       const [enquiries, leads] = await Promise.all([
         Enquiry.find({ deletedAt: null, clientPhone: { $exists: true, $ne: '' } })
-          .select('clientName clientPhone')
+          .select('clientName clientPhone project status enquiryNumber createdAt')
           .lean(),
         Lead.find({ deletedAt: null, clientPhone: { $exists: true, $ne: '' } })
-          .select('clientName clientPhone')
+          .populate('currentStageId', 'name')
+          .select('clientName clientPhone project status currentStageName currentStageId leadNumber createdAt')
           .lean(),
       ]);
 
       enquiries.forEach((e) => {
         const p = this.normalizePhone(e.clientPhone);
         if (p && !phoneMap.has(p)) {
-          phoneMap.set(p, { enquiryId: e._id, name: e.clientName || 'Client', phone: p });
+          phoneMap.set(p, {
+            enquiryId: e._id,
+            name: e.clientName || 'Prospective Buyer',
+            phone: p,
+            type: 'Enquiry',
+            code: e.enquiryNumber || 'ENQ',
+            project: e.project || 'General Inquiry',
+            status: e.status || 'New',
+            createdAt: e.createdAt,
+          });
         }
       });
 
       leads.forEach((l) => {
         const p = this.normalizePhone(l.clientPhone);
         if (p && !phoneMap.has(p)) {
-          phoneMap.set(p, { leadId: l._id, name: l.clientName || 'Client', phone: p });
+          phoneMap.set(p, {
+            leadId: l._id,
+            name: l.clientName || 'Qualified Lead',
+            phone: p,
+            type: 'Lead',
+            code: l.leadNumber || 'LD',
+            project: l.project || 'General Lead',
+            status: l.currentStageName || l.currentStageId?.name || l.status || 'Active',
+            createdAt: l.createdAt,
+          });
         }
       });
     } else if (mode === 'status') {
@@ -133,16 +152,48 @@ class BulkMessageService {
       if (statuses.length) {
         query.status = { $in: statuses };
       }
-      const enquiries = await Enquiry.find(query).select('clientName clientPhone').lean();
+      const enquiries = await Enquiry.find(query)
+        .select('clientName clientPhone project status enquiryNumber createdAt')
+        .lean();
       enquiries.forEach((e) => {
         const p = this.normalizePhone(e.clientPhone);
         if (p && !phoneMap.has(p)) {
-          phoneMap.set(p, { enquiryId: e._id, name: e.clientName || 'Client', phone: p });
+          phoneMap.set(p, {
+            enquiryId: e._id,
+            name: e.clientName || 'Prospective Buyer',
+            phone: p,
+            type: 'Enquiry',
+            code: e.enquiryNumber || 'ENQ',
+            project: e.project || 'General Inquiry',
+            status: e.status || 'New',
+            createdAt: e.createdAt,
+          });
         }
       });
     } else if (mode === 'lead') {
       const query = { deletedAt: null, clientPhone: { $exists: true, $ne: '' } };
       if (leadStatuses.length) {
+        query.status = { $in: leadStatuses };
+      }
+      const leads = await Lead.find(query)
+        .populate('currentStageId', 'name')
+        .select('clientName clientPhone project status currentStageName currentStageId leadNumber createdAt')
+        .lean();
+      leads.forEach((l) => {
+        const p = this.normalizePhone(l.clientPhone);
+        if (p && !phoneMap.has(p)) {
+          phoneMap.set(p, {
+            leadId: l._id,
+            name: l.clientName || 'Qualified Lead',
+            phone: p,
+            type: 'Lead',
+            code: l.leadNumber || 'LD',
+            project: l.project || 'General Lead',
+            status: l.currentStageName || l.currentStageId?.name || l.status || 'Active',
+            createdAt: l.createdAt,
+          });
+        }
+      });
         query.status = { $in: leadStatuses };
       }
       const leads = await Lead.find(query).select('clientName clientPhone').lean();
@@ -196,6 +247,7 @@ class BulkMessageService {
       reachable: recipients.length,
       matched: recipients.length,
       skipped: 0,
+      recipients,
     };
   }
 

@@ -440,6 +440,48 @@ const DEFAULT_VENDORS = [
   { name: 'Prism RMC Ready Mix Concrete', category: 'rmc', contactPerson: 'Manish Verma', phone: '+91 99280 66778', gstNumber: '08AAACP7890K1Z5', rating: 4.8 },
 ];
 
+const CONSTRUCTION_STATUS = [
+  'siteMobilized',
+  'inProgress',
+  'reviewPending',
+  'approved',
+  'rejected',
+];
+
+const CONSTRUCTION_SECTION_KEYS = [
+  'dailyProgress',
+  'labourTracking',
+  'materialConsumption',
+  'qualitySitePhotos',
+];
+
+const WEATHER_CONDITIONS = ['Sunny', 'Clear', 'Cloudy', 'Rainy', 'Windy', 'Extreme Heat'];
+
+const SHIFTS = ['Day Shift', 'Night Shift', 'Overtime'];
+
+const CONSTRUCTION_TRADES = [
+  'Civil & Masonry',
+  'Shuttering & Formwork',
+  'Bar Bending & Steel',
+  'Concreting & Pouring',
+  'Plumbing & Drainage',
+  'Electrical Conduit & Wiring',
+  'Plastering & Rendering',
+  'Painting & Finishing',
+  'General Unskilled Labour',
+];
+
+const QUALITY_CHECK_STATUS = ['Passed', 'Conditional Pass', 'Rectification Required', 'Rejected'];
+
+const PHOTO_CATEGORIES = [
+  'Foundation & Excavation',
+  'RCC Structural Work',
+  'Brickwork & Masonry',
+  'Finishing & MEP',
+  'Safety & Equipment',
+  'Snag & Rectification',
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -497,4 +539,11 @@ module.exports = {
   PROCUREMENT_SECTION_KEYS,
   MATERIAL_CATEGORIES,
   DEFAULT_VENDORS,
+  CONSTRUCTION_STATUS,
+  CONSTRUCTION_SECTION_KEYS,
+  WEATHER_CONDITIONS,
+  SHIFTS,
+  CONSTRUCTION_TRADES,
+  QUALITY_CHECK_STATUS,
+  PHOTO_CATEGORIES,
 };

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const baselinePlanningController = require('../controllers/baselinePlanning.controller');
-const { authenticate } = require('../../auth/middlewares/auth.middleware');
+const auth = require('../../../middlewares/auth.middleware');
 
-router.use(authenticate);
+router.use(auth);
 
 // KPIs
 router.get('/kpis', (req, res, next) => baselinePlanningController.getKPIs(req, res, next));

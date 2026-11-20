@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const procurementInventoryController = require('../controllers/procurementInventory.controller');
-const { authenticate } = require('../../auth/middlewares/auth.middleware');
+const auth = require('../../../middlewares/auth.middleware');
 
-router.use(authenticate);
+router.use(auth);
 
 // KPIs
 router.get('/kpis', (req, res, next) => procurementInventoryController.getKPIs(req, res, next));

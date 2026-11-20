@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const preSiteStartController = require('../controllers/preSiteStart.controller');
-const { authenticate } = require('../../auth/middlewares/auth.middleware');
+const auth = require('../../../middlewares/auth.middleware');
 
-router.use(authenticate);
+router.use(auth);
 
 // KPIs
 router.get('/kpis', (req, res, next) => preSiteStartController.getKPIs(req, res, next));

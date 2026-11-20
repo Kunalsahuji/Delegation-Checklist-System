@@ -33,6 +33,7 @@ import PmsPlotListPage from './modules/pms/pages/PmsPlotListPage';
 import PmsLegalCaseListPage from './modules/pms/pages/PmsLegalCaseListPage';
 import PmsLandPurchaseListPage from './modules/pms/pages/PmsLandPurchaseListPage';
 import PmsPlanningListPage from './modules/pms/pages/PmsPlanningListPage';
+import PmsPreSiteListPage from './modules/pms/pages/PmsPreSiteListPage';
 import { Spinner } from './components/Spinner';
 
 const ProtectedRoute = ({ children }) => {
@@ -108,6 +109,7 @@ export default function App() {
               <Route path="pms/legal-cases" element={<PmsLegalCaseListPage />} />
               <Route path="pms/land-purchases" element={<PmsLandPurchaseListPage />} />
               <Route path="pms/planning" element={<PmsPlanningListPage />} />
+              <Route path="pms/pre-site-start" element={<PmsPreSiteListPage />} />
 
               {/* Master administration routes */}
               <Route path="master/departments" element={<DepartmentsPage />} />

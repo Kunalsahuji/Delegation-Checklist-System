@@ -309,6 +309,52 @@ const PLANNING_AMENITY_ITEMS = [
   { key: 'securityCabin', label: 'Gated Security Cabin' },
 ];
 
+// Stage 5: Pre-Site Start & Contractor Selection Constants
+const PRE_SITE_STATUS = [
+  'contractorSelection',
+  'rateFinalization',
+  'workOrder',
+  'siteSetup',
+  'managementApproval',
+  'approved',
+  'cancelled',
+];
+
+const PRE_SITE_SECTION_KEYS = [
+  'contractorSelection',
+  'rateFinalization',
+  'workOrder',
+  'siteSetup',
+];
+
+const CONTRACTOR_TRADES = [
+  'civil',
+  'infrastructure',
+  'earthwork',
+  'electrical',
+  'plumbing',
+  'general',
+  'mep',
+  'landscaping',
+];
+
+const CONTRACT_TYPES = [
+  'itemRate',
+  'lumpSum',
+  'percentageRate',
+  'turnkey',
+  'costPlus',
+];
+
+const DEFAULT_RATE_ITEMS = [
+  { itemDescription: 'Earthwork Excavation in all types of soil', unit: 'cum', tenderRate: 180, agreedRate: 165 },
+  { itemDescription: 'Plain Cement Concrete (PCC 1:4:8)', unit: 'cum', tenderRate: 4800, agreedRate: 4600 },
+  { itemDescription: 'Reinforced Cement Concrete (RCC M25)', unit: 'cum', tenderRate: 6800, agreedRate: 6500 },
+  { itemDescription: 'TMT Reinforcement bar cutting & placing', unit: 'kg', tenderRate: 78, agreedRate: 74 },
+  { itemDescription: 'Brickwork / AAC Block masonry in CM 1:6', unit: 'cum', tenderRate: 4200, agreedRate: 4000 },
+  { itemDescription: 'Internal / External Cement Plastering', unit: 'sqm', tenderRate: 190, agreedRate: 175 },
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -352,4 +398,9 @@ module.exports = {
   FACING_DIRECTIONS,
   UNIT_KINDS,
   PLANNING_AMENITY_ITEMS,
+  PRE_SITE_STATUS,
+  PRE_SITE_SECTION_KEYS,
+  CONTRACTOR_TRADES,
+  CONTRACT_TYPES,
+  DEFAULT_RATE_ITEMS,
 };

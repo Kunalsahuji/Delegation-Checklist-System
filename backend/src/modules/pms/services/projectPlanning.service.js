@@ -90,7 +90,17 @@ class ProjectPlanningService {
     const filter = { deletedAt: null };
     if (projectId) filter.project = projectId;
     if (projectType && projectType !== 'all') filter.projectType = projectType;
-    if (status && status !== 'all') filter.status = status;
+    if (status && status !== 'all') {
+      if (status === 'hasBudget') {
+        filter['budget.totalEstimatedCost'] = { $gt: 0 };
+      } else if (status === 'inPlanning') {
+        filter.status = {
+          $in: ['survey', 'masterLayout', 'roadPlanning', 'amenities', 'plotVillaPlanning', 'budget'],
+        };
+      } else {
+        filter.status = status;
+      }
+    }
 
     if (search && search.trim()) {
       const rx = new RegExp(search.trim(), 'i');

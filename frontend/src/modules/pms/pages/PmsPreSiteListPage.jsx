@@ -244,7 +244,14 @@ export default function PmsPreSiteListPage() {
         </div>
 
         {/* KPI 5 */}
-        <div className="p-3.5 rounded-xl border bg-white border-slate-200 shadow-xs">
+        <div
+          onClick={() => handleKpiFilter(statusFilter === 'hasWorkOrder' ? 'all' : 'hasWorkOrder')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            statusFilter === 'hasWorkOrder'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <FileSignature className="w-3.5 h-3.5 text-purple-600" />
@@ -253,7 +260,7 @@ export default function PmsPreSiteListPage() {
             <div className="relative group/tip">
               <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
               <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
-                Cumulative value of formal contractor work orders executed.
+                Cumulative value of formal contractor work orders executed. Click to filter records with work orders.
               </div>
             </div>
           </div>
@@ -295,6 +302,7 @@ export default function PmsPreSiteListPage() {
             <option value="rateFinalization">Step: Rate Finalization</option>
             <option value="workOrder">Step: WO Agreement</option>
             <option value="siteSetup">Step: Site Mobilization</option>
+            <option value="hasWorkOrder">With Executed Work Order</option>
             <option value="managementApproval">Awaiting Management Sign-off</option>
             <option value="approved">Approved & Mobilized</option>
           </select>

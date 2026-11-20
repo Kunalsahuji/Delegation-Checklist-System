@@ -245,7 +245,14 @@ export default function PmsBaselineListPage() {
         </div>
 
         {/* KPI 5 */}
-        <div className="p-3.5 rounded-xl border bg-white border-slate-200 shadow-xs">
+        <div
+          onClick={() => handleKpiFilter(statusFilter === 'hasBudget' ? 'all' : 'hasBudget')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            statusFilter === 'hasBudget'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <IndianRupee className="w-3.5 h-3.5 text-purple-600" />
@@ -254,7 +261,7 @@ export default function PmsBaselineListPage() {
             <div className="relative group/tip">
               <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
               <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
-                Cumulative baseline budget allocation across all projects.
+                Cumulative baseline budget allocation across all projects. Click to filter projects with baseline budget.
               </div>
             </div>
           </div>
@@ -297,6 +304,7 @@ export default function PmsBaselineListPage() {
             <option value="plannedTimeline">Step: Planned Timeline</option>
             <option value="plannedCashflow">Step: Planned Cashflow</option>
             <option value="baselineReview">Awaiting Executive Lock</option>
+            <option value="hasBudget">With Baseline Budget</option>
             <option value="locked">Baseline Frozen & Locked</option>
           </select>
 

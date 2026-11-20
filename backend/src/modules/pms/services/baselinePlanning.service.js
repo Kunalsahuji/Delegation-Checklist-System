@@ -100,6 +100,8 @@ class BaselinePlanningService {
         };
       } else if (status === 'locked') {
         filter['baselineLock.isLocked'] = true;
+      } else if (status === 'hasBudget') {
+        filter['baselineLock.totalBaselineBudget'] = { $gt: 0 };
       } else {
         filter.status = status;
       }

@@ -88,6 +88,8 @@ class PreSiteStartService {
         filter.status = {
           $in: ['contractorSelection', 'rateFinalization', 'workOrder', 'siteSetup'],
         };
+      } else if (status === 'hasWorkOrder') {
+        filter['workOrder.contractValue'] = { $gt: 0 };
       } else {
         filter.status = status;
       }

@@ -247,7 +247,14 @@ export default function PmsPlanningListPage() {
         </div>
 
         {/* KPI 5 */}
-        <div className="p-3.5 rounded-xl border bg-white border-slate-200 shadow-xs">
+        <div
+          onClick={() => handleKpiFilter(statusFilter === 'hasBudget' ? 'all' : 'hasBudget')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            statusFilter === 'hasBudget'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <Calculator className="w-3.5 h-3.5 text-purple-600" />
@@ -256,7 +263,7 @@ export default function PmsPlanningListPage() {
             <div className="relative group/tip">
               <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
               <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
-                Cumulative estimated civil infrastructure development budget across projects.
+                Cumulative estimated civil infrastructure development budget across projects. Click to filter budgeted plans.
               </div>
             </div>
           </div>
@@ -300,6 +307,7 @@ export default function PmsPlanningListPage() {
             <option value="amenities">Stage: Amenities</option>
             <option value="plotVillaPlanning">Stage: Plot/Villa Typology</option>
             <option value="budget">Stage: Dev Budgeting</option>
+            <option value="hasBudget">With Development Budget</option>
             <option value="managementApproval">Awaiting Management Sanction</option>
             <option value="approved">Approved</option>
           </select>

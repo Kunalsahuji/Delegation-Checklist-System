@@ -22,6 +22,7 @@ const preSiteStartRoutes = require('./modules/pms/routes/preSiteStart.route');
 const baselinePlanningRoutes = require('./modules/pms/routes/baselinePlanning.route');
 const procurementInventoryRoutes = require('./modules/pms/routes/procurementInventory.route');
 const constructionExecutionRoutes = require('./modules/pms/routes/constructionExecution.route');
+const qualityControlRoutes = require('./modules/pms/routes/qualityControl.route');
 
 const app = express();
 
@@ -93,6 +94,7 @@ app.use(`${config.apiPrefix}/pms/pre-site-start`, preSiteStartRoutes);
 app.use(`${config.apiPrefix}/pms/baseline`, baselinePlanningRoutes);
 app.use(`${config.apiPrefix}/pms/procurement`, procurementInventoryRoutes);
 app.use(`${config.apiPrefix}/pms/construction`, constructionExecutionRoutes);
+app.use(`${config.apiPrefix}/pms/quality`, qualityControlRoutes);
 
 // Master shortcuts / aliases (/api/v1/users, /api/v1/departments, /api/v1/projects)
 app.use(`${config.apiPrefix}/users`, (req, res, next) => {

@@ -482,6 +482,59 @@ const PHOTO_CATEGORIES = [
   'Snag & Rectification',
 ];
 
+const QUALITY_STATUS = [
+  'inspectionPending',
+  'inProgress',
+  'snaggingActive',
+  'rectificationUnderway',
+  'approvalPending',
+  'approved',
+  'rejected',
+];
+
+const QUALITY_SECTION_KEYS = [
+  'stageInspection',
+  'engineerApproval',
+  'snagList',
+  'rectification',
+];
+
+const INSPECTION_STAGES = [
+  'Substructure & Excavation',
+  'Plinth Beam & Anti-Termite',
+  'RCC Superstructure & Slab Casting',
+  'Masonry & Brickwork',
+  'Internal & External Plastering',
+  'Waterproofing (Toilets & Terrace)',
+  'Flooring & Tiling Work',
+  'Door & Window Frames/Glazing',
+  'Plumbing Pressure & Hydro Testing',
+  'Electrical Megger & Wiring Verification',
+  'Painting & Final Polish',
+];
+
+const SNAG_SEVERITIES = ['Low', 'Medium', 'High', 'Critical'];
+
+const SNAG_STATUS = [
+  'identified',
+  'assigned',
+  'inProgress',
+  'rectificationInProgress',
+  'rectified',
+  'verifiedClosed',
+];
+
+const SNAG_CATEGORIES = [
+  'Civil & Structural',
+  'Plumbing & Drainage',
+  'Electrical & Automation',
+  'Carpentry & Woodwork',
+  'Tiling & Flooring',
+  'Painting & Finishing',
+  'Glass & Aluminum',
+  'Safety & Cleaning',
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -546,4 +599,10 @@ module.exports = {
   CONSTRUCTION_TRADES,
   QUALITY_CHECK_STATUS,
   PHOTO_CATEGORIES,
+  QUALITY_STATUS,
+  QUALITY_SECTION_KEYS,
+  INSPECTION_STAGES,
+  SNAG_SEVERITIES,
+  SNAG_STATUS,
+  SNAG_CATEGORIES,
 };

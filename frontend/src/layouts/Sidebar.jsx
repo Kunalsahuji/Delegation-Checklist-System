@@ -523,6 +523,18 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
               >
                 Construction Execution (Stage 8)
               </NavLink>
+              <NavLink
+                to="/pms/quality"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Quality & Snags (Stage 9)
+              </NavLink>
             </div>
           )}
         </div>

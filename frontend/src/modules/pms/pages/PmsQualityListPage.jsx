@@ -94,7 +94,7 @@ export default function PmsQualityListPage() {
         const payload = res.data;
         setRecords(payload.records || []);
         setTotal(payload.pagination?.total || 0);
-        setTotalPages(payload.pagination?.pages || 1);
+        setTotalPages(payload.pagination?.totalPages || payload.pagination?.pages || 1);
       }
     } catch (err) {
       console.error('Failed to fetch quality records:', err);

@@ -6,54 +6,42 @@ export const pmsPurchaseApi = {
     const res = await axiosClient.get('/pms/land-purchases/kpis', {
       params: projectId ? { projectId } : {},
     });
-    return res.data;
+    return res;
   },
 
   // Paginated List
   listPurchases: async (params = {}) => {
     const res = await axiosClient.get('/pms/land-purchases', { params });
-    return res.data;
+    return res;
   },
 
   // Single Land Purchase Detail
   getPurchaseById: async (id) => {
     const res = await axiosClient.get(`/pms/land-purchases/${id}`);
-    return res.data;
+    return res;
   },
 
   // Interlink handoff from Plot
   createFromPlot: async (plotId) => {
     const res = await axiosClient.post('/pms/land-purchases/from-plot', { plotId });
-    return res.data;
+    return res;
   },
 
-  // Update Section Data (Negotiation round, Registry witnesses, etc.)
+  // Update Section Items/Fields
   updateSection: async (id, section, patch) => {
     const res = await axiosClient.put(`/pms/land-purchases/${id}/sections/${section}`, patch);
-    return res.data;
+    return res;
   },
 
   // Mark Section Completed
-  completeSection: async (id, section) => {
-    const res = await axiosClient.post(`/pms/land-purchases/${id}/sections/${section}/complete`);
-    return res.data;
+  completeSection: async (id, section, payload = {}) => {
+    const res = await axiosClient.post(`/pms/land-purchases/${id}/sections/${section}/complete`, payload);
+    return res;
   },
 
-  // Request Price Approval
-  requestApproval: async (id, payload) => {
-    const res = await axiosClient.post(`/pms/land-purchases/${id}/request-approval`, payload);
-    return res.data;
-  },
-
-  // Price Decision Gate
-  decidePrice: async (id, payload) => {
-    const res = await axiosClient.post(`/pms/land-purchases/${id}/decide-price`, payload);
-    return res.data;
-  },
-
-  // Final Complete Purchase
-  completePurchase: async (id, payload = {}) => {
-    const res = await axiosClient.post(`/pms/land-purchases/${id}/complete`, payload);
-    return res.data;
+  // Decision Gate (Approved, Rejected)
+  decide: async (id, payload) => {
+    const res = await axiosClient.post(`/pms/land-purchases/${id}/decide`, payload);
+    return res;
   },
 };

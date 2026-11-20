@@ -487,6 +487,18 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
               >
                 Pre-Site Start (Stage 5)
               </NavLink>
+              <NavLink
+                to="/pms/baseline"
+                className={({ isActive }) =>
+                  `flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    isActive
+                      ? 'bg-brand-50 text-brand-700 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`
+                }
+              >
+                Baseline Planning (Stage 6)
+              </NavLink>
             </div>
           )}
         </div>

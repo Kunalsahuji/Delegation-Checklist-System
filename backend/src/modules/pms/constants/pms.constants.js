@@ -355,6 +355,51 @@ const DEFAULT_RATE_ITEMS = [
   { itemDescription: 'Internal / External Cement Plastering', unit: 'sqm', tenderRate: 190, agreedRate: 175 },
 ];
 
+// Stage 6: Baseline Planning & Baseline Lock Constants
+const BASELINE_STATUS = [
+  'plannedMaterial',
+  'plannedLabour',
+  'plannedTimeline',
+  'plannedCashflow',
+  'baselineReview',
+  'locked',
+  'cancelled',
+];
+
+const BASELINE_SECTION_KEYS = [
+  'plannedMaterial',
+  'plannedLabour',
+  'plannedTimeline',
+  'plannedCashflow',
+];
+
+const DEFAULT_MATERIALS = [
+  { name: 'OPC 53 Grade Cement', category: 'cement', unit: 'Bags', plannedQuantity: 12000, unitRate: 380, remarks: 'Ultratech / Ambuja 53 Grade' },
+  { name: 'Fe 550D TMT Reinforcement Steel', category: 'steel', unit: 'MT', plannedQuantity: 140, unitRate: 62000, remarks: 'Tata Tiscon / Jindal Panther' },
+  { name: 'Coarse River Sand / M-Sand', category: 'sand', unit: 'MT', plannedQuantity: 1800, unitRate: 1400, remarks: 'Washed zone-II sand' },
+  { name: '10mm & 20mm Crushed Aggregate', category: 'aggregate', unit: 'MT', plannedQuantity: 2400, unitRate: 950, remarks: 'Blue metal basalt aggregate' },
+  { name: 'AAC Lightweight Blocks (600x200x150mm)', category: 'blocks', unit: 'Nos', plannedQuantity: 45000, unitRate: 65, remarks: 'Grade 1 compressive strength' },
+  { name: 'Ready Mix Concrete (RMC M25)', category: 'rmc', unit: 'cum', plannedQuantity: 850, unitRate: 4600, remarks: 'Transit mixer supply on site' },
+];
+
+const DEFAULT_LABOUR_TRADES = [
+  { trade: 'Mason (Head Mason & Skilled)', headcount: 8, ratePerDay: 900, plannedManDays: 1440, remarks: 'Brickwork & plastering gang' },
+  { trade: 'Barbender (Steel Fixer)', headcount: 6, ratePerDay: 850, plannedManDays: 900, remarks: 'Rebar cutting, bending & binding' },
+  { trade: 'Carpenter (Shuttering & Formwork)', headcount: 6, ratePerDay: 850, plannedManDays: 960, remarks: 'Plywood & props staging' },
+  { trade: 'Heavy Machinery Operator', headcount: 3, ratePerDay: 1100, plannedManDays: 450, remarks: 'JCB, excavator & roller operators' },
+  { trade: 'General Helper / Unskilled Labour', headcount: 20, ratePerDay: 550, plannedManDays: 3600, remarks: 'Material handling & concrete curing' },
+];
+
+const DEFAULT_TIMELINE_MILESTONES = [
+  { name: '1. Site Mobilization & Earthwork Excavation', durationDays: 45, weightagePercent: 10, remarks: 'Boundary clearing, levelling & basement/foundation dig' },
+  { name: '2. Substructure & Plinth Level RCC', durationDays: 60, weightagePercent: 20, remarks: 'Footings, grade slab, tie beams & plinth filling' },
+  { name: '3. Superstructure RCC Framing', durationDays: 90, weightagePercent: 30, remarks: 'Columns, shear walls, beams & floor slabs' },
+  { name: '4. Block Masonry & Internal/External Plaster', durationDays: 60, weightagePercent: 15, remarks: 'Partition walls, lintels & 2-coat plaster' },
+  { name: '5. MEP, Concealed Electrical & Plumbing', durationDays: 45, weightagePercent: 10, remarks: 'Conduits, wiring, water supply & drainage lines' },
+  { name: '6. Architectural Finishing & Landscaping', durationDays: 45, weightagePercent: 10, remarks: 'Tiles, exterior texture painting, doors & roads' },
+  { name: '7. Final Inspection, Snagging & Commissioning', durationDays: 15, weightagePercent: 5, remarks: 'QA signoff, deep cleaning & owner handover' },
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -403,4 +448,9 @@ module.exports = {
   CONTRACTOR_TRADES,
   CONTRACT_TYPES,
   DEFAULT_RATE_ITEMS,
+  BASELINE_STATUS,
+  BASELINE_SECTION_KEYS,
+  DEFAULT_MATERIALS,
+  DEFAULT_LABOUR_TRADES,
+  DEFAULT_TIMELINE_MILESTONES,
 };

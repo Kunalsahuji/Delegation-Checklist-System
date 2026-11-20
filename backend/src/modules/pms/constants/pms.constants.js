@@ -575,6 +575,44 @@ const PAYMENT_STATUS = ['Pending', 'Verified', 'Approved', 'Paid', 'Hold'];
 
 const RA_BILL_STATUS = ['Draft', 'Certified', 'PaymentApproved', 'Approved', 'Paid', 'Settled'];
 
+// ---- Handover Management Engine (Module 12 / Stage 12) ----
+const HANDOVER_STATUS = [
+  'preHandoverInspection',
+  'deSnaggingInProgress',
+  'cleaningVerification',
+  'readyForHandover',
+  'possessionCompleted',
+  'approvalPending',
+  'approved',
+  'rejected',
+];
+
+const HANDOVER_SECTION_KEYS = [
+  'finalInspection',
+  'snagClosure',
+  'deepCleaning',
+  'customerHandover',
+];
+
+const CLEANING_CHECKLIST_ITEMS = [
+  'Living & Dining Floor Deep Scrubbing',
+  'Kitchen Countertop & Cabinet Degreasing',
+  'Bathroom Tiles, Fixtures & Acid Cleaning',
+  'Windows & Glass Glazing Spotless Polishing',
+  'Balcony & Terrace Pressure Wash',
+  'Electrical Fittings & Switchboard Wipe-down',
+  'Door Frames & Hardware Polish',
+  'Common Corridor & Entrance Lobby Detailing',
+];
+
+const HANDOVER_DOCUMENT_TYPES = [
+  'Handover Checklist',
+  'Handover Certificate',
+  'Possession Letter',
+  'Zero-Snag Certificate',
+  'Key Handover Receipt',
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -653,4 +691,8 @@ module.exports = {
   FINANCE_SECTION_KEYS,
   PAYMENT_STATUS,
   RA_BILL_STATUS,
+  HANDOVER_STATUS,
+  HANDOVER_SECTION_KEYS,
+  CLEANING_CHECKLIST_ITEMS,
+  HANDOVER_DOCUMENT_TYPES,
 };

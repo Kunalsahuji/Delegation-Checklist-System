@@ -400,6 +400,46 @@ const DEFAULT_TIMELINE_MILESTONES = [
   { name: '7. Final Inspection, Snagging & Commissioning', durationDays: 15, weightagePercent: 5, remarks: 'QA signoff, deep cleaning & owner handover' },
 ];
 
+// Stage 7: Procurement & Inventory Constants
+const PROCUREMENT_STATUS = [
+  'vendorSelection',
+  'purchaseOrder',
+  'materialReceive',
+  'stockEntry',
+  'managementApproval',
+  'approved',
+  'cancelled',
+];
+
+const PROCUREMENT_SECTION_KEYS = [
+  'vendorSelection',
+  'purchaseOrder',
+  'materialReceive',
+  'stockEntry',
+];
+
+const MATERIAL_CATEGORIES = [
+  'cement',
+  'steel',
+  'sand',
+  'aggregate',
+  'blocks',
+  'rmc',
+  'electrical',
+  'plumbing',
+  'paint',
+  'tiles',
+  'general',
+];
+
+const DEFAULT_VENDORS = [
+  { name: 'Ultratech Cement Distributors Ltd', category: 'cement', contactPerson: 'Suresh Agarwal', phone: '+91 98290 55441', gstNumber: '08AAACU1234F1Z1', rating: 4.8 },
+  { name: 'Kamdhenu & Tata Steel Agencies', category: 'steel', contactPerson: 'Deepak Sharma', phone: '+91 94140 22331', gstNumber: '08AAACK5678G1Z2', rating: 4.9 },
+  { name: 'Jaipur Mining & Sand Suppliers', category: 'sand', contactPerson: 'Kailash Meena', phone: '+91 98280 99881', gstNumber: '08AAACJ9012H1Z3', rating: 4.5 },
+  { name: 'Apex Crushed Blue Metal Basalt', category: 'aggregate', contactPerson: 'Er. Rohit Saini', phone: '+91 97850 11223', gstNumber: '08AAACA3456J1Z4', rating: 4.7 },
+  { name: 'Prism RMC Ready Mix Concrete', category: 'rmc', contactPerson: 'Manish Verma', phone: '+91 99280 66778', gstNumber: '08AAACP7890K1Z5', rating: 4.8 },
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -453,4 +493,8 @@ module.exports = {
   DEFAULT_MATERIALS,
   DEFAULT_LABOUR_TRADES,
   DEFAULT_TIMELINE_MILESTONES,
+  PROCUREMENT_STATUS,
+  PROCUREMENT_SECTION_KEYS,
+  MATERIAL_CATEGORIES,
+  DEFAULT_VENDORS,
 };

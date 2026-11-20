@@ -535,6 +535,26 @@ const SNAG_CATEGORIES = [
   'Safety & Cleaning',
 ];
 
+const PROJECT_CONTROL_STATUS = [
+  'monitoring',
+  'varianceIdentified',
+  'mitigationInProgress',
+  'approvalPending',
+  'approved',
+  'closed',
+];
+
+const CONTROL_SECTION_KEYS = [
+  'materialVariance',
+  'labourVariance',
+  'timeVariance',
+  'costVariance',
+];
+
+const VARIANCE_TYPES = ['Favorable', 'Adverse', 'Neutral'];
+
+const SCHEDULE_STATUSES = ['On Schedule', 'Ahead', 'Minor Delay (<15 days)', 'Critical Delay (>15 days)'];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -605,4 +625,8 @@ module.exports = {
   SNAG_SEVERITIES,
   SNAG_STATUS,
   SNAG_CATEGORIES,
+  PROJECT_CONTROL_STATUS,
+  CONTROL_SECTION_KEYS,
+  VARIANCE_TYPES,
+  SCHEDULE_STATUSES,
 };

@@ -26,6 +26,7 @@ const qualityControlRoutes = require('./modules/pms/routes/qualityControl.route'
 const projectControlRoutes = require('./modules/pms/routes/projectControl.route');
 const pmsFinanceRoutes = require('./modules/pms/routes/pmsFinance.route');
 const pmsHandoverRoutes = require('./modules/pms/routes/pmsHandover.route');
+const pmsAfterSalesRoutes = require('./modules/pms/routes/pmsAfterSales.route');
 
 const app = express();
 
@@ -101,6 +102,7 @@ app.use(`${config.apiPrefix}/pms/quality`, qualityControlRoutes);
 app.use(`${config.apiPrefix}/pms/project-control`, projectControlRoutes);
 app.use(`${config.apiPrefix}/pms/finance`, pmsFinanceRoutes);
 app.use(`${config.apiPrefix}/pms/handover`, pmsHandoverRoutes);
+app.use(`${config.apiPrefix}/pms/after-sales`, pmsAfterSalesRoutes);
 
 // Master shortcuts / aliases (/api/v1/users, /api/v1/departments, /api/v1/projects)
 app.use(`${config.apiPrefix}/users`, (req, res, next) => {

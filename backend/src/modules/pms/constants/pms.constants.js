@@ -613,6 +613,55 @@ const HANDOVER_DOCUMENT_TYPES = [
   'Key Handover Receipt',
 ];
 
+// ---- After Sales & DLP Management Engine (Module 13 / Stage 13) ----
+const AFTER_SALES_STATUS = [
+  'warrantyActive',
+  'dlpInProgress',
+  'routineMaintenance',
+  'auditPending',
+  'approved',
+  'dlpMatured',
+];
+
+const AFTER_SALES_SECTION_KEYS = [
+  'warrantyClaims',
+  'amcVisits',
+  'customerSupport',
+  'feedback',
+];
+
+const WARRANTY_TRADES = [
+  'Plumbing',
+  'Electrical',
+  'Carpentry',
+  'Civil & Masonry',
+  'Painting & Finishing',
+  'Waterproofing',
+  'HVAC',
+  'Lift & Elevators',
+];
+
+const CLAIM_SEVERITIES = ['Low', 'Medium', 'High', 'Critical'];
+
+const CLAIM_STATUSES = ['Reported', 'Investigating', 'WorkAssigned', 'Rectified', 'Closed'];
+
+const AMC_VISIT_TYPES = [
+  'Quarterly Preventive Maintenance',
+  'HVAC & Ventilation Check',
+  'Lift & Elevator Audit',
+  'Water Filtration & RO Inspection',
+  'Pest Control Treatment',
+  'Fire Fighting System Test',
+];
+
+const SUPPORT_TICKET_CATEGORIES = [
+  'Billing & Invoicing',
+  'Documentation & Certificates',
+  'Facility Maintenance',
+  'Amenities & Club Access',
+  'General Inquiry',
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -695,4 +744,11 @@ module.exports = {
   HANDOVER_SECTION_KEYS,
   CLEANING_CHECKLIST_ITEMS,
   HANDOVER_DOCUMENT_TYPES,
+  AFTER_SALES_STATUS,
+  AFTER_SALES_SECTION_KEYS,
+  WARRANTY_TRADES,
+  CLAIM_SEVERITIES,
+  CLAIM_STATUSES,
+  AMC_VISIT_TYPES,
+  SUPPORT_TICKET_CATEGORIES,
 };

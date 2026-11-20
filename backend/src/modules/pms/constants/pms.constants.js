@@ -256,6 +256,59 @@ const LAND_PURCHASE_DECISIONS = ['approved', 'rejected'];
 
 const PAYMENT_MODES = ['bankTransfer', 'cheque', 'cash', 'upi', 'dd'];
 
+// ---- Project Planning & Approvals (Module 04 / Stage 4) ----
+const PROJECT_TYPES = ['plotting', 'villa', 'apartment', 'commercial'];
+
+const PROJECT_PLANNING_STATUS = [
+  'survey',
+  'masterLayout',
+  'roadPlanning',
+  'amenities',
+  'plotVillaPlanning',
+  'budget',
+  'managementApproval',
+  'pendingGovernmentApproval',
+  'approved',
+  'rejected',
+  'cancelled',
+];
+
+const PLANNING_SECTION_KEYS = [
+  'survey',
+  'masterLayout',
+  'roadPlanning',
+  'amenities',
+  'plotVillaPlanning',
+  'budget',
+];
+
+const PLANNING_SECTION_STATUS = ['pending', 'inProgress', 'completed', 'notApplicable'];
+
+const PLANNING_DECISIONS = ['approved', 'rejected'];
+
+const ROAD_CATEGORIES = ['main', 'internal', 'approach'];
+const ROAD_SURFACES = ['bt', 'cc', 'wbm', 'paver', 'kutcha'];
+const FACING_DIRECTIONS = [
+  'east',
+  'west',
+  'north',
+  'south',
+  'northEast',
+  'northWest',
+  'southEast',
+  'southWest',
+];
+const UNIT_KINDS = ['plot', 'villa', 'apartment', 'shop'];
+
+const PLANNING_AMENITY_ITEMS = [
+  { key: 'garden', label: 'Garden / Central Park' },
+  { key: 'clubhouse', label: 'Clubhouse & Community Hall' },
+  { key: 'swimmingPool', label: 'Swimming Pool' },
+  { key: 'parking', label: 'Visitors Parking Bay' },
+  { key: 'temple', label: 'Temple & Meditation Area' },
+  { key: 'securityCabin', label: 'Gated Security Cabin' },
+];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -289,4 +342,14 @@ module.exports = {
   LAND_PURCHASE_SECTION_STATUS,
   LAND_PURCHASE_DECISIONS,
   PAYMENT_MODES,
+  PROJECT_TYPES,
+  PROJECT_PLANNING_STATUS,
+  PLANNING_SECTION_KEYS,
+  PLANNING_SECTION_STATUS,
+  PLANNING_DECISIONS,
+  ROAD_CATEGORIES,
+  ROAD_SURFACES,
+  FACING_DIRECTIONS,
+  UNIT_KINDS,
+  PLANNING_AMENITY_ITEMS,
 };

@@ -17,6 +17,7 @@ const plotRoutes = require('./modules/pms/routes/plot.route');
 const feasibilityRoutes = require('./modules/pms/routes/feasibility.route');
 const legalCaseRoutes = require('./modules/pms/routes/legalCase.route');
 const landPurchaseRoutes = require('./modules/pms/routes/landPurchase.route');
+const projectPlanningRoutes = require('./modules/pms/routes/projectPlanning.route');
 
 const app = express();
 
@@ -83,6 +84,7 @@ app.use(`${config.apiPrefix}/pms/plots`, plotRoutes);
 app.use(`${config.apiPrefix}/pms/feasibility`, feasibilityRoutes);
 app.use(`${config.apiPrefix}/pms/legal-cases`, legalCaseRoutes);
 app.use(`${config.apiPrefix}/pms/land-purchases`, landPurchaseRoutes);
+app.use(`${config.apiPrefix}/pms/planning`, projectPlanningRoutes);
 
 // Master shortcuts / aliases (/api/v1/users, /api/v1/departments, /api/v1/projects)
 app.use(`${config.apiPrefix}/users`, (req, res, next) => {

@@ -555,6 +555,26 @@ const VARIANCE_TYPES = ['Favorable', 'Adverse', 'Neutral'];
 
 const SCHEDULE_STATUSES = ['On Schedule', 'Ahead', 'Minor Delay (<15 days)', 'Critical Delay (>15 days)'];
 
+const FINANCE_STATUS = [
+  'activeAccounting',
+  'billingInProgress',
+  'paymentReview',
+  'approvalPending',
+  'approved',
+  'settled',
+];
+
+const FINANCE_SECTION_KEYS = [
+  'budgetVsActual',
+  'vendorPayments',
+  'contractorPayments',
+  'costAndProfit',
+];
+
+const PAYMENT_STATUS = ['Pending', 'Verified', 'Approved', 'Paid', 'Hold'];
+
+const RA_BILL_STATUS = ['Draft', 'Certified', 'PaymentApproved', 'Approved', 'Paid', 'Settled'];
+
 module.exports = {
   LIFECYCLE_STAGES,
   BASELINE_LOCK_ORDER,
@@ -629,4 +649,8 @@ module.exports = {
   CONTROL_SECTION_KEYS,
   VARIANCE_TYPES,
   SCHEDULE_STATUSES,
+  FINANCE_STATUS,
+  FINANCE_SECTION_KEYS,
+  PAYMENT_STATUS,
+  RA_BILL_STATUS,
 };

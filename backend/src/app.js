@@ -24,6 +24,7 @@ const procurementInventoryRoutes = require('./modules/pms/routes/procurementInve
 const constructionExecutionRoutes = require('./modules/pms/routes/constructionExecution.route');
 const qualityControlRoutes = require('./modules/pms/routes/qualityControl.route');
 const projectControlRoutes = require('./modules/pms/routes/projectControl.route');
+const pmsFinanceRoutes = require('./modules/pms/routes/pmsFinance.route');
 
 const app = express();
 
@@ -97,6 +98,7 @@ app.use(`${config.apiPrefix}/pms/procurement`, procurementInventoryRoutes);
 app.use(`${config.apiPrefix}/pms/construction`, constructionExecutionRoutes);
 app.use(`${config.apiPrefix}/pms/quality`, qualityControlRoutes);
 app.use(`${config.apiPrefix}/pms/project-control`, projectControlRoutes);
+app.use(`${config.apiPrefix}/pms/finance`, pmsFinanceRoutes);
 
 // Master shortcuts / aliases (/api/v1/users, /api/v1/departments, /api/v1/projects)
 app.use(`${config.apiPrefix}/users`, (req, res, next) => {

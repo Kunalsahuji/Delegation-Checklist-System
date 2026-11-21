@@ -425,7 +425,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Project Catalog (13 Stages)
+                Project Catalog
               </NavLink>
               <NavLink
                 to="/pms/plots"
@@ -437,7 +437,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Land Acquisition (Plots)
+                Land Acquisition & Feasibility
               </NavLink>
               <NavLink
                 to="/pms/legal-cases"
@@ -449,7 +449,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Legal Verification (Stage 2)
+                Legal Due Diligence
               </NavLink>
               <NavLink
                 to="/pms/land-purchases"
@@ -461,7 +461,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Land Purchase (Stage 3)
+                Land Purchase & Registry
               </NavLink>
               <NavLink
                 to="/pms/planning"
@@ -473,7 +473,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Project Planning (Stage 4)
+                Project Planning & Sanctions
               </NavLink>
               <NavLink
                 to="/pms/pre-site-start"
@@ -485,7 +485,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Pre-Site Start (Stage 5)
+                Pre-Site Mobilization
               </NavLink>
               <NavLink
                 to="/pms/baseline"
@@ -497,7 +497,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Baseline Planning (Stage 6)
+                Baseline Planning & Lock
               </NavLink>
               <NavLink
                 to="/pms/procurement"
@@ -509,7 +509,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Procurement & Stock (Stage 7)
+                Procurement & Stock
               </NavLink>
               <NavLink
                 to="/pms/construction"
@@ -521,7 +521,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Construction Execution (Stage 8)
+                Construction Execution
               </NavLink>
               <NavLink
                 to="/pms/quality"
@@ -533,7 +533,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Quality & Snags (Stage 9)
+                Quality Control & Snags
               </NavLink>
               <NavLink
                 to="/pms/project-control"
@@ -545,7 +545,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Variance & Control (Stage 10)
+                Project Control & Variance
               </NavLink>
               <NavLink
                 to="/pms/finance"
@@ -557,7 +557,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Finance & RA Bills (Stage 11)
+                Finance & RA Billing
               </NavLink>
               <NavLink
                 to="/pms/handover"
@@ -569,7 +569,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                Handover & Possession (Stage 12)
+                Handover & Possession
               </NavLink>
               <NavLink
                 to="/pms/after-sales"
@@ -581,7 +581,7 @@ export const Sidebar = ({ mobileOpen = false, onClose }) => {
                   }`
                 }
               >
-                After Sales & DLP (Stage 13)
+                After-Sales & Warranty (DLP)
               </NavLink>
             </div>
           )}

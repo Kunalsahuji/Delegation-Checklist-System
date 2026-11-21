@@ -210,7 +210,7 @@ export default function PmsProjectListPage() {
               Project Management System (PMS)
             </h1>
             <span className="px-2 py-0.5 text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200/60 rounded-full">
-              Phase 01 • Master Rail
+              Project Master Portfolio
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">
@@ -241,8 +241,149 @@ export default function PmsProjectListPage() {
         </div>
       </div>
 
-      {/* 3-Liner KPI Overview Strip with (i) hover tooltips */}
-      <WorkKpiStrip items={kpiItems} columns="grid-cols-2 sm:grid-cols-4" />
+      {/* 5-Card KPI Overview Grid (Consistent across all submodules) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* KPI 1 */}
+        <div
+          onClick={() => {
+            setKpiFilter('all');
+            setStatusFilter('all');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'all' && statusFilter === 'all'
+              ? 'bg-brand-50/70 border-brand-300 ring-2 ring-brand-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Building2 className="w-3.5 h-3.5 text-brand-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Projects</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                All master real estate developments registered across land, planning, and execution phases.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-slate-900 mt-1">{kpis.total}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">All real estate developments</div>
+        </div>
+
+        {/* KPI 2 */}
+        <div
+          onClick={() => {
+            setKpiFilter(kpiFilter === 'planning' ? 'all' : 'planning');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'planning'
+              ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5 text-blue-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">In Planning</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Projects in land acquisition, legal due diligence, and master layout design.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-blue-700 mt-1">{kpis.planning || 0}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Stages 1–5 active</div>
+        </div>
+
+        {/* KPI 3 */}
+        <div
+          onClick={() => {
+            setKpiFilter(kpiFilter === 'active' ? 'all' : 'active');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'active'
+              ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <HardHat className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Under Construction</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Projects actively executing civil work, daily labor logs, and structural work packages.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-amber-700 mt-1">{kpis.underConstruction}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Stage 6–10 active civil works</div>
+        </div>
+
+        {/* KPI 4 */}
+        <div
+          onClick={() => {
+            setKpiFilter(kpiFilter === 'completed' ? 'all' : 'completed');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'completed'
+              ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Completed & Handover</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Projects with 100% stage completions, final handover certificates, and possession letters issued.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-emerald-700 mt-1">{kpis.completed}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Handover & After-Sales</div>
+        </div>
+
+        {/* KPI 5 */}
+        <div
+          onClick={() => {
+            setKpiFilter(kpiFilter === 'planning' ? 'all' : 'planning');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'planning'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <IndianRupee className="w-3.5 h-3.5 text-purple-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Planned Budget</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Aggregate capital expenditure budget planned across active and upcoming construction projects.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-purple-700 mt-1">{formatCurrencyCr(kpis.plannedBudget)}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">${kpis.portfolioProgress}% portfolio progression</div>
+        </div>
+      </div>
 
       {/* Filters and Control Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-2xs">
@@ -473,13 +614,9 @@ export default function PmsProjectListPage() {
                     className="hover:bg-slate-50/80 transition-colors cursor-pointer"
                   >
                     <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200/60">
-                          {proj.code}
-                        </span>
-                        <div>
-                          <div className="font-bold text-slate-900 hover:text-brand-600">{proj.name}</div>
-                        </div>
+                      <div className="font-bold text-slate-900 hover:text-brand-600">{proj.name}</div>
+                      <div className="text-[11px] text-slate-500 font-mono mt-0.5">
+                        {proj.code} • {proj.currentStageName || 'Planning'}
                       </div>
                     </td>
                     <td className="py-3 px-4 text-slate-600">
@@ -512,17 +649,7 @@ export default function PmsProjectListPage() {
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                          proj.status === 'active'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : proj.status === 'planning'
-                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                            : proj.status === 'completed'
-                            ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                            : 'bg-amber-50 text-amber-700 border border-amber-200'
-                        }`}
-                      >
+                      <span className="text-xs font-semibold uppercase whitespace-nowrap text-slate-700">
                         {proj.status}
                       </span>
                     </td>
@@ -530,10 +657,10 @@ export default function PmsProjectListPage() {
                       <button
                         type="button"
                         onClick={() => navigate(`/pms/projects/${proj._id}`)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-md shadow-2xs hover:shadow-xs transition-all cursor-pointer"
-                        title="Open 13-stage workspace"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer mr-2"
+                        title="Open workspace"
                       >
-                        <Layers className="w-3.5 h-3.5 text-brand-600" />
+                        <Layers className="w-3.5 h-3.5" />
                         <span>Workspace</span>
                       </button>
                       <button

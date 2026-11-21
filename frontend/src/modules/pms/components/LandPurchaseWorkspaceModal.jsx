@@ -197,8 +197,8 @@ export default function LandPurchaseWorkspaceModal({ purchaseId, onClose, onRefr
   if (!purchaseId) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex justify-center items-center p-3 sm:p-5">
-      <div className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4 overflow-hidden">
+      <div className="bg-white w-full max-w-6xl h-[92vh] max-h-[92vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Top Header */}
         <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between">
           <div className="flex items-center gap-3">

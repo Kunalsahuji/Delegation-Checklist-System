@@ -123,7 +123,7 @@ export default function PmsFinanceListPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
-              Stage 11: Finance & Cost Management
+              Finance & Cost Management
             </span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 mt-1">Finance & Contractor RA Billing Engine</h1>
@@ -375,16 +375,16 @@ export default function PmsFinanceListPage() {
                         {formatCurrency(r.totalRaCertifiedAmount)}
                       </td>
                       <td className="py-3 px-4 text-center">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${cfg.color}`}>
+                        <span className="text-xs font-semibold whitespace-nowrap text-slate-700">
                           {cfg.label}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-xs font-semibold shadow-xs transition"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
                         >
-                          Workspace
+                          <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </td>

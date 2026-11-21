@@ -121,8 +121,7 @@ export default function PmsHandoverListPage() {
               Handover & Possession Management
             </h1>
             <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-teal-50 text-teal-700 border border-teal-200">
-              Stage 12
-            </span>
+              </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             End-to-end unit completion, final inspection, zero-snag certification, deep cleaning, and customer possession clearance.
@@ -405,9 +404,7 @@ export default function PmsHandoverListPage() {
                       onClick={() => setSelectedRecordId(item._id)}
                     >
                       <td className="py-3.5 px-4">
-                        <span className="font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
-                          {item.code}
-                        </span>
+                        <div className="font-bold text-slate-900">{item.code}</div>
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-slate-900">{item.project?.name || 'Project'}</div>

@@ -120,7 +120,7 @@ export default function PmsAfterSalesListPage() {
               After Sales, Warranty & DLP Management
             </h1>
             <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-pink-50 text-pink-700 border border-pink-200">
-              Stage 13 (Terminal Lifecycle)
+              After-Sales & DLP Warranty
             </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -402,9 +402,7 @@ export default function PmsAfterSalesListPage() {
                       onClick={() => setSelectedRecordId(item._id)}
                     >
                       <td className="py-3.5 px-4">
-                        <span className="font-bold text-pink-700 bg-pink-50 px-2 py-0.5 rounded border border-pink-200">
-                          {item.code}
-                        </span>
+                        <div className="font-bold text-slate-900">{item.code}</div>
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-slate-900">{item.project?.name || 'Project'}</div>

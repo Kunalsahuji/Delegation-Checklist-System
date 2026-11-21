@@ -446,8 +446,8 @@ export default function BaselinePlanningWorkspaceModal({ baselineId, onClose, on
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl my-8 overflow-hidden flex flex-col border border-slate-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[92vh] max-h-[92vh] overflow-hidden flex flex-col border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 text-white px-6 py-5 flex items-center justify-between border-b border-slate-800">
           <div>
@@ -525,7 +525,7 @@ export default function BaselinePlanningWorkspaceModal({ baselineId, onClose, on
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto max-h-[calc(85vh-200px)] space-y-6">
+        <div className="p-6 overflow-y-auto flex-1 space-y-6">
           {/* TAB 1: PLANNED MATERIAL */}
           {activeTab === 'plannedMaterial' && (
             <div className="space-y-4">

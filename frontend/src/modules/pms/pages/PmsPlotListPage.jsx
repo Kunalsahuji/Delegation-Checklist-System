@@ -259,8 +259,149 @@ export default function PmsPlotListPage() {
         </div>
       </div>
 
-      {/* 3-Liner KPI Overview Strip with (i) hover tooltips */}
-      <WorkKpiStrip items={kpiItems} columns="grid-cols-2 sm:grid-cols-4" />
+      {/* 5-Card KPI Overview Grid (Consistent across all submodules) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* KPI 1 */}
+        <div
+          onClick={() => {
+            setKpiFilter('all');
+            setStatusFilter('all');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'all' && statusFilter === 'all'
+              ? 'bg-brand-50/70 border-brand-300 ring-2 ring-brand-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-brand-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Plots</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Total scouted land parcels registered across all targeted project regions.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-slate-900 mt-1">{kpis.total}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">All land parcels identified</div>
+        </div>
+
+        {/* KPI 2 */}
+        <div
+          onClick={() => {
+            setKpiFilter(kpiFilter === 'visitScheduled' ? 'all' : 'visitScheduled');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'visitScheduled'
+              ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-blue-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Visit Scheduled</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Plots with active surveyor inspection or pending topography verification.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-blue-700 mt-1">{kpis.visitScheduled}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Pending field inspection</div>
+        </div>
+
+        {/* KPI 3 */}
+        <div
+          onClick={() => {
+            setKpiFilter(kpiFilter === 'underAnalysis' ? 'all' : 'underAnalysis');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'underAnalysis'
+              ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Calculator className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Under Feasibility</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Parcels undergoing pro-forma financial ROI, IRR, and FSI zoning analysis.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-amber-700 mt-1">{kpis.underAnalysis}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Financial analysis in progress</div>
+        </div>
+
+        {/* KPI 4 */}
+        <div
+          onClick={() => {
+            setKpiFilter(kpiFilter === 'approved' ? 'all' : 'approved');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'approved'
+              ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Approved for Acquisition</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Plots with positive investment committee sanction ready for legal verification.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-emerald-700 mt-1">{kpis.approved}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Sanctioned & advanced</div>
+        </div>
+
+        {/* KPI 5 */}
+        <div
+          onClick={() => {
+            setKpiFilter('all');
+            setPagination((p) => ({ ...p, page: 1 }));
+          }}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+            kpiFilter === 'acreage'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <IndianRupee className="w-3.5 h-3.5 text-purple-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Estimated Outlay</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Total estimated capital required for approved land parcel acquisitions.
+              </div>
+            </div>
+          </div>
+          <div className="text-xl font-black text-purple-700 mt-1">{formatCurrencyCr(kpis.totalEstimatedCost)}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Capital deployment target</div>
+        </div>
+      </div>
 
       {/* Filters and Control Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-white border border-slate-200 rounded-xl shadow-2xs">
@@ -507,33 +648,12 @@ export default function PmsPlotListPage() {
                       {formatCurrencyCr(plot.expectedTotalPrice)}
                     </td>
                     <td className="py-3 px-4">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold capitalize ${
-                          plot.verdict === 'feasible'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : plot.verdict === 'feasibleWithConditions'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : plot.verdict === 'notFeasible'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                            : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        {plot.verdict === 'feasible' && <CheckCircle2 className="w-3 h-3 text-emerald-600" />}
-                        {plot.verdict === 'feasibleWithConditions' ? 'Conditional' : plot.verdict}
+                      <span className="text-xs font-semibold whitespace-nowrap text-slate-700 capitalize">
+                        {plot.verdict === 'feasibleWithConditions' ? 'Conditional' : plot.verdict || 'Pending'}
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                          plot.status === 'approved'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : plot.status === 'underAnalysis'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : plot.status === 'rejected'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                            : 'bg-blue-50 text-blue-700 border border-blue-200'
-                        }`}
-                      >
+                      <span className="text-xs font-semibold uppercase whitespace-nowrap text-slate-700">
                         {plot.status}
                       </span>
                     </td>
@@ -541,21 +661,19 @@ export default function PmsPlotListPage() {
                       <button
                         type="button"
                         onClick={() => handleOpenFeasibility(plot)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-md shadow-2xs hover:shadow-xs transition-all cursor-pointer"
+                        className="text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer mr-2"
                         title="Calculate & assess financial feasibility"
                       >
-                        <Calculator className="w-3.5 h-3.5 text-purple-600" />
-                        <span>Feasibility</span>
+                        Feasibility
                       </button>
                       {plot.status === 'approved' && (
                         <button
                           type="button"
                           onClick={() => navigate('/pms/legal-cases')}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-md shadow-2xs hover:shadow-xs transition-all cursor-pointer"
-                          title="Move to Legal Verification (Stage 2)"
+                          className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer mr-2"
+                          title="View Legal Due Diligence"
                         >
-                          <Scale className="w-3.5 h-3.5 text-indigo-600" />
-                          <span>Legal (S2)</span>
+                          Legal
                         </button>
                       )}
                       <button

@@ -115,7 +115,7 @@ export default function PmsQualityListPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 font-bold border border-teal-200">
-              Stage 09: Quality Control & Snags
+              Quality Control & Snags
             </span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 mt-1">Quality Control & Snagging Engine</h1>
@@ -373,7 +373,7 @@ export default function PmsQualityListPage() {
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-xs font-semibold shadow-xs transition"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
                         >
                           Workspace
                           <ArrowRight className="w-3.5 h-3.5" />

@@ -123,7 +123,7 @@ export default function PmsConstructionListPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold border border-amber-200">
-              Stage 08: Construction Execution
+              Construction Execution
             </span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 mt-1">Construction Execution Engine</h1>
@@ -379,7 +379,7 @@ export default function PmsConstructionListPage() {
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 text-xs font-semibold shadow-xs transition"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
                         >
                           Workspace
                           <ArrowRight className="w-3.5 h-3.5" />

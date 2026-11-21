@@ -119,7 +119,7 @@ export default function PmsProcurementListPage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-brand-50 text-brand-700 font-bold border border-brand-200">
-              Stage 07: Procurement & Inventory
+              Procurement & Inventory
             </span>
           </div>
           <h1 className="text-xl font-bold text-slate-900 mt-1">Procurement & Inventory (FIFO)</h1>
@@ -411,9 +411,7 @@ export default function PmsProcurementListPage() {
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${statusConf.color}`}>
-                          {statusConf.label}
-                        </span>
+                        <span className="text-xs font-semibold whitespace-nowrap text-slate-700">{statusConf.label}</span>
                       </td>
                       <td className="py-3 px-4 text-right">
                         <button

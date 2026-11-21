@@ -498,7 +498,7 @@ export default function PmsHandoverListPage() {
         {/* Dynamic Contextual Pagination */}
         <div className="bg-slate-50 border-t border-slate-200 px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-slate-600 font-medium">
-            Showing page {page} of {totalPages} ({total} records)
+            Showing page {page} of {totalPages} ({total} handover registers)
           </p>
 
           <div className="flex items-center gap-2">

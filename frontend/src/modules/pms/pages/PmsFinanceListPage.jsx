@@ -401,7 +401,7 @@ export default function PmsFinanceListPage() {
           <div>
             Showing page <strong className="text-slate-700">{page}</strong> of{' '}
             <strong className="text-slate-700">{totalPages}</strong> (
-            <strong className="text-slate-700">{total}</strong> records)
+            <strong className="text-slate-700">{total}</strong> finance accounts)
           </div>
           <div className="flex items-center gap-1">
             <button

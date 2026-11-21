@@ -644,20 +644,51 @@ export default function PmsPlotListPage() {
                       {formatCurrencyCr(plot.expectedTotalPrice)}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="text-xs font-semibold whitespace-nowrap text-slate-700 capitalize">
-                        {plot.verdict === 'feasibleWithConditions' ? 'Conditional' : plot.verdict || 'Pending'}
-                      </span>
+                      {plot.verdict === "feasible" ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          Feasible
+                        </span>
+                      ) : plot.verdict === "feasibleWithConditions" ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          Conditional
+                        </span>
+                      ) : plot.verdict === "notFeasible" ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          Not Feasible
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-500">
+                          <Clock className="w-3.5 h-3.5" />
+                          Pending
+                        </span>
+                      )}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="text-xs font-semibold uppercase whitespace-nowrap text-slate-700">
-                        {plot.status}
-                      </span>
+                      {plot.status === "APPROVED" ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 uppercase">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          Approved
+                        </span>
+                      ) : plot.status === "REJECTED" ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 uppercase">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          Rejected
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 uppercase">
+                          <Clock className="w-3.5 h-3.5" />
+                          {plot.status}
+                        </span>
+                      )}
                     </td>
                     <td className="py-3.5 px-4 text-right space-x-2" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
                         onClick={() => handleOpenFeasibility(plot)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer mr-2"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-800 transition-colors cursor-pointer mr-2"
                         title="Calculate & assess financial feasibility"
                       >
                         <span>Feasibility</span>

@@ -443,30 +443,24 @@ export default function ProcurementWorkspaceModal({ recordId, onClose, onRefresh
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-hidden animate-in fade-in duration-150">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[95vh] max-h-[95vh] flex flex-col overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 text-white px-6 py-5 flex items-center justify-between border-b border-slate-800">
+        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between shrink-0">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs px-2 py-0.5 rounded bg-brand-500/20 text-brand-300 border border-brand-400/30">
-                {record?.code || 'PRC-000000'}
+              <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                {record?.code || "PRC-000000"}
               </span>
-              <span className="text-xs uppercase tracking-wider text-slate-300 font-semibold">
-                Stage 7: Procurement & Inventory (FIFO)
+              <h2 className="text-base font-bold text-slate-900 tracking-tight">Stage 7 Procurement, Vendor POs & Inventory Workspace</h2>
+              <span className="text-xs font-semibold text-slate-500">
+                • {record?.status || "Draft"}
               </span>
             </div>
-            <h2 className="text-lg font-bold text-white mt-1">
-              {record?.project?.name || 'Procurement & Stock Workspace'}
-            </h2>
-            <div className="text-xs text-slate-300 mt-0.5 flex items-center gap-3">
-              <span>Orders: <strong className="text-white">{orders.length} Active POs</strong></span>
-              <span>•</span>
-              <span>Committed PO Value: <strong className="text-emerald-300">{formatCurrency(totalPoValuePreview)}</strong></span>
-              <span>•</span>
-              <span>Site Stock Value: <strong className="text-cyan-300">{formatCurrency(totalStockValuePreview)}</strong></span>
-            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Project: <span className="font-medium text-slate-700">{record?.project?.name || "Project"}</span> ({record?.project?.code}) • Locality: {record?.project?.locality || "Site"}
+            </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

@@ -459,36 +459,24 @@ export default function BaselinePlanningWorkspaceModal({ baselineId, onClose, on
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-hidden animate-in fade-in duration-150">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[95vh] max-h-[95vh] flex flex-col overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 text-white px-6 py-5 flex items-center justify-between border-b border-slate-800">
+        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between shrink-0">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs px-2 py-0.5 rounded bg-brand-500/20 text-brand-300 border border-brand-400/30">
-                {baseline?.code || 'BSL-000000'}
+              <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                {baseline?.code || "BSL-000000"}
               </span>
-              <span className="text-xs uppercase tracking-wider text-slate-300 font-semibold">
-                Stage 6: Baseline Planning & Governance Lock
+              <h2 className="text-base font-bold text-slate-900 tracking-tight">Stage 6 Baseline Planning & Governance Lock</h2>
+              <span className="text-xs font-semibold text-slate-500">
+                • {baseline?.status || "In Planning"}
               </span>
-              {isFrozen && (
-                <span className="flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                  <Lock className="w-3 h-3" />
-                  <span>BASELINE FROZEN</span>
-                </span>
-              )}
             </div>
-            <h2 className="text-lg font-bold text-white mt-1">
-              {baseline?.project?.name || 'Baseline Master Workspace'}
-            </h2>
-            <div className="text-xs text-slate-300 mt-0.5 flex items-center gap-3">
-              <span>Materials: <strong className="text-white">{formatCurrency(totalMatCostPreview)}</strong></span>
-              <span>•</span>
-              <span>Labour: <strong className="text-white">{formatCurrency(totalLabCostPreview)}</strong></span>
-              <span>•</span>
-              <span>Total Baseline: <strong className="text-emerald-300">{formatCurrency(totalBaselinePreview)}</strong></span>
-            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Project: <span className="font-medium text-slate-700">{baseline?.project?.name || "Project"}</span> ({baseline?.project?.code}) • Locality: {baseline?.project?.locality || "Site"}
+            </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

@@ -390,7 +390,7 @@ export default function PmsLegalCaseListPage() {
                       <button
                         type="button"
                         onClick={() => setSelectedCaseId(item._id)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
                       >
                         <span>Workspace</span>
                         <ArrowRight className="w-3.5 h-3.5" />

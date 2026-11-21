@@ -352,51 +352,34 @@ export default function FinanceWorkspaceModal({ recordId, onClose, onRefresh }) 
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-hidden animate-in fade-in duration-150">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[95vh] max-h-[95vh] flex flex-col overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white flex items-center justify-between shrink-0 shadow-md">
+        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-              <IndianRupee className="w-6 h-6 text-emerald-200" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+              <CreditCard className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-xl font-bold tracking-tight">
+                <h2 className="text-base font-bold text-slate-900 tracking-tight">
                   Stage 11 • Finance Management & Contractor Billing
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase bg-emerald-500/30 text-emerald-100 border border-emerald-300/30">
-                  {record?.code || 'FIN'}
+                <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                  {record.code}
                 </span>
-                <span
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
-                    record?.status === 'approved'
-                      ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/30'
-                      : record?.status === 'approvalPending'
-                      ? 'bg-blue-500/30 text-blue-200 border border-blue-400/30'
-                      : 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/30'
-                  }`}
-                >
-                  {record?.status || 'activeAccounting'}
+                <span className="text-xs font-semibold text-emerald-600">
+                  • {record.status?.toUpperCase()}
                 </span>
               </div>
-              <p className="text-xs text-emerald-100/90 font-medium mt-0.5">
-                Project: {record?.project?.name} ({record?.project?.code}) • Stage Order: {record?.project?.stageOrder || 11}
+              <p className="text-xs text-slate-500 mt-0.5">
+                Project: <span className="font-medium text-slate-700">{record.project?.name || "Project"}</span> ({record.project?.code}) • Stage Order: {record.stageOrder || 8}
               </p>
             </div>
           </div>
-
-          <div className="flex items-center space-x-3">
-            {record?.status === 'approved' && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-100 text-xs font-medium rounded-lg border border-emerald-400/40">
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                Ledger Certified
-              </span>
-            )}
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Global Notifications */}

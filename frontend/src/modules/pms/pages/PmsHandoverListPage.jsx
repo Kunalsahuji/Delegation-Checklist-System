@@ -315,7 +315,7 @@ export default function PmsHandoverListPage() {
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
-                <th className="py-3 px-4">Handover Code</th>
+                <th className="py-3 px-4 whitespace-nowrap">Handover Code</th>
                 <th className="py-3 px-4">Project & Location</th>
                 <th className="py-3 px-4">Customer & Unit</th>
                 <th className="py-3 px-4">Final Inspection</th>
@@ -363,20 +363,22 @@ export default function PmsHandoverListPage() {
                       className="hover:bg-slate-50/80 transition-colors cursor-pointer"
                       onClick={() => setSelectedRecordId(item._id)}
                     >
-                      <td className="py-3.5 px-4">
-                        <div className="font-bold text-slate-900">{item.code}</div>
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="font-mono text-[11px] text-slate-400 font-normal">{item.code}</span>
                       </td>
-                      <td className="py-3.5 px-4">
-                        <div className="font-bold text-slate-900">{item.project?.name || 'Project'}</div>
-                        <div className="text-[11px] text-slate-500">
-                          {item.project?.code} • {item.project?.locality || item.project?.city || 'Site'}
+                      <td className="py-3.5 px-4 min-w-[200px] max-w-[240px]">
+                        <div className="font-semibold text-slate-900 text-xs leading-snug line-clamp-2">
+                          {item.project?.name || 'Project'}
+                        </div>
+                        <div className="text-[11px] text-slate-500 leading-tight mt-0.5 truncate">
+                          {item.project?.locality || item.project?.city || 'Site'}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4">
-                        <div className="font-semibold text-slate-800">
+                      <td className="py-3.5 px-4 min-w-[180px] max-w-[220px]">
+                        <div className="font-semibold text-slate-800 text-xs leading-snug line-clamp-2">
                           {item.customerHandover?.customerName || 'Allottee TBD'}
                         </div>
-                        <div className="text-[11px] text-slate-500">
+                        <div className="text-[11px] text-slate-500 leading-tight mt-0.5 truncate">
                           {item.customerHandover?.unitNumber || 'Unit General'}
                         </div>
                       </td>
@@ -431,14 +433,27 @@ export default function PmsHandoverListPage() {
                         )}
                       </td>
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span className="text-xs font-semibold text-slate-800">
-                          {cfg.label}
-                        </span>
+                        {item.status === 'certified' || item.status === 'approved' ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            {cfg.label}
+                          </span>
+                        ) : item.status === 'possessionCompleted' ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600">
+                            <KeyRound className="w-3.5 h-3.5" />
+                            {cfg.label}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600">
+                            <Clock className="w-3.5 h-3.5" />
+                            {cfg.label}
+                          </span>
+                        )}
                       </td>
-                      <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => setSelectedRecordId(item._id)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
                         >
                           <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />

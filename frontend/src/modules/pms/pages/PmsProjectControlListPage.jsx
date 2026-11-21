@@ -388,14 +388,22 @@ export default function PmsProjectControlListPage() {
                         {formatCurrency(r.overallCostVariance)}
                       </td>
                       <td className="py-3 px-4 text-center whitespace-nowrap">
-                        <span className="text-xs font-semibold text-slate-800">
-                          {cfg.label}
-                        </span>
+                        {r.status === "certified" || r.status === "withinBudget" ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            {cfg.label}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600">
+                            <Clock className="w-3.5 h-3.5" />
+                            {cfg.label}
+                          </span>
+                        )}
                       </td>
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
                         >
                           <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />

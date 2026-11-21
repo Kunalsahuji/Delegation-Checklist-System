@@ -416,7 +416,22 @@ export default function PmsPlanningListPage() {
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="text-xs font-semibold whitespace-nowrap text-slate-700">{statusConf.label}</span>
+                        {p.status === "approved" ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            {statusConf.label}
+                          </span>
+                        ) : p.status === "inPlanning" || p.status === "draft" ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600">
+                            <Compass className="w-3.5 h-3.5" />
+                            {statusConf.label}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-600">
+                            <Clock className="w-3.5 h-3.5" />
+                            {statusConf.label}
+                          </span>
+                        )}
                       </td>
                       <td className="py-3 px-4 text-right">
                         <button
@@ -424,7 +439,7 @@ export default function PmsPlanningListPage() {
                             e.stopPropagation();
                             setSelectedPlanId(p._id);
                           }}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
                         >
                           <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />

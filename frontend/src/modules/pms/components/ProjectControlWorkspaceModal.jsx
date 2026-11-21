@@ -351,51 +351,34 @@ export default function ProjectControlWorkspaceModal({ recordId, onClose, onRefr
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-hidden animate-in fade-in duration-150">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[95vh] max-h-[95vh] flex flex-col overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-indigo-700 via-indigo-800 to-slate-900 text-white flex items-center justify-between shrink-0 shadow-md">
+        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-              <Activity className="w-6 h-6 text-indigo-200" />
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
+              <Activity className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-xl font-bold tracking-tight">
-                  Stage 10 • Project Control & Variance Monitor
+                <h2 className="text-base font-bold text-slate-900 tracking-tight">
+                  Stage 10 • Project Control, Variance & Tracking
                 </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase bg-indigo-500/30 text-indigo-100 border border-indigo-300/30">
-                  {record?.code || 'PC'}
+                <span className="font-mono text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                  {record.code}
                 </span>
-                <span
-                  className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
-                    record?.status === 'approved'
-                      ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/30'
-                      : record?.status === 'approvalPending'
-                      ? 'bg-blue-500/30 text-blue-200 border border-blue-400/30'
-                      : 'bg-indigo-500/30 text-indigo-200 border border-indigo-400/30'
-                  }`}
-                >
-                  {record?.status || 'monitoring'}
+                <span className="text-xs font-semibold text-indigo-600">
+                  • {record.status?.toUpperCase()}
                 </span>
               </div>
-              <p className="text-xs text-indigo-100/90 font-medium mt-0.5">
-                Project: {record?.project?.name} ({record?.project?.code}) • Stage Order: {record?.project?.stageOrder || 10}
+              <p className="text-xs text-slate-500 mt-0.5">
+                Project: <span className="font-medium text-slate-700">{record.project?.name || "Project"}</span> ({record.project?.code}) • Stage Order: {record.stageOrder || 7}
               </p>
             </div>
           </div>
-
-          <div className="flex items-center space-x-3">
-            {record?.status === 'approved' && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-100 text-xs font-medium rounded-lg border border-emerald-400/40">
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                Variance Certified
-              </span>
-            )}
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Global Notifications */}

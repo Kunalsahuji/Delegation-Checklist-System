@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -17,6 +18,14 @@ import { pmsPlotApi } from '../../../api/pmsPlotApi';
 import { useToast } from '../../../context/ToastContext';
 
 export default function FeasibilityDrawer({ isOpen, onClose, plot, onUpdated }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isOpen]);
   const { showSuccess, showError } = useToast();
   const [saving, setSaving] = useState(false);
   const [deciding, setDeciding] = useState(false);
@@ -166,9 +175,9 @@ export default function FeasibilityDrawer({ isOpen, onClose, plot, onUpdated }) 
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white w-full max-w-xl h-full shadow-2xl border-l border-slate-200 flex flex-col justify-between overflow-hidden">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex justify-end bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white w-full max-w-xl h-full shadow-2xl border-l border-slate-200 flex flex-col justify-between overflow-hidden animate-in slide-in-from-right duration-200">
         {/* Drawer Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/75 shrink-0">
           <div className="flex items-center gap-2.5">
@@ -418,6 +427,7 @@ export default function FeasibilityDrawer({ isOpen, onClose, plot, onUpdated }) 
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

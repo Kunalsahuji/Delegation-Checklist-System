@@ -15,6 +15,7 @@ import {
   Calculator,
   Building2,
   CheckCircle2,
+  AlertCircle,
   Clock,
   AlertTriangle,
   Layers,

@@ -64,3 +64,5 @@ backend/src/scripts/test*
 # Documentation & Internal Specs
 docs/*
 !docs/pms/
+!docs/crm/
+!docs/README.md

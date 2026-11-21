@@ -21,6 +21,7 @@ import {
   ArrowRight,
   TrendingUp,
   Scale,
+  Info,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import { pmsPlotApi } from '../../../api/pmsPlotApi';

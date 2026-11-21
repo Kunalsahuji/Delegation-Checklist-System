@@ -18,6 +18,8 @@ import {
   Layers,
   MapPin,
   Calendar,
+  Info,
+  Compass,
 } from 'lucide-react';
 import WorkKpiStrip from '../../../components/WorkKpiStrip';
 import { pmsProjectApi } from '../../../api/pmsProjectApi';

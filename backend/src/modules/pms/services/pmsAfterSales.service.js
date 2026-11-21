@@ -52,7 +52,17 @@ class PmsAfterSalesService {
     const filter = {};
 
     if (status && status !== 'all') {
-      filter.status = status;
+      if (status === 'hasActiveClaims') {
+        filter.activeClaimsCount = { $gt: 0 };
+      } else if (status === 'amcCompleted') {
+        filter.completedVisitsCount = { $gt: 0 };
+      } else if (status === 'supportResolved') {
+        filter.resolvedTicketsCount = { $gt: 0 };
+      } else if (status === 'topRated') {
+        filter.averageSatisfactionScore = { $gte: 4.0 };
+      } else {
+        filter.status = status;
+      }
     }
 
     if (hasActiveClaims === true || hasActiveClaims === 'true') {

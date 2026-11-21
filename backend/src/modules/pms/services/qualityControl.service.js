@@ -79,6 +79,10 @@ class QualityControlService {
         filter.status = {
           $in: ['inProgress', 'inspectionPending', 'snaggingActive', 'rectificationUnderway'],
         };
+      } else if (status === 'hasOpenSnags') {
+        filter.openSnags = { $gt: 0 };
+      } else if (status === 'hasInspections') {
+        filter.totalInspectionsCount = { $gt: 0 };
       } else {
         filter.status = status;
       }

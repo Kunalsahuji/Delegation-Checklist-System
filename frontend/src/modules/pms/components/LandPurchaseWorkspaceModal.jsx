@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -38,6 +39,14 @@ function formatCurrency(val) {
 }
 
 export default function LandPurchaseWorkspaceModal({ purchaseId, onClose, onRefresh }) {
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   const [purchase, setPurchase] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('negotiation');
@@ -196,8 +205,8 @@ export default function LandPurchaseWorkspaceModal({ purchaseId, onClose, onRefr
 
   if (!purchaseId) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4 overflow-hidden">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-hidden animate-in fade-in duration-150">
       <div className="bg-white w-full max-w-6xl h-[92vh] max-h-[92vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
         {/* Top Header */}
         <div className="px-6 py-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between">
@@ -1013,5 +1022,5 @@ export default function LandPurchaseWorkspaceModal({ purchaseId, onClose, onRefr
         </div>
       </div>
     </div>
-  );
+  , document.body);
 }

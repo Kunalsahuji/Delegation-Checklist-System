@@ -141,170 +141,130 @@ export default function PmsAfterSalesListPage() {
       </div>
 
       {/* 5 Interactive 3-Liner KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-        {/* KPI 1: Total Registers */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'all'
-              ? 'border-pink-500 ring-2 ring-pink-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-pink-50/70 border-pink-300 ring-2 ring-pink-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              Total Portfolios
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Total registered projects under active warranty, AMC, and DLP maintenance"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-pink-50 flex items-center justify-center text-pink-600">
-                <HeartHandshake className="w-4 h-4" />
+              <HeartHandshake className="w-3.5 h-3.5 text-pink-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Portfolios</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Total registered projects under active warranty, AMC, and DLP maintenance.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 mt-2">
-            {kpis.total}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Lifetime Support Tracking
-          </p>
+          <div className="text-xl font-black text-slate-900 mt-1">{kpis.total}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Lifetime Support Tracking</div>
         </div>
 
-        {/* KPI 2: Active Claims */}
+        {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('hasActiveClaims')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasActiveClaims'
-              ? 'border-amber-500 ring-2 ring-amber-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
-              Active Warranty Claims
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Open warranty claims currently undergoing technician investigation or rectification"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
-                <ShieldAlert className="w-4 h-4" />
+              <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Active Warranty Claims</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Open warranty claims currently undergoing technician investigation or rectification.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-amber-700 mt-2">
-            {kpis.activeClaimsTotal}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Open Punch-list Defect Calls
-          </p>
+          <div className="text-xl font-black text-amber-700 mt-1">{kpis.activeClaimsTotal}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Open Punch-list Defect Calls</div>
         </div>
 
-        {/* KPI 3: AMC Visits Completed */}
+        {/* KPI 3 */}
         <div
           onClick={() => handleKpiFilter('amcCompleted')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'amcCompleted'
-              ? 'border-blue-500 ring-2 ring-blue-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
-              AMC Visits Executed
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Preventive maintenance visits executed across HVAC, elevators, and water filtration"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-                <CalendarCheck2 className="w-4 h-4" />
+              <CalendarCheck2 className="w-3.5 h-3.5 text-blue-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">AMC Visits Executed</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Preventive maintenance visits executed across HVAC, elevators, and water filtration.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-blue-700 mt-2">
-            {kpis.completedVisitsTotal}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Preventive Servicing Executed
-          </p>
+          <div className="text-xl font-black text-blue-700 mt-1">{kpis.completedVisitsTotal}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Preventive Servicing Executed</div>
         </div>
 
-        {/* KPI 4: Support Tickets Resolved */}
+        {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('supportResolved')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'supportResolved'
-              ? 'border-emerald-500 ring-2 ring-emerald-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">
-              Support Queries Resolved
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Resident helpdesk support and billing queries successfully resolved"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-                <Headphones className="w-4 h-4" />
+              <Headphones className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Support Queries Resolved</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Resident helpdesk support and billing queries successfully resolved.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-emerald-700 mt-2">
-            {kpis.resolvedTicketsTotal}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Resident Helpdesk Queries Closed
-          </p>
+          <div className="text-xl font-black text-emerald-700 mt-1">{kpis.resolvedTicketsTotal}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Resident Helpdesk Queries Closed</div>
         </div>
 
-        {/* KPI 5: Customer Satisfaction (Clickable 5th KPI Card) */}
+        {/* KPI 5 */}
         <div
           onClick={() => handleKpiFilter('topRated')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'topRated'
-              ? 'border-purple-500 ring-2 ring-purple-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-purple-700 uppercase tracking-wider">
-              Customer Satisfaction
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Projects achieving 4.0+ customer satisfaction rating on post-handover survey"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
-                <Star className="w-4 h-4" />
+              <Star className="w-3.5 h-3.5 text-purple-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Customer Satisfaction</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Projects achieving 4.0+ customer satisfaction rating on post-handover survey.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-purple-700 mt-2">
-            {kpis.averageSatisfactionScore > 0 ? `${kpis.averageSatisfactionScore} / 5.0` : '5.0 / 5.0'}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Top Rated Satisfaction (≥ 4.0)
-          </p>
+          <div className="text-xl font-black text-purple-700 mt-1">{kpis.averageSatisfactionScore > 0 ? `${kpis.averageSatisfactionScore} / 5.0` : '5.0 / 5.0'}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Top Rated Satisfaction (≥ 4.0)</div>
         </div>
       </div>
 
@@ -410,32 +370,32 @@ export default function PmsAfterSalesListPage() {
                           {item.project?.code} • {item.project?.locality || item.project?.city || 'Site'}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         {item.activeClaimsCount > 0 ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                            <ShieldAlert className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                            <ShieldAlert className="w-3.5 h-3.5" />
                             {item.activeClaimsCount} Open Claims
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
                             All Claims Resolved
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 px-4">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                          <CalendarCheck2 className="w-3 h-3" />
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-600">
+                          <CalendarCheck2 className="w-3.5 h-3.5" />
                           {item.completedVisitsCount} Visits Executed
                         </span>
                       </td>
-                      <td className="py-3.5 px-4">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                          <Headphones className="w-3 h-3" />
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                          <Headphones className="w-3.5 h-3.5" />
                           {item.resolvedTicketsCount} Tickets Closed
                         </span>
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-1">
                           <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
                           <span className="font-bold text-slate-800">
@@ -444,18 +404,18 @@ export default function PmsAfterSalesListPage() {
                           <span className="text-[10px] text-slate-400">/ 5.0</span>
                         </div>
                       </td>
-                      <td className="py-3.5 px-4">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${cfg.color}`}>
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="text-xs font-semibold text-slate-800">
                           {cfg.label}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => setSelectedRecordId(item._id)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-pink-700 bg-pink-50 border border-pink-200 rounded-lg hover:bg-pink-100 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
                           <span>Workspace</span>
-                          <ArrowRight className="w-3 h-3" />
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>

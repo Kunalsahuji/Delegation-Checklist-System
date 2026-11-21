@@ -60,7 +60,17 @@ class PmsHandoverService {
     const filter = {};
 
     if (status && status !== 'all') {
-      filter.status = status;
+      if (status === 'possessionCompleted') {
+        filter.possessionCompleted = true;
+      } else if (status === 'zeroSnagVerified') {
+        filter.zeroSnagVerified = true;
+      } else if (status === 'hasPendingSnags') {
+        filter.pendingSnagsCount = { $gt: 0 };
+      } else if (status === 'inspectionsCleared') {
+        filter.inspectionsCleared = true;
+      } else {
+        filter.status = status;
+      }
     }
 
     if (possessionCompleted === true || possessionCompleted === 'true') {

@@ -1,9 +1,17 @@
+import { createPortal } from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import { X, Building, MapPin, IndianRupee, Calendar, FileText, Check } from 'lucide-react';
 import { pmsProjectApi } from '../../../api/pmsProjectApi';
 import { useToast } from '../../../context/ToastContext';
 
 export default function ProjectFormModal({ isOpen, onClose, project, onSaved }) {
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
   const { showSuccess, showError } = useToast();
   const [submitting, setSubmitting] = useState(false);
 
@@ -90,9 +98,9 @@ export default function ProjectFormModal({ isOpen, onClose, project, onSaved }) 
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh]">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Header */}
         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-2.5">
@@ -270,5 +278,5 @@ export default function ProjectFormModal({ isOpen, onClose, project, onSaved }) 
         </form>
       </div>
     </div>
-  );
+  , document.body);
 }

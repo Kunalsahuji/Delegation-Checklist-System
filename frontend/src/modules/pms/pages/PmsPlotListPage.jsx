@@ -294,10 +294,10 @@ export default function PmsPlotListPage() {
         {/* KPI 2 */}
         <div
           onClick={() => {
-            setKpiFilter(kpiFilter === 'visitScheduled' ? 'all' : 'visitScheduled');
+            setKpiFilter('visitScheduled');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             kpiFilter === 'visitScheduled'
               ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -322,10 +322,10 @@ export default function PmsPlotListPage() {
         {/* KPI 3 */}
         <div
           onClick={() => {
-            setKpiFilter(kpiFilter === 'underAnalysis' ? 'all' : 'underAnalysis');
+            setKpiFilter('underAnalysis');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             kpiFilter === 'underAnalysis'
               ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -350,10 +350,10 @@ export default function PmsPlotListPage() {
         {/* KPI 4 */}
         <div
           onClick={() => {
-            setKpiFilter(kpiFilter === 'approved' ? 'all' : 'approved');
+            setKpiFilter('approved');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             kpiFilter === 'approved'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -624,15 +624,10 @@ export default function PmsPlotListPage() {
               <tbody className="divide-y divide-slate-100">
                 {plots.map((plot) => (
                   <tr key={plot._id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">
-                          {plot.code}
-                        </span>
-                        <div>
-                          <div className="font-bold text-slate-900">{plot.title}</div>
-                          <div className="text-[11px] text-slate-400">Owner: {plot.owner?.name}</div>
-                        </div>
+                    <td className="py-3.5 px-4">
+                      <div className="font-bold text-slate-900">{plot.title}</div>
+                      <div className="text-[11px] text-slate-500 font-mono">
+                        {plot.code} • Owner: {plot.owner?.name || 'N/A'}
                       </div>
                     </td>
                     <td className="py-3 px-4 text-slate-700 font-medium">
@@ -658,32 +653,23 @@ export default function PmsPlotListPage() {
                         {plot.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right space-x-1" onClick={(e) => e.stopPropagation()}>
+                    <td className="py-3.5 px-4 text-right space-x-2" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
                         onClick={() => handleOpenFeasibility(plot)}
-                        className="text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer mr-2"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer mr-2"
                         title="Calculate & assess financial feasibility"
                       >
-                        Feasibility
+                        <span>Feasibility</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </button>
-                      {plot.status === 'approved' && (
-                        <button
-                          type="button"
-                          onClick={() => navigate('/pms/legal-cases')}
-                          className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer mr-2"
-                          title="View Legal Due Diligence"
-                        >
-                          Legal
-                        </button>
-                      )}
                       <button
                         type="button"
                         onClick={() => {
                           setSelectedPlotForEdit(plot);
                           setFormModalOpen(true);
                         }}
-                        className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+                        className="p-1.5 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
                         title="Edit Plot"
                       >
                         <Edit2 className="w-3.5 h-3.5" />

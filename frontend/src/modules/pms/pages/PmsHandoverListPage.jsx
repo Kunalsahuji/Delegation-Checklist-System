@@ -141,170 +141,130 @@ export default function PmsHandoverListPage() {
       </div>
 
       {/* 5 Interactive 3-Liner KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
-        {/* KPI 1: Total Handovers */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'all'
-              ? 'border-teal-500 ring-2 ring-teal-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-teal-50/70 border-teal-300 ring-2 ring-teal-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              Total Registers
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Total registered residential and commercial handover portfolios"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                <KeyRound className="w-4 h-4" />
+              <KeyRound className="w-3.5 h-3.5 text-teal-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Registers</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Total registered residential and commercial handover portfolios.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-slate-900 mt-2">
-            {kpis.total}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Lifetime Handover Tracking
-          </p>
+          <div className="text-xl font-black text-slate-900 mt-1">{kpis.total}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Lifetime Handover Tracking</div>
         </div>
 
-        {/* KPI 2: Possession Delivered */}
+        {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('possessionCompleted')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'possessionCompleted'
-              ? 'border-blue-500 ring-2 ring-blue-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
-              Possession Delivered
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Units where possession letter signed and keys handed over to buyer"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-                <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Possession Delivered</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Units where possession letter signed and keys handed over to buyer.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-blue-700 mt-2">
-            {kpis.possessionCompleted}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Keys & Letters Dispatched
-          </p>
+          <div className="text-xl font-black text-blue-700 mt-1">{kpis.possessionCompleted}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Keys & Letters Dispatched</div>
         </div>
 
-        {/* KPI 3: Zero-Snag Verified */}
+        {/* KPI 3 */}
         <div
           onClick={() => handleKpiFilter('zeroSnagVerified')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'zeroSnagVerified'
-              ? 'border-emerald-500 ring-2 ring-emerald-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">
-              Zero-Snag Verified
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Units with 100% snag rectification and zero-snag certificate issued"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
-                <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Zero-Snag Verified</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Units with 100% snag rectification and zero-snag certificate issued.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-emerald-700 mt-2">
-            {kpis.zeroSnagVerified}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Zero Open Punch-list Items
-          </p>
+          <div className="text-xl font-black text-emerald-700 mt-1">{kpis.zeroSnagVerified}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Zero Open Punch-list Items</div>
         </div>
 
-        {/* KPI 4: Pending Snag Backlog */}
+        {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('hasPendingSnags')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasPendingSnags'
-              ? 'border-amber-500 ring-2 ring-amber-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
-              Pending Snags Backlog
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Total open snag backlog awaiting engineering touch-up clearance"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
-                <Clock className="w-4 h-4" />
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Pending Snags Backlog</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Total open snag backlog awaiting engineering touch-up clearance.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-amber-700 mt-2">
-            {kpis.pendingSnagsTotal}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Open Touch-up Items
-          </p>
+          <div className="text-xl font-black text-amber-700 mt-1">{kpis.pendingSnagsTotal}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Open Touch-up Items</div>
         </div>
 
-        {/* KPI 5: Final Inspections Cleared (Clickable 5th KPI Card) */}
+        {/* KPI 5 */}
         <div
           onClick={() => handleKpiFilter('inspectionsCleared')}
-          className={`p-4 bg-white rounded-xl border transition-all cursor-pointer group relative ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'inspectionsCleared'
-              ? 'border-cyan-500 ring-2 ring-cyan-500 shadow-md'
-              : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+              ? 'bg-cyan-50/70 border-cyan-300 ring-2 ring-cyan-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-cyan-700 uppercase tracking-wider">
-              Final Inspections Cleared
-            </span>
             <div className="flex items-center gap-1.5">
-              <div
-                title="Units with structural, MEP, and architectural finishing sign-offs completed"
-                className="text-slate-400 hover:text-slate-600 cursor-help"
-              >
-                <Info className="w-3.5 h-3.5" />
-              </div>
-              <div className="w-7 h-7 rounded-lg bg-cyan-50 flex items-center justify-center text-cyan-600">
-                <ClipboardCheck className="w-4 h-4" />
+              <ClipboardCheck className="w-3.5 h-3.5 text-cyan-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Final Inspections Cleared</span>
+            </div>
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
+                Units with structural, MEP, and architectural finishing sign-offs completed.
               </div>
             </div>
           </div>
-          <div className="text-2xl font-black text-cyan-700 mt-2">
-            {kpis.inspectionsCleared}
-          </div>
-          <p className="text-[11px] text-slate-500 mt-1">
-            Structural & MEP Certified
-          </p>
+          <div className="text-xl font-black text-cyan-700 mt-1">{kpis.inspectionsCleared}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Structural & MEP Certified</div>
         </div>
       </div>
 
@@ -420,68 +380,68 @@ export default function PmsHandoverListPage() {
                           {item.customerHandover?.unitNumber || 'Unit General'}
                         </div>
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         {item.inspectionsCleared ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
                             Cleared
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                            <Clock className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                            <Clock className="w-3.5 h-3.5" />
                             Pending Sign-off
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         {item.zeroSnagVerified ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            <ShieldCheck className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                            <ShieldCheck className="w-3.5 h-3.5" />
                             Zero-Snag Certified
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                            <Clock className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                            <Clock className="w-3.5 h-3.5" />
                             {item.pendingSnagsCount} Open Snags
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         {item.deepCleaning?.allAreasCleaned ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            <Sparkles className="w-3 h-3 text-emerald-500" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                            <Sparkles className="w-3.5 h-3.5" />
                             Deep Cleaned
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-600 bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
+                          <span className="text-xs font-medium text-slate-500">
                             In Detailing
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3.5 px-4 whitespace-nowrap">
                         {item.possessionCompleted ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                            <KeyRound className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-600">
+                            <KeyRound className="w-3.5 h-3.5" />
                             Possession Done
                           </span>
                         ) : (
-                          <span className="text-[11px] text-slate-400">
+                          <span className="text-xs font-medium text-slate-400">
                             Pre-Possession
                           </span>
                         )}
                       </td>
-                      <td className="py-3.5 px-4">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${cfg.color}`}>
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="text-xs font-semibold text-slate-800">
                           {cfg.label}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => setSelectedRecordId(item._id)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-lg hover:bg-teal-100 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
                           <span>Workspace</span>
-                          <ArrowRight className="w-3 h-3" />
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>

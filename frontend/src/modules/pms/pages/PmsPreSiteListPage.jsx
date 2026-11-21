@@ -245,8 +245,8 @@ export default function PmsPreSiteListPage() {
 
         {/* KPI 5 */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasWorkOrder' ? 'all' : 'hasWorkOrder')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasWorkOrder')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasWorkOrder'
               ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -438,9 +438,10 @@ export default function PmsPreSiteListPage() {
                             e.stopPropagation();
                             setSelectedRecordId(r._id);
                           }}
-                          className="px-2.5 py-1 text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200/80 rounded-md transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
-                          Workspace
+                          <span>Workspace</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>

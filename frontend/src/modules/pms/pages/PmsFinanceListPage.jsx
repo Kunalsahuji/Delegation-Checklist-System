@@ -150,7 +150,7 @@ export default function PmsFinanceListPage() {
         {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'all'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -174,8 +174,8 @@ export default function PmsFinanceListPage() {
 
         {/* KPI 2 */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasOutflow' ? 'all' : 'hasOutflow')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasOutflow')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasOutflow'
               ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -201,8 +201,8 @@ export default function PmsFinanceListPage() {
 
         {/* KPI 3 */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'pendingClearance' ? 'all' : 'pendingClearance')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('pendingClearance')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'pendingClearance'
               ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -229,7 +229,7 @@ export default function PmsFinanceListPage() {
         {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('approved')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'approved'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -253,8 +253,8 @@ export default function PmsFinanceListPage() {
 
         {/* KPI 5 (CLICKABLE & ACCESSIBLE!) */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasRaBills' ? 'all' : 'hasRaBills')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasRaBills')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasRaBills'
               ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -382,7 +382,7 @@ export default function PmsFinanceListPage() {
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
                           <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />

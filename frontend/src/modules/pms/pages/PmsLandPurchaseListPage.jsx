@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Award,
+  ArrowRight,
 } from 'lucide-react';
 import { pmsPurchaseApi } from '../../../api/pmsPurchaseApi';
 import LandPurchaseWorkspaceModal from '../components/LandPurchaseWorkspaceModal';
@@ -123,149 +124,131 @@ export default function PmsLandPurchaseListPage() {
         </button>
       </div>
 
-      {/* 3-Liner KPI Cards with (i) Tooltips */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-        {/* TOTAL PURCHASES */}
+      {/* 5-Card KPI Overview Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
-            statusFilter === 'all' ? 'border-purple-500 ring-2 ring-purple-500/20' : 'border-slate-200'
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
+            statusFilter === 'all'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
-              <BadgeDollarSign className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <BadgeDollarSign className="w-3.5 h-3.5 text-purple-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Purchases</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Total commercial land purchases across all real estate projects.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-              Total Purchases
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.total}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">{formatCurrency(kpis.totalOutlay)} committed</p>
-          </div>
+          <div className="text-xl font-black text-slate-900 mt-1">{kpis.total}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">{formatCurrency(kpis.totalOutlay)} committed</div>
         </div>
 
-        {/* IN NEGOTIATION */}
+        {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('negotiation')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'negotiation'
-              ? 'border-amber-500 ring-2 ring-amber-500/20'
-              : 'border-slate-200'
+              ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
-              <Clock className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">In Negotiation</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Land parcels undergoing price discovery and offer/counter negotiations.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">
-              In Negotiation
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.inNegotiation}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Price haggling</p>
-          </div>
+          <div className="text-xl font-black text-amber-700 mt-1">{kpis.inNegotiation}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Price haggling</div>
         </div>
 
-        {/* PRICE SANCTION */}
+        {/* KPI 3 */}
         <div
           onClick={() => handleKpiFilter('priceApproval')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'priceApproval'
-              ? 'border-indigo-500 ring-2 ring-indigo-500/20'
-              : 'border-slate-200'
+              ? 'bg-indigo-50/70 border-indigo-300 ring-2 ring-indigo-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
-              <Award className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <Award className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Price Sanction</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Commercial agreements awaiting management price approval before token release.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-indigo-700 uppercase tracking-wider">
-              Price Sanction
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.priceApprovalPending}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Awaiting management</p>
-          </div>
+          <div className="text-xl font-black text-indigo-700 mt-1">{kpis.priceApprovalPending}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Awaiting management</div>
         </div>
 
-        {/* EXECUTION & REGISTRY */}
+        {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('mutation')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             ['tokenPayment', 'saleAgreement', 'registry', 'mutation'].includes(statusFilter)
-              ? 'border-blue-500 ring-2 ring-blue-500/20'
-              : 'border-slate-200'
+              ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-              <Stamp className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <Stamp className="w-3.5 h-3.5 text-blue-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Registry & Mutation</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Deeds registered or mutation applied with Tehsil/JDA revenue authority.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">
-              Registry & Mutation
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.inExecution}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Under execution</p>
-          </div>
+          <div className="text-xl font-black text-blue-700 mt-1">{kpis.inExecution}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Under execution</div>
         </div>
 
-        {/* FULLY COMPLETED */}
+        {/* KPI 5 */}
         <div
           onClick={() => handleKpiFilter('completed')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'completed'
-              ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-              : 'border-slate-200'
+              ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Completed Purchases</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Deeds registered, full mutation completed, and title transitioned to developer.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">
-              Completed Purchases
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.completed}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Ready for Project Planning</p>
-          </div>
+          <div className="text-xl font-black text-emerald-700 mt-1">{kpis.completed}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Ready for Project Planning</div>
         </div>
       </div>
 
@@ -313,8 +296,7 @@ export default function PmsLandPurchaseListPage() {
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
               <tr>
-                <th className="py-3 px-4">Code</th>
-                <th className="py-3 px-4">Project & Locality</th>
+                <th className="py-3 px-4">Project & Code</th>
                 <th className="py-3 px-4">Land Parcel (Plot)</th>
                 <th className="py-3 px-4">Landowner Details</th>
                 <th className="py-3 px-4">Contract / Agreed Price</th>
@@ -339,16 +321,11 @@ export default function PmsLandPurchaseListPage() {
               ) : (
                 purchases.map((item) => (
                   <tr key={item._id} className="hover:bg-slate-50/70 transition-colors">
-                    {/* Code */}
-                    <td className="py-3.5 px-4 font-mono font-semibold text-purple-600">
-                      {item.code}
-                    </td>
-
-                    {/* Project */}
+                    {/* Project & Code */}
                     <td className="py-3.5 px-4">
-                      <div className="font-medium text-slate-900">{item.project?.name || '---'}</div>
-                      <div className="text-[11px] text-slate-500">
-                        {item.project?.locality || 'Jaipur District'}
+                      <div className="font-bold text-slate-900">{item.project?.name || '---'}</div>
+                      <div className="text-[11px] text-slate-500 font-mono">
+                        {item.code} • {item.project?.locality || 'Jaipur District'}
                       </div>
                     </td>
 
@@ -383,43 +360,35 @@ export default function PmsLandPurchaseListPage() {
                     </td>
 
                     {/* Status */}
-                    <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize ${
-                          item.status === 'completed'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : item.status === 'negotiation'
-                            ? 'bg-amber-100 text-amber-800'
-                            : item.status === 'priceApproval'
-                            ? 'bg-indigo-100 text-indigo-800'
-                            : 'bg-purple-100 text-purple-800'
-                        }`}
-                      >
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="text-xs font-semibold text-slate-800">
                         {item.status === 'negotiation'
-                          ? '1. Negotiation'
+                          ? 'Negotiation'
                           : item.status === 'priceApproval'
-                          ? '2. Price Sanction'
+                          ? 'Price Sanction'
                           : item.status === 'tokenPayment'
-                          ? '3. Token Advance'
+                          ? 'Token Advance'
                           : item.status === 'saleAgreement'
-                          ? '4. Sale Agreement'
+                          ? 'Sale Agreement'
                           : item.status === 'registry'
-                          ? '5. Registry Deed'
+                          ? 'Registry Deed'
                           : item.status === 'mutation'
-                          ? '6. Mutation Record'
+                          ? 'Mutation Record'
+                          : item.status === 'completed'
+                          ? 'Completed'
                           : item.status}
                       </span>
                     </td>
 
                     {/* Action */}
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
                         onClick={() => setSelectedPurchaseId(item._id)}
-                        className="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold shadow-sm inline-flex items-center gap-1.5 transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                       >
-                        <BadgeDollarSign className="w-3.5 h-3.5" />
                         <span>Workspace</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>

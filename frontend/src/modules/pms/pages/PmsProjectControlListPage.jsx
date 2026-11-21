@@ -156,7 +156,7 @@ export default function PmsProjectControlListPage() {
         {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'all'
               ? 'bg-indigo-50/70 border-indigo-300 ring-2 ring-indigo-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -181,7 +181,7 @@ export default function PmsProjectControlListPage() {
         {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('withinBudget')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'withinBudget'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -206,7 +206,7 @@ export default function PmsProjectControlListPage() {
         {/* KPI 3 */}
         <div
           onClick={() => handleKpiFilter('costOverrun')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'costOverrun'
               ? 'bg-rose-50/70 border-rose-300 ring-2 ring-rose-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -231,7 +231,7 @@ export default function PmsProjectControlListPage() {
         {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('scheduleDelayed')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'scheduleDelayed'
               ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -255,8 +255,8 @@ export default function PmsProjectControlListPage() {
 
         {/* KPI 5 (CLICKABLE & ACCESSIBLE!) */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasVariance' ? 'all' : 'hasVariance')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasVariance')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasVariance'
               ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -387,17 +387,17 @@ export default function PmsProjectControlListPage() {
                       >
                         {formatCurrency(r.overallCostVariance)}
                       </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${cfg.color}`}>
+                      <td className="py-3 px-4 text-center whitespace-nowrap">
+                        <span className="text-xs font-semibold text-slate-800">
                           {cfg.label}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
-                          Workspace
+                          <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </td>

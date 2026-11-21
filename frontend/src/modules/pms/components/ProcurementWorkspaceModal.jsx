@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -36,6 +37,14 @@ function formatCurrency(val) {
 }
 
 export default function ProcurementWorkspaceModal({ recordId, onClose, onRefresh }) {
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   const [record, setRecord] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('vendorSelection');
@@ -408,8 +417,8 @@ export default function ProcurementWorkspaceModal({ recordId, onClose, onRefresh
   };
 
   if (loading) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+    return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-hidden animate-in fade-in duration-150">
         <div className="bg-white rounded-xl p-8 shadow-2xl flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-3 border-brand-600 border-t-transparent rounded-full animate-spin" />
           <p className="text-sm font-medium text-slate-600">Loading Stage 7 Procurement Workspace...</p>
@@ -431,7 +440,7 @@ export default function ProcurementWorkspaceModal({ recordId, onClose, onRefresh
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4 overflow-hidden">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[92vh] max-h-[92vh] overflow-hidden flex flex-col border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[95vh] max-h-[95vh] flex flex-col overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 text-white px-6 py-5 flex items-center justify-between border-b border-slate-800">
           <div>
@@ -1171,5 +1180,5 @@ export default function ProcurementWorkspaceModal({ recordId, onClose, onRefresh
         </div>
       </div>
     </div>
-  );
+  , document.body);
 }

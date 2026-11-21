@@ -119,149 +119,131 @@ export default function PmsLegalCaseListPage() {
         </button>
       </div>
 
-      {/* 3-Liner KPI Cards with (i) Tooltips */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-        {/* TOTAL CASES */}
+      {/* 5-Card KPI Overview Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
-            statusFilter === 'all' ? 'border-indigo-500 ring-2 ring-indigo-500/20' : 'border-slate-200'
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
+            statusFilter === 'all'
+              ? 'bg-indigo-50/70 border-indigo-300 ring-2 ring-indigo-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
-              <Scale className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <Scale className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Legal Cases</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Total land parcels currently undergoing or completed legal verification.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-              Total Legal Cases
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.total}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">All parcel title files</p>
-          </div>
+          <div className="text-xl font-black text-slate-900 mt-1">{kpis.total}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">All parcel title files</div>
         </div>
 
-        {/* IN PROGRESS */}
+        {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('titleVerification')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'titleVerification'
-              ? 'border-amber-500 ring-2 ring-amber-500/20'
-              : 'border-slate-200'
+              ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
-              <Clock className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">In Verification</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Cases with active checklist search at Tehsil, Sub-Registrar, or Counsel.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider">
-              In Verification
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.inProgress}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Active stage check</p>
-          </div>
+          <div className="text-xl font-black text-amber-700 mt-1">{kpis.inProgress}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Active stage check</div>
         </div>
 
-        {/* APPROVAL PENDING */}
+        {/* KPI 3 */}
         <div
           onClick={() => handleKpiFilter('approvalPending')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'approvalPending'
-              ? 'border-indigo-500 ring-2 ring-indigo-500/20'
-              : 'border-slate-200'
+              ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
-              <FileCheck2 className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <FileCheck2 className="w-3.5 h-3.5 text-purple-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Approval Gate</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 All 4 checklists verified; awaiting Project Manager or Management sign-off.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-purple-700 uppercase tracking-wider">
-              Approval Gate
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.approvalPending}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Awaiting PM decision</p>
-          </div>
+          <div className="text-xl font-black text-purple-700 mt-1">{kpis.approvalPending}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Awaiting PM decision</div>
         </div>
 
-        {/* APPROVED / CLEAN TITLES */}
+        {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('approved')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'approved'
-              ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-              : 'border-slate-200'
+              ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-              <CheckCircle2 className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Approved Titles</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Approved titles sanctioned for Stage 3 purchase agreement & registry.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider">
-              Approved Titles
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.approved}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Cleared for registry</p>
-          </div>
+          <div className="text-xl font-black text-emerald-700 mt-1">{kpis.approved}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Cleared for registry</div>
         </div>
 
-        {/* HIGH RISK */}
+        {/* KPI 5 */}
         <div
           onClick={() => handleKpiFilter('highRisk')}
-          className={`cursor-pointer group relative p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'highRisk'
-              ? 'border-rose-500 ring-2 ring-rose-500/20'
-              : 'border-slate-200'
+              ? 'bg-rose-50/70 border-rose-300 ring-2 ring-rose-400/40 shadow-xs'
+              : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
         >
           <div className="flex items-center justify-between">
-            <div className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600">
-              <AlertTriangle className="w-4 h-4" />
+            <div className="flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">High Risk</span>
             </div>
-            <div className="relative group/info">
-              <Info className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600 cursor-pointer" />
-              <div className="absolute right-0 top-5 hidden group-hover/info:block z-20 w-48 p-2 text-[11px] leading-tight text-white bg-slate-900 rounded-lg shadow-lg">
+            <div className="relative group/tip">
+              <Info className="w-3.5 h-3.5 text-slate-400 group-hover/tip:text-slate-600 transition-colors" />
+              <div className="absolute right-0 top-5 z-20 hidden group-hover/tip:block bg-slate-900 text-white text-[11px] rounded py-1 px-2 w-48 shadow-lg">
                 Parcels flagging legal disputes, pending litigation, or adverse findings.
               </div>
             </div>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-semibold text-rose-700 uppercase tracking-wider">
-              High Risk
-            </span>
-            <div className="text-2xl font-bold text-slate-900 mt-0.5">{kpis.highRisk}</div>
-            <p className="text-[11px] text-slate-500 mt-0.5">Adverse issues found</p>
-          </div>
+          <div className="text-xl font-black text-rose-700 mt-1">{kpis.highRisk}</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">Adverse issues found</div>
         </div>
       </div>
 
@@ -367,55 +349,51 @@ export default function PmsLegalCaseListPage() {
                     </td>
 
                     {/* Current Stage */}
-                    <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize ${
-                          item.status === 'approved'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : item.status === 'rejected'
-                            ? 'bg-rose-100 text-rose-800'
-                            : item.status === 'approvalPending'
-                            ? 'bg-purple-100 text-purple-800'
-                            : 'bg-amber-100 text-amber-800'
-                        }`}
-                      >
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <span className="text-xs font-semibold text-slate-800">
                         {item.status === 'titleVerification'
-                          ? '1. Title Verification'
+                          ? 'Title Verification'
                           : item.status === 'encumbranceCheck'
-                          ? '2. Encumbrance Check'
+                          ? 'Encumbrance Check'
                           : item.status === 'documentVerification'
-                          ? '3. Document Completeness'
+                          ? 'Document Completeness'
                           : item.status === 'legalOpinion'
-                          ? '4. Counsel Opinion'
+                          ? 'Counsel Opinion'
+                          : item.status === 'approved'
+                          ? 'Approved'
+                          : item.status === 'rejected'
+                          ? 'Rejected'
+                          : item.status === 'approvalPending'
+                          ? 'Approval Pending'
                           : item.status}
                       </span>
                     </td>
 
                     {/* Risk Badge */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-3.5 px-4 whitespace-nowrap">
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold uppercase ${
+                        className={`inline-flex items-center gap-1 text-xs font-semibold uppercase ${
                           item.risk?.level === 'high'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                            ? 'text-rose-600'
                             : item.risk?.level === 'medium'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            ? 'text-amber-600'
+                            : 'text-emerald-600'
                         }`}
                       >
-                        <ShieldCheck className="w-3 h-3" />
+                        <ShieldCheck className="w-3.5 h-3.5" />
                         <span>{item.risk?.level || 'LOW'}</span>
                       </span>
                     </td>
 
                     {/* Action */}
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
                         onClick={() => setSelectedCaseId(item._id)}
-                        className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold shadow-sm inline-flex items-center gap-1.5 transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                       >
-                        <Scale className="w-3.5 h-3.5" />
                         <span>Workspace</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </td>
                   </tr>

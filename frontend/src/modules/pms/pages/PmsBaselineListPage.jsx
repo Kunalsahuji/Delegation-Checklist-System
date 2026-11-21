@@ -147,7 +147,7 @@ export default function PmsBaselineListPage() {
         {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'all'
               ? 'bg-brand-50/70 border-brand-300 ring-2 ring-brand-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -172,7 +172,7 @@ export default function PmsBaselineListPage() {
         {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('inPlanning')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'inPlanning'
               ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -197,7 +197,7 @@ export default function PmsBaselineListPage() {
         {/* KPI 3 */}
         <div
           onClick={() => handleKpiFilter('baselineReview')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'baselineReview'
               ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -222,7 +222,7 @@ export default function PmsBaselineListPage() {
         {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('locked')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'locked'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -246,8 +246,8 @@ export default function PmsBaselineListPage() {
 
         {/* KPI 5 */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasBudget' ? 'all' : 'hasBudget')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasBudget')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasBudget'
               ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -431,7 +431,7 @@ export default function PmsBaselineListPage() {
                             e.stopPropagation();
                             setSelectedBaselineId(b._id);
                           }}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
                           <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />

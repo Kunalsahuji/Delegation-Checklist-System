@@ -59,11 +59,14 @@ class ConstructionExecutionService {
     const filter = {};
 
     if (status && status !== 'all') {
-      if (status === 'inProgress') {
+      if (status === 'hasDpr') {
+        filter.totalDprCount = { $gt: 0 };
+      } else if (status === 'inProgress') {
         filter.status = { $in: ['inProgress', 'siteMobilized'] };
       } else {
         filter.status = status;
       }
+    }
     }
 
     if (projectId) {

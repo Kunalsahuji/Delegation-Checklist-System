@@ -142,7 +142,7 @@ export default function PmsQualityListPage() {
         {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'all'
               ? 'bg-teal-50/70 border-teal-300 ring-2 ring-teal-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -167,7 +167,7 @@ export default function PmsQualityListPage() {
         {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('inProgress')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'inProgress'
               ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -191,8 +191,8 @@ export default function PmsQualityListPage() {
 
         {/* KPI 3 */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasOpenSnags' ? 'all' : 'hasOpenSnags')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasOpenSnags')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasOpenSnags'
               ? 'bg-rose-50/70 border-rose-300 ring-2 ring-rose-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -217,7 +217,7 @@ export default function PmsQualityListPage() {
         {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('approved')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'approved'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -241,8 +241,8 @@ export default function PmsQualityListPage() {
 
         {/* KPI 5 (CLICKABLE & ACCESSIBLE!) */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasInspections' ? 'all' : 'hasInspections')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasInspections')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasInspections'
               ? 'bg-teal-50/70 border-teal-300 ring-2 ring-teal-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -365,17 +365,17 @@ export default function PmsQualityListPage() {
                       <td className="py-3 px-4 text-center font-bold text-teal-700">
                         {r.snagClosureRate || 100}%
                       </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${cfg.color}`}>
+                      <td className="py-3 px-4 text-center whitespace-nowrap">
+                        <span className="text-xs font-semibold text-slate-800">
                           {cfg.label}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
-                          Workspace
+                          <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </td>

@@ -150,7 +150,7 @@ export default function PmsConstructionListPage() {
         {/* KPI 1 */}
         <div
           onClick={() => handleKpiFilter('all')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'all'
               ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -175,7 +175,7 @@ export default function PmsConstructionListPage() {
         {/* KPI 2 */}
         <div
           onClick={() => handleKpiFilter('inProgress')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'inProgress'
               ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -200,7 +200,7 @@ export default function PmsConstructionListPage() {
         {/* KPI 3 */}
         <div
           onClick={() => handleKpiFilter('reviewPending')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'reviewPending'
               ? 'bg-yellow-50/70 border-yellow-300 ring-2 ring-yellow-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -225,7 +225,7 @@ export default function PmsConstructionListPage() {
         {/* KPI 4 */}
         <div
           onClick={() => handleKpiFilter('approved')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'approved'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -249,8 +249,8 @@ export default function PmsConstructionListPage() {
 
         {/* KPI 5 (CLICKABLE & ACCESSIBLE!) */}
         <div
-          onClick={() => handleKpiFilter(statusFilter === 'hasDpr' ? 'all' : 'hasDpr')}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          onClick={() => handleKpiFilter('hasDpr')}
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             statusFilter === 'hasDpr'
               ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -367,21 +367,21 @@ export default function PmsConstructionListPage() {
                         {formatCurrency(r.totalMaterialCost)}
                       </td>
                       <td className="py-3 px-4 text-center">
-                        <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span className="text-xs font-semibold text-emerald-600">
                           {r.overallPassRate || 100}%
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${cfg.color}`}>
+                      <td className="py-3 px-4 text-center whitespace-nowrap">
+                        <span className="text-xs font-semibold text-slate-800">
                           {cfg.label}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => setSelectedRecordId(r._id)}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
                         >
-                          Workspace
+                          <span>Workspace</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                       </td>

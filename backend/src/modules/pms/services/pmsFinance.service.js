@@ -71,6 +71,12 @@ class PmsFinanceService {
         filter.status = {
           $in: ['activeAccounting', 'billingInProgress', 'paymentReview'],
         };
+      } else if (status === 'hasOutflow') {
+        filter.totalDisbursements = { $gt: 0 };
+      } else if (status === 'pendingClearance') {
+        filter.pendingDisbursements = { $gt: 0 };
+      } else if (status === 'hasRaBills') {
+        filter.totalRaCertified = { $gt: 0 };
       } else {
         filter.status = status;
       }

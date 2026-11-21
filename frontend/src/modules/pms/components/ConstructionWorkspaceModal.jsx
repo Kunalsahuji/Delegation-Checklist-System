@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -40,6 +41,14 @@ function formatCurrency(val) {
 }
 
 export default function ConstructionWorkspaceModal({ recordId, onClose, onRefresh }) {
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   const [record, setRecord] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dailyProgress');
@@ -385,9 +394,9 @@ export default function ConstructionWorkspaceModal({ recordId, onClose, onRefres
 
   if (!recordId) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4 overflow-hidden">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[92vh] max-h-[92vh] flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-sm overflow-hidden animate-in fade-in duration-150">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[95vh] max-h-[95vh] flex flex-col overflow-hidden border border-slate-200 animate-in zoom-in-95 duration-150">
         {/* Header */}
         <div className="px-6 py-4 bg-gradient-to-r from-amber-600 via-amber-700 to-orange-800 text-white flex items-center justify-between shrink-0 shadow-md">
           <div className="flex items-center space-x-3">
@@ -1221,5 +1230,5 @@ export default function ConstructionWorkspaceModal({ recordId, onClose, onRefres
         </div>
       </div>
     </div>
-  );
+  , document.body);
 }

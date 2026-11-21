@@ -252,7 +252,7 @@ export default function PmsProjectListPage() {
             setStatusFilter('all');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             kpiFilter === 'all' && statusFilter === 'all'
               ? 'bg-brand-50/70 border-brand-300 ring-2 ring-brand-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -277,10 +277,10 @@ export default function PmsProjectListPage() {
         {/* KPI 2 */}
         <div
           onClick={() => {
-            setKpiFilter(kpiFilter === 'planning' ? 'all' : 'planning');
+            setKpiFilter('planning');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             kpiFilter === 'planning'
               ? 'bg-blue-50/70 border-blue-300 ring-2 ring-blue-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -305,10 +305,10 @@ export default function PmsProjectListPage() {
         {/* KPI 3 */}
         <div
           onClick={() => {
-            setKpiFilter(kpiFilter === 'active' ? 'all' : 'active');
+            setKpiFilter('active');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             kpiFilter === 'active'
               ? 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -333,10 +333,10 @@ export default function PmsProjectListPage() {
         {/* KPI 4 */}
         <div
           onClick={() => {
-            setKpiFilter(kpiFilter === 'completed' ? 'all' : 'completed');
+            setKpiFilter('completed');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
             kpiFilter === 'completed'
               ? 'bg-emerald-50/70 border-emerald-300 ring-2 ring-emerald-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
@@ -361,11 +361,11 @@ export default function PmsProjectListPage() {
         {/* KPI 5 */}
         <div
           onClick={() => {
-            setKpiFilter(kpiFilter === 'planning' ? 'all' : 'planning');
+            setKpiFilter('budget');
             setPagination((p) => ({ ...p, page: 1 }));
           }}
-          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group ${
-            kpiFilter === 'planning'
+          className={`p-3.5 rounded-xl border transition-all cursor-pointer relative group min-h-[96px] flex flex-col justify-between ${
+            kpiFilter === 'budget'
               ? 'bg-purple-50/70 border-purple-300 ring-2 ring-purple-400/40 shadow-xs'
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
           }`}
@@ -383,7 +383,7 @@ export default function PmsProjectListPage() {
             </div>
           </div>
           <div className="text-xl font-black text-purple-700 mt-1">{formatCurrencyCr(kpis.plannedBudget)}</div>
-          <div className="text-[11px] text-slate-500 mt-0.5">${kpis.portfolioProgress}% portfolio progression</div>
+          <div className="text-[11px] text-slate-500 mt-0.5">{kpis.portfolioProgress}% portfolio progression</div>
         </div>
       </div>
 
@@ -659,11 +659,11 @@ export default function PmsProjectListPage() {
                       <button
                         type="button"
                         onClick={() => navigate(`/pms/projects/${proj._id}`)}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-800 transition-colors cursor-pointer mr-2"
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer mr-2"
                         title="Open workspace"
                       >
-                        <Layers className="w-3.5 h-3.5" />
                         <span>Workspace</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                       <button
                         type="button"
